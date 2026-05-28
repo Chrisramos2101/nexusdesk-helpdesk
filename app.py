@@ -5,7 +5,7 @@ import os
 from openpyxl import load_workbook
 
 app = Flask(__name__)
-app.secret_key = "helpdesk_secret_key"
+app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_key")
 
 tickets = []
 
@@ -241,7 +241,7 @@ def my_tickets():
 
 
 @app.route("/submit", methods=["POST"])
-def sumbit():
+def submit():
     name = request.form["name"]
     department = request.form["department"]
     issue = request.form["issue"]
@@ -694,6 +694,9 @@ def quick_close(ticket_id):
 
 @app.route("/delete_ticket/<int:ticket_id>", methods=["POST"])
 def delete_ticket(ticket_id):
+    if "username" not in session or session["role"] != "admin":
+        return redirect("/login")
+
     connection = sqlite3.connect("helpdesk.db")
     cursor = connection.cursor()
 
@@ -877,6 +880,10 @@ def stats():
         overdue_tickets=overdue_tickets,
     )
 
+@app.route("/healthz")
+def healthz():
+    return "OK", 200
+
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True, port=5001)
+    app.run()
