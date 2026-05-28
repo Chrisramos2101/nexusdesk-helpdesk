@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Desk System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="login-page">
+    <div class="login-card">
+        <div class="logo-circle">🎧</div>
+
+        <div class="portal-badge">EMPLOYEE PORTAL</div>
+
+        <h1>NexusDesk Help Desk Portal</h1>
+        <p class="login-subtitle">Submit, track, and manage IT support requests in one secure place.</p>
+
+        {% if submitted == "success" %}
+            <div class="success-box">
+                ✅ Ticket submitted successfully! Your Ticket ID is <strong>#{{ ticket_id }}</strong>.
+            </div>
+        {% endif %}
+
+        <div class="home-stats">
+            <div class="home-stat">
+                <h2>{{ open_tickets }}</h2>
+                <p>Open Tickets</p>
+            </div>
+
+            <div class="home-stat">
+                <h2>{{ overdue_tickets }}</h2>
+                <p>Overdue</p>
+            </div>
+
+            <div class="home-stat">
+                <h2>{{ high_priority_tickets }}</h2>
+                <p>High Priority</p>
+            </div>
+        </div>
+
+        <div class="steps-box portal-info-box">
+            <h3>Request Process</h3>
+            <p><strong>1.</strong> Enter your name and department</p>
+            <p><strong>2.</strong> Describe the issue clearly</p>
+            <p><strong>3.</strong> Select category and priority</p>
+            <p><strong>4.</strong> Submit and track your ticket</p>
+        </div>
+
+        <form action="/submit" method="POST">
+            <input type="text" name="name" placeholder="👤 Your Name" required>
+
+            <select name="department" required>
+                <option value="">🏢 Select Department</option>
+                <option value="Finance">Finance</option>
+                <option value="HR">HR</option>
+                <option value="IT">IT</option>
+                <option value="Management">Management</option>
+                <option value="Operations">Operations</option>
+                <option value="Sales">Sales</option>
+            </select>
+
+            <textarea name="issue" placeholder="📝 Describe the issue..." required></textarea>
+
+            <select name="category" required>
+                <option value="">🗂️ Select Category</option>
+                <option value="Hardware">Hardware</option>
+                <option value="Software">Software</option>
+                <option value="Network">Network</option>
+                <option value="Account Access">Account Access</option>
+                <option value="Security">Security</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <select name="priority" required>
+                <option value="">⚠️ Select Priority</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+            </select>
+
+            <button type="submit">🚀 Submit Ticket Request</button>
+        </form>
+
+        <div class="portal-actions">
+
+            <a href="/my_tickets" class="portal-button secondary-button">
+                📁 View My Tickets
+            </a>
+
+            {% if role == "admin" %}
+
+            <a href="/dashboard" class="portal-button admin-button">
+                🖥️ IT Dashboard
+            </a>
+
+            <a href="/stats" class="portal-button admin-button">
+                📊 Stats Dashboard
+            </a>
+
+            {% endif %}
+
+            <a href="/logout" class="portal-button logout-button">
+                🚪 Logout
+            </a>
+
+        </div>
+
+        <p class="security-note">Role-based access protected system</p>
+    </div>
+</div>
+
+<footer class="login-footer">
+    © 2026 NexusDesk Help Desk Portal · Secure Internal System
+</footer>
+</body>
+</html>

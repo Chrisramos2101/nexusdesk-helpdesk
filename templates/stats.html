@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help Desk Stats</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card dashboard-card">
+            <h1>📊 Help Desk Analytics</h1>
+            <p>Overview of ticket activity and performance</p>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h2>{{ total_tickets }}</h2>
+                    <p>Total Tickets</p>
+                </div>
+
+                <div class="stat-box">
+                    <h2>{{ open_tickets }}</h2>
+                    <p>Open Tickets</p>
+                </div>
+
+                <div class="stat-box">
+                    <h2>{{ in_progress_tickets }}</h2>
+                    <p>In Progress</p>
+                </div>
+
+                <div class="stat-box">
+                    <h2>{{ closed_tickets }}</h2>
+                    <p>Closed Tickets</p>
+                </div>
+
+                <div class="stat-box">
+                    <h2>{{ high_priority_tickets }}</h2>
+                    <p>High Priority</p>
+                </div>
+            </div>
+
+            <h2>Ticket Status Overview</h2>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <h2>{{ sla_met_count }}</h2>
+                    <p>SLA Met</p>
+                </div>
+
+                <div class="stat-box">
+                    <h2>{{ sla_missed_count }}</h2>
+                    <p>SLA Missed</p>
+                </div>
+
+                <div class="stat-box">
+                    <h2>{{ overdue_tickets }}</h2>
+                    <p>Overdue Tickets</p>
+                </div>
+            </div>
+
+            <h2>Visual Analytics</h2>
+
+            <div class="chart-dashboard">
+                <div class="chart-card">
+                    <h3>Status Breakdown</h3>
+                    <canvas id="statusChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>SLA Performance</h3>
+                    <canvas id="slaChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Tickets by Priority</h3>
+                    <canvas id="priorityChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Tickets by Category</h3>
+                    <canvas id="categoryChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Tickets by Department</h3>
+                    <canvas id="departmentChart"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <h3>Technician Workload</h3>
+                    <canvas id="techChart"></canvas>
+                </div>
+            </div>
+
+            <h2>SLA Performance</h2>
+
+            <div class="chart-box">
+                <div class="chart-row">
+                    <span>Met</span>
+                    <div class="bar-bg">
+                        <div class="bar-fill closed-bar" data-percent="{{ (sla_met_count / closed_tickets * 100) if closed_tickets else 0 }}"></div>
+                    </div>
+                    <span>{{ sla_met_count }}</span>
+                </div>
+
+                <div class="chart-row">
+                    <span>Missed</span>
+                    <div class="bar-bg">
+                        <div class="bar-fill missed-bar" data-percent="{{ (sla_missed_count / closed_tickets * 100) if closed_tickets else 0 }}"></div>
+                    </div>
+                    <span>{{ sla_missed_count }}</span>
+                </div>
+            </div>
+
+            <h2>SLA Misses by Technician</h2>
+
+            <div class="stats-list-grid">
+                {% if sla_missed_by_tech %}
+                    {% for tech in sla_missed_by_tech %}
+                        <div class="mini-stat-card danger-mini-card">
+                            <h3>{{ tech.assigned_to }}</h3>
+                            <p>{{ tech.total }} missed SLA ticket(s)</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="mini-stat-card">
+                        <p>No missed SLA data yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="chart-box">
+                <div class="chart-row">
+                    <span>Open</span>
+                    <div class="bar-bg">
+                      <div class="bar-fill" data-percent="{{ open_percent }}"></div>
+                    </div>
+                    <span>{{ open_tickets }}</span>
+                </div>
+
+                <div class="chart-row">
+                    <span>In Progress</span>
+                    <div class="bar-bg">
+                        <div class="bar-fill" data-percent="{{ progress_percent }}"></div>
+                    </div>
+                    <span>{{ in_progress_tickets }}</span>
+                </div>
+
+                <div class="chart-row">
+                    <span>Closed</span>
+                    <div class="bar-bg">
+                        <div class="bar-fill closed-bar" data-percent="{{ closed_percent }}"></div>
+                    </div>
+                    <span>{{ closed_tickets }}</span>
+                </div>
+            </div>
+
+            <h2>Tickets by Priority</h2>
+
+            <div class="chart-box">
+                {% if priority_stats %}
+                    {% for priority in priority_stats %}
+                        <div class="chart-row">
+                            <span>{{ priority.priority }}</span>
+                            <div class="bar-bg">
+                                <div class="bar-fill" data-percent="{{ priority.percent }}"></div>
+                            </div>
+                            <span>{{ priority.total }}</span>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No priority data available.</p>
+                {% endif %}
+            </div>
+
+            <h2>Tickets by Department</h2>
+
+            <div class="stats-list-grid">
+                {% if department_stats %}
+                    {% for department in department_stats %}
+                        <div class="mini-stat-card">
+                            <h3>{{ department.department }}</h3>
+                            <p>{{ department.total }} ticket(s)</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="mini-stat-card">
+                        <p>No department data available.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <h2>Tickets Completed by IT Worker</h2>
+
+            <div class="stats-list-grid">
+                {% if completed_by_stats %}
+                    {% for worker in completed_by_stats %}
+                        <div class="mini-stat-card success-mini-card">
+                            <h3>{{ worker.completed_by }}</h3>
+                            <p>{{ worker.total }} completed ticket(s)</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="mini-stat-card">
+                        <p>No completed ticket data yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="portal-actions">
+                <a href="/dashboard" class="portal-button secondary-button">
+                    🖥️ Back to IT Dashboard
+                </a>
+
+                <a href="/" class="portal-button secondary-button">
+                    🎫 Back to Submit Ticket
+                </a>
+            </div>
+        </div>
+    </div>
+
+<script id="chart-data" type="application/json">
+{
+    "statusData": {{ [open_tickets, in_progress_tickets, closed_tickets] | tojson }},
+    "slaData": {{ [sla_met_count, sla_missed_count] | tojson }},
+    "priorityLabels": {{ priority_stats | map(attribute="priority") | list | tojson }},
+    "priorityData": {{ priority_stats | map(attribute="total") | list | tojson }},
+    "categoryLabels": {{ category_stats | map(attribute="category") | list | tojson }},
+    "categoryData": {{ category_stats | map(attribute="total") | list | tojson }},
+    "departmentLabels": {{ department_stats | map(attribute="department") | list | tojson }},
+    "departmentData": {{ department_stats | map(attribute="total") | list | tojson }},
+    "techLabels": {{ assigned_stats | map(attribute="assigned_to") | list | tojson }},
+    "techData": {{ assigned_stats | map(attribute="total") | list | tojson }}
+}
+</script>
+
+<script>
+    const chartData = JSON.parse(document.getElementById("chart-data").textContent);
+
+    document.querySelectorAll(".bar-fill").forEach(function(bar) {
+        const percent = bar.getAttribute("data-percent");
+        if (percent) {
+            bar.style.width = percent + "%";
+        }
+    });
+
+    Chart.register(ChartDataLabels);
+
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: "white"
+                }
+            },
+            datalabels: {
+                color: "white",
+                anchor: "end",
+                align: "top",
+                font: {
+                    weight: "bold"
+                }
+            }
+        },
+        scales: {
+            x: {
+                ticks: { color: "white" },
+                grid: { color: "#334155" }
+            },
+            y: {
+                beginAtZero: true,
+                ticks: { color: "white" },
+                grid: { color: "#334155" }
+            }
+        }
+    };
+
+    const doughnutOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: "white"
+                }
+            },
+            datalabels: {
+                color: "white",
+                font: {
+                    weight: "bold",
+                    size: 14
+                },
+                formatter: function(value) {
+                    return value;
+                }
+            }
+        }
+    };
+
+    new Chart(document.getElementById("statusChart"), {
+        type: "doughnut",
+        data: {
+            labels: ["Open", "In Progress", "Closed"],
+            datasets: [{
+                data: chartData.statusData }]
+        },
+        options: doughnutOptions
+    });
+
+    new Chart(document.getElementById("slaChart"), {
+        type: "doughnut",
+        data: {
+            labels: ["SLA Met", "SLA Missed"],
+            datasets: [{
+                data: chartData.slaData }]
+        },
+        options: doughnutOptions
+    });
+
+    new Chart(document.getElementById("priorityChart"), {
+        type: "bar",
+        data: {
+            labels: chartData.priorityLabels,
+            datasets: [{
+                label: "Tickets",
+                data: chartData.priorityData }]
+        },
+        options: chartOptions
+    });
+
+    new Chart(document.getElementById("categoryChart"), {
+        type: "bar",
+        data: {
+            labels: chartData.categoryLabels,
+            datasets: [{
+                label: "Tickets",
+                data: chartData.categoryData
+            }]
+        },
+        options: chartOptions
+    });
+
+    new Chart(document.getElementById("departmentChart"), {
+        type: "bar",
+        data: {
+            labels: chartData.departmentLabels,
+            datasets: [{
+                label: "Tickets",
+                data: chartData.departmentData
+            }]
+        },
+        options: chartOptions
+    });
+
+    new Chart(document.getElementById("techChart"), {
+        type: "bar",
+        data: {
+            labels: chartData.techLabels,
+            datasets: [{
+                label: "Assigned Tickets",
+                data: chartData.techData
+            }]
+        },
+        options: chartOptions
+    });
+</script>
+
+</body>
+</html>

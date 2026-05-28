@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tickets</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card dashboard-card">
+            <h1>🎫 My Submitted Tickets</h1>
+            <p>Track the tickets you submitted</p>
+
+            {% if tickets %}
+                {% for ticket in tickets %}
+                    <div class="ticket">
+                        <h3>Ticket #{{ ticket.id }} - {{ ticket.issue }}</h3>
+                        <p><strong>Department:</strong> {{ ticket.department }}</p>
+                        <p><strong>Category:</strong> {{ ticket.category }}</p>
+                        <p><strong>Priority:</strong> {{ ticket.priority }}</p>
+                        <p><strong>Status:</strong> {{ ticket.status }}</p>
+                        <p><strong>Assigned To:</strong> {{ ticket.assigned_to if ticket.assigned_to else "Unassigned" }}</p>
+                        <p><strong>Submitted:</strong> {{ ticket.submitted_at }}</p>
+                        <p><strong>Closed:</strong> {{ ticket.closed_at if ticket.closed_at else "Not closed yet" }}</p>
+                        <p><strong>Resolution Time:</strong> {{ ticket.resolution_time if ticket.resolution_time else "Not completed yet" }}</p>
+                        <p><strong>SLA Met:</strong> {{ ticket.sla_met if ticket.sla_met else "Not completed yet" }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You have not submitted any tickets yet.</p>
+            {% endif %}
+
+            <a href="/">← Back to Submit Ticket</a>
+        </div>
+    </div>
+</body>
+</html>

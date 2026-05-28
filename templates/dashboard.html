@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="card dashboard-card">
+            <h1>📋 IT Ticket Dashboard</h1>
+            <p>Manage all submitted support tickets</p>
+
+            <div class="dashboard-summary">
+                <div class="summary-box">
+                    <h2>{{ open_tickets }}</h2>
+                    <p>Open</p>
+                </div>
+
+                <div class="summary-box">
+                    <h2>{{ in_progress_tickets }}</h2>
+                    <p>In Progress</p>
+                </div>
+
+                <div class="summary-box">
+                    <h2>{{ closed_tickets }}</h2>
+                    <p>Closed</p>
+                </div>
+
+                <div class="summary-box danger-box">
+                    <h2>{{ overdue_tickets }}</h2>
+                    <p>Overdue</p>
+                </div>
+
+                <div class="summary-box success-box-small">
+                    <h2>{{ sla_met_count }}</h2>
+                    <p>SLA Met</p>
+                </div>
+            </div>
+
+            <div class="tech-load-box">
+                <h3>Technician Load</h3>
+
+                {% if tech_load %}
+                    {% for tech in tech_load %}
+                        <p><strong>{{ tech.assigned_to if tech.assigned_to else "Unassigned" }}:</strong> {{ tech.total }} active ticket(s)</p>
+                    {% endfor %}
+                {% else %}
+                    <p>No active technician load data.</p>
+                {% endif %}
+            </div>
+
+            <div class="tabs">
+                <a href="/dashboard?status=Open"
+                class="{% if selected_status == 'Open' %}active-tab{% endif %}">
+                Open
+            </a>
+
+            <a href="/dashboard?status=In Progress"
+                class="{% if selected_status == 'In Progress' %}active-tab{% endif %}">
+                In Progress
+            </a>
+
+            <a href="/dashboard?status=Closed"
+                class="{% if selected_status == 'Closed' %}active-tab{% endif %}">
+                Closed ✅
+            </a>
+        </div>
+
+        <div class="dashboard-actions">
+            <a href="/stats" class="portal-button secondary-button">
+                📊 View Stats Dashboard
+            </a>
+        </div>
+
+        <form action="/dashboard" method="GET" class="filter-form">
+            <input type="hidden" name="status" value="{{ selected_status }}">
+
+            <input 
+                type="text" 
+                name="search" 
+                placeholder="Search name, department, or issue..."
+                value="{{ search_query }}">
+
+            <select name="priority">
+                <option value="">All Priorities</option>
+                <option value="High" {% if selected_priority == "High" %}selected{% endif %}>High</option>
+                <option value="Medium" {% if selected_priority == "Medium" %}selected{% endif %}>Medium</option>
+                <option value="Low" {% if selected_priority == "Low" %}selected{% endif %}>Low</option>
+            </select>
+
+            <select name="category">
+                <option value="">All Categories</option>
+                <option value="Hardware" {% if selected_category == "Hardware" %}selected{% endif %}>Hardware</option>
+                <option value="Software" {% if selected_category == "Software" %}selected{% endif %}>Software</option>
+                <option value="Network" {% if selected_category == "Network" %}selected{% endif %}>Network</option>
+                <option value="Account Access" {% if selected_category == "Account Access" %}selected{% endif %}>Account Access</option>
+                <option value="Security" {% if selected_category == "Security" %}selected{% endif %}>Security</option>
+                <option value="Other" {% if selected_category == "Other" %}selected{% endif %}>Other</option>
+            </select>
+
+        <input 
+            type="text" 
+            name="assigned_to" 
+            placeholder="Filter by assigned IT worker..."
+            value="{{ selected_assigned }}">
+
+        <button type="submit">Apply Filters</button>
+        </form>
+
+<a href="/dashboard?status={{ selected_status }}" class="dashboard-link">Clear Filters</a>
+
+            {% if tickets %}
+                {% for ticket in tickets %}
+            <div class="ticket 
+                {% if ticket.status == 'Closed' %}closed-ticket{% endif %}
+                {% if ticket.sla_status == 'Overdue' %}overdue-ticket{% endif %}
+                {% if ticket.sla_status == 'Due Soon' %}due-soon-ticket{% endif %}
+                {% if ticket.priority == 'High' %}high-priority-ticket{% endif %}
+            ">
+
+            <div class="ticket-header-row">
+                <div>
+                    <h3>Ticket #{{ ticket.id }} - {{ ticket.name }}</h3>
+                    <p>{{ ticket.issue }}</p>
+                </div>
+
+                <div class="ticket-badges">
+                    <span class="priority-badge priority-{{ ticket.priority | lower }}">
+                        {{ ticket.priority }}
+                    </span>
+                    
+                    <span class="status-badge">
+                        {{ ticket.status }}
+                    </span>
+
+                    <span class="sla-badge 
+                        {% if ticket.sla_status == 'Overdue' %}sla-overdue
+                        {% elif ticket.sla_status == 'Due Soon' %}sla-soon
+                        {% elif ticket.sla_status == 'On Track' %}sla-track
+                        {% else %}sla-none
+                        {% endif %}">
+                        {{ ticket.sla_status }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="ticket-meta-grid">
+                <p><strong>Department:</strong> {{ ticket.department }}</p>
+                <p><strong>Category:</strong> {{ ticket.category }}</p>
+                <p><strong>Assigned:</strong> {{ ticket.assigned_to if ticket.assigned_to else "Unassigned" }}</p>
+                <p><strong>Submitted:</strong> {{ ticket.submitted_at }}</p>
+            </div>
+
+                <div class="quick-actions">
+                    <form action="/assign_me/{{ ticket.id }}" method="POST">
+                        <button type="submit" class="small-action-button">Assign to Me</button>
+                    </form>
+
+                    {% if ticket.status != "Closed" %}
+                        <form action="/quick_close/{{ ticket.id }}" method="POST">
+                            <button type="submit" class="small-action-button close-action-button">Quick Close</button>
+                        </form>
+                    {% endif %}
+                </div>
+
+                <button type="button" class="edit-ticket-button" onclick="toggleEditForm('{{ ticket.id }}')">
+                    ✏️ Edit Ticket
+                </button>
+
+                <div id="edit-form-{{ ticket.id }}" class="hidden-edit-form">
+
+                <form action="/update_ticket/{{ ticket.id }}" method="POST" class="update-form">
+
+                    <label for="name-{{ ticket.id }}">Name</label>
+                    <input
+                        type="text"
+                        name="name"
+                        id="name-{{ ticket.id }}"
+                        value="{{ ticket.name }}"
+                        required>
+
+                    <label for="department-{{ ticket.id }}">Department</label>
+                    <select name="department" id="department-{{ ticket.id }}" required>
+                        <option value="Finance" {% if ticket.department == "Finance" %}selected{% endif %}>Finance</option>
+                        <option value="HR" {% if ticket.department == "HR" %}selected{% endif %}>HR</option>
+                        <option value="IT" {% if ticket.department == "IT" %}selected{% endif %}>IT</option>
+                        <option value="Management" {% if ticket.department == "Management" %}selected{% endif %}>Management</option>
+                        <option value="Operations" {% if ticket.department == "Operations" %}selected{% endif %}>Operations</option>
+                        <option value="Sales" {% if ticket.department == "Sales" %}selected{% endif %}>Sales</option>
+                    </select>
+
+                    <label for="issue-{{ ticket.id }}">Issue</label>
+                    <textarea name="issue" id="issue-{{ ticket.id }}" required>{{ ticket.issue }}</textarea>
+
+                    <label for="priority-{{ ticket.id }}">Priority</label>
+                    <select name="priority" id="priority-{{ ticket.id }}" required>
+                        <option value="Low" {% if ticket.priority == "Low" %}selected{% endif %}>Low</option>
+                        <option value="Medium" {% if ticket.priority == "Medium" %}selected{% endif %}>Medium</option>
+                        <option value="High" {% if ticket.priority == "High" %}selected{% endif %}>High</option>
+                    </select>
+
+                    <label for="category-{{ ticket.id }}">Category</label>
+                    <select name="category" id="category-{{ ticket.id }}" required>
+                        <option value="Hardware" {% if ticket.category == "Hardware" %}selected{% endif %}>Hardware</option>
+                        <option value="Software" {% if ticket.category == "Software" %}selected{% endif %}>Software</option>
+                        <option value="Network" {% if ticket.category == "Network" %}selected{% endif %}>Network</option>
+                        <option value="Account Access" {% if ticket.category == "Account Access" %}selected{% endif %}>Account Access</option>
+                        <option value="Security" {% if ticket.category == "Security" %}selected{% endif %}>Security</option>
+                        <option value="Other" {% if ticket.category == "Other" %}selected{% endif %}>Other</option>
+                    </select>
+
+                    <label for="status-{{ ticket.id }}">Update Status</label>
+                    <select name="status" id="status-{{ ticket.id }}" required>
+                        <option value="Open" {% if ticket.status == "Open" %}selected{% endif %}>Open</option>
+                        <option value="In Progress" {% if ticket.status == "In Progress" %}selected{% endif %}>In Progress</option>
+                        <option value="Closed" {% if ticket.status == "Closed" %}selected{% endif %}>Closed</option>
+                    </select>
+
+                    <label for="assigned_to-{{ ticket.id }}">Assigned To</label>
+                    <select name="assigned_to" id="assigned_to-{{ ticket.id }}" required>
+                        <option value="Unassigned" {% if ticket.assigned_to == "Unassigned" %}selected{% endif %}>Unassigned</option>
+                        <option value="Chris" {% if ticket.assigned_to == "Chris" %}selected{% endif %}>Chris</option>
+                        <option value="Alex" {% if ticket.assigned_to == "Alex" %}selected{% endif %}>Alex</option>
+                        <option value="Jordan" {% if ticket.assigned_to == "Jordan" %}selected{% endif %}>Jordan</option>
+                    </select>
+
+                    <label for="notes-{{ ticket.id }}">Add Timeline Note</label>
+                    <textarea name="notes" id="notes-{{ ticket.id }}" placeholder="Add new note to ticket timeline..."></textarea>
+
+                    <button type="submit">Save Update</button>
+                </form>
+                </div>
+
+                <div class="timeline">
+                    <h4>Notes History</h4>
+
+                    {% if notes_by_ticket.get(ticket.id) %}
+                        {% for note in notes_by_ticket.get(ticket.id) %}
+                            <div class="timeline-entry">
+                                <p><strong>{{ note.created_at }}</strong> - {{ note.created_by }}</p>
+                                <p>{{ note.note }}</p>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>No notes yet.</p>
+                    {% endif %}
+                </div>
+
+                <form action="/delete_ticket/{{ ticket.id }}" method="POST">
+                    <button type="submit" class="delete-button">Delete Ticket</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No {{ selected_status }} tickets right now.</p>
+    {% endif %}
+
+            <div class="dashboard-actions">
+                <a href="/" class="portal-button secondary-button">
+                    🎫 Submit Another Ticket
+                </a>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function toggleEditForm(ticketId) {
+        const form = document.getElementById("edit-form-" + ticketId);
+        form.classList.toggle("show-edit-form");
+    }
+</script>
+
+</body>
+</html>
