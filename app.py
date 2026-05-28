@@ -29,6 +29,15 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT UNIQUE NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT NOT NULL
+        )
+    """)
+
     try:
         cursor.execute("ALTER TABLE tickets ADD COLUMN assigned_to TEXT DEFAULT 'Unassigned'")
     except sqlite3.OperationalError:
@@ -50,6 +59,11 @@ def init_db():
         pass
 
     try:
+        cursor.execute("ALTER TABLE tickets ADD COLUMN submitted_by TEXT DEFAULT ''")
+    except sqlite3.OperationalError:
+        pass
+
+    try:
         cursor.execute("ALTER TABLE tickets ADD COLUMN resolution_time TEXT DEFAULT ''")
     except sqlite3.OperationalError:
         pass
@@ -58,6 +72,24 @@ def init_db():
         cursor.execute("ALTER TABLE tickets ADD COLUMN sla_met TEXT DEFAULT ''")
     except sqlite3.OperationalError:
         pass
+
+    cursor.execute("SELECT * FROM users WHERE username = ?", ("admin",))
+    admin_exists = cursor.fetchone()
+
+    if not admin_exists:
+        cursor.execute("""
+            INSERT INTO users (username, password, role)
+            VALUES (?, ?, ?)
+        """, ("admin", "admin123", "admin"))
+
+    cursor.execute("SELECT * FROM users WHERE username = ?", ("employee",))
+    employee_exists = cursor.fetchone()
+
+    if not employee_exists:
+        cursor.execute("""
+            INSERT INTO users (username, password, role)
+            VALUES (?, ?, ?)
+        """, ("employee", "employee123", "employee"))
 
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS ticket_notes (
@@ -150,25 +182,34 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
 
-        if username == "employee" and password == "employee123":
-            session["username"] = username
-            session["role"] = "employee"
+        connection = sqlite3.connect("helpdesk.db")
+        connection.row_factory = sqlite3.Row
+        cursor = connection.cursor()
+
+        cursor.execute("""
+            SELECT *
+            FROM users
+            WHERE username = ? AND password = ?
+        """, (username, password))
+
+        user = cursor.fetchone()
+        connection.close()
+
+        if user:
+            session["username"] = user["username"]
+            session["role"] = user["role"]
             return redirect("/")
 
-        elif username == "admin" and password == "admin123":
-            session["username"] = username
-            session["role"] = "admin"
-            return redirect("/")
-
-        else:
-            error = "Invalid username or password"
+        error = "Invalid username or password"
 
     return render_template("login.html", error=error)
+
 
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect("/login")
+
 
 @app.route("/")
 def home():
@@ -230,7 +271,7 @@ def my_tickets():
     cursor.execute("""
         SELECT *
         FROM tickets
-        WHERE name = ?
+        WHERE submitted_by = ?
         ORDER BY id DESC
     """, (session["username"],))
 
@@ -248,6 +289,7 @@ def submit():
     priority = request.form["priority"]
     category = request.form["category"]
     submitted_at = datetime.now().strftime("%m/%d/%Y %I:%M %p")
+    submitted_by = session["username"]
 
     now = datetime.now()
 
@@ -263,9 +305,9 @@ def submit():
 
     cursor.execute("""
         INSERT INTO tickets
-        (name, department, issue, priority, category, status, submitted_at, closed_at, assigned_to, completed_by, notes, sla_due_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (name, department, issue, priority, category, "Open", submitted_at, "", "Unassigned", "", "", sla_due_at))
+        (name, department, issue, priority, category, status, submitted_at, closed_at, assigned_to, completed_by, notes, sla_due_at, submitted_by)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (name, department, issue, priority, category, "Open", submitted_at, "", "Unassigned", "", "", sla_due_at, submitted_by))
 
     connection.commit()
     new_ticket_id = cursor.lastrowid
