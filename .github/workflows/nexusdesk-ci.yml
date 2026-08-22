@@ -33,7 +33,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements-dev.txt
+          python -m pip install -r requirements-dev.txt
 
       - name: Compile Python Source
         run: |
@@ -41,7 +41,7 @@ jobs:
 
       - name: Run Test Suite
         run: |
-          pytest --cov=app --cov=database --cov=routes --cov=services --cov-report=term-missing
+          python -m pytest --cov=app --cov=database --cov=routes --cov=services --cov-report=term-missing
 
       - name: Docker Build Test
         run: |
