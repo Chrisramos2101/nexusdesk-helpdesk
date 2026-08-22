@@ -6,6 +6,12 @@ from database.sql_helpers import db_placeholder
 
 
 def get_user_by_email(email):
+    """Find a user by email without treating email casing as significant.
+
+    PostgreSQL text equality is case-sensitive. Authentication/account-recovery
+    email addresses should be matched case-insensitively so an address stored as
+    Example@icloud.com is found when the reset form submits example@icloud.com.
+    """
     connection = get_db_connection()
     cursor = connection.cursor()
     placeholder = db_placeholder()
@@ -13,7 +19,8 @@ def get_user_by_email(email):
     cursor.execute(f"""
         SELECT *
         FROM users
-        WHERE email = {placeholder}
+        WHERE LOWER(TRIM(email)) = LOWER(TRIM({placeholder}))
+        LIMIT 1
     """, (email,))
 
     user = cursor.fetchone()
