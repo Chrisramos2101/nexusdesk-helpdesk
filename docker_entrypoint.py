@@ -29,6 +29,13 @@ def main():
         run_schema_file()
         print("PostgreSQL schema applied successfully.", flush=True)
 
+        from services.bootstrap_service import bootstrap_portfolio_admin
+        bootstrap_portfolio_admin()
+
+        if os.getenv("SEED_DEMO_DATA", "false").strip().lower() == "true":
+            from scripts.seed_demo_portfolio import seed_demo_data
+            seed_demo_data()
+
     os.execvp(
         "gunicorn",
         [
