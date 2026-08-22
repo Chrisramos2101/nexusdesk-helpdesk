@@ -1,4 +1,4 @@
-﻿from flask import Blueprint, render_template, request, redirect, session
+from flask import Blueprint, render_template, request, redirect, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta
 from routes.auth_helpers import login_required
