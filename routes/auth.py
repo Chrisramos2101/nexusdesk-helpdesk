@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, session
+﻿from flask import Blueprint, render_template, request, redirect, session
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime, timedelta
 from routes.auth_helpers import login_required
@@ -16,6 +16,7 @@ from services.password_reset_service import (
 from services.audit_service import log_audit_event
 from services.mfa_service import generate_mfa_code, invalidate_mfa_codes, verify_mfa_code
 from services.security_service import check_rate_limit, reset_rate_limit
+from services.production_config import get_app_base_url
 import os
 
 auth_bp = Blueprint("auth", __name__)
@@ -220,7 +221,7 @@ def forgot_password():
 
         if user:
             token = create_password_reset_token(user["id"])
-            base_url = os.getenv("APP_BASE_URL", "http://127.0.0.1:5000")
+            base_url = get_app_base_url()
             reset_link = f"{base_url}/reset_password/{token}"
 
             email_body = f"""
