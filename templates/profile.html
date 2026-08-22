@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>My Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="container">
+    <div class="card">
+        <div class="logo-circle">👤</div>
+
+        <h1>My Profile</h1>
+        <p>View your NexusDesk account information.</p>
+
+        <div class="ticket">
+            <form action="/update_profile" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <label>Full Name</label>
+                <input
+                    type="text"
+                    name="full_name"
+                    value="{{ user.full_name if user.full_name else '' }}"
+                    required>
+
+                <label>Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    value="{{ user.email if user.email else '' }}"
+                    required>
+
+                <label>Department</label>
+                <select name="department" required>
+                    <option value="Finance" {% if user.department == "Finance" %}selected{% endif %}>Finance</option>
+                    <option value="HR" {% if user.department == "HR" %}selected{% endif %}>HR</option>
+                    <option value="IT" {% if user.department == "IT" %}selected{% endif %}>IT</option>
+                    <option value="Management" {% if user.department == "Management" %}selected{% endif %}>Management</option>
+                    <option value="Operations" {% if user.department == "Operations" %}selected{% endif %}>Operations</option>
+                    <option value="Sales" {% if user.department == "Sales" %}selected{% endif %}>Sales</option>
+                </select>
+
+                <button type="submit">💾 Save Profile</button>
+            </form>
+
+            <div class="steps-box">
+                <p><strong>Username:</strong> {{ user.username }}</p>
+                <p><strong>Role:</strong> {{ user.role }}</p>
+                <p><strong>Last Login:</strong> {{ user.last_login if user.last_login else "Never" }}</p>
+                <p><strong>Last Logout:</strong> {{ user.last_logout if user.last_logout else "Never" }}</p>
+            </div>
+        </div>
+
+        <div class="portal-actions">
+            <a href="/change_password" class="portal-button admin-button">🔐 Change Password</a>
+            <a href="/" class="portal-button secondary-button">← Back to Portal</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Manage Users</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="container">
+    <div class="card dashboard-card">
+        <h1>👥 Manage Users</h1>
+        <p>View, edit, and remove NexusDesk user accounts.</p>
+
+        <div class="portal-actions">
+            <a href="/create_user" class="portal-button admin-button">➕ Create User</a>
+            <a href="/dashboard" class="portal-button secondary-button">← Back to Dashboard</a>
+        </div>
+
+        {% if users %}
+            {% for user in users %}
+                <div class="ticket">
+                    <h3>{{ user.full_name if user.full_name else "No Name" }} — {{ user.username }}</h3>
+
+                    <p><strong>Email:</strong> {{ user.email if user.email else "No email" }}</p>
+                    <p><strong>Department:</strong> {{ user.department if user.department else "No department" }}</p>
+                    <p><strong>Role:</strong> {{ user.role }}</p>
+                    <p><strong>Last Login:</strong> {{ user.last_login if user.last_login else "Never" }}</p>
+                    <p><strong>Last Logout:</strong> {{ user.last_logout if user.last_logout else "Never" }}</p>
+
+                    <form action="/edit_user/{{ user.id }}" method="POST" class="update-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                        <label>Full Name</label>
+                        <input type="text" name="full_name" value="{{ user.full_name }}">
+
+                        <label>Email</label>
+                        <input type="email" name="email" value="{{ user.email }}">
+
+                        <label>Department</label>
+                        <select name="department" required>
+                            <option value="Finance" {% if user.department == "Finance" %}selected{% endif %}>Finance</option>
+                            <option value="HR" {% if user.department == "HR" %}selected{% endif %}>HR</option>
+                            <option value="IT" {% if user.department == "IT" %}selected{% endif %}>IT</option>
+                            <option value="Management" {% if user.department == "Management" %}selected{% endif %}>Management</option>
+                            <option value="Operations" {% if user.department == "Operations" %}selected{% endif %}>Operations</option>
+                            <option value="Sales" {% if user.department == "Sales" %}selected{% endif %}>Sales</option>
+                        </select>
+
+                        <label>Role</label>
+                        <select name="role" required>
+                            <option value="employee" {% if user.role == "employee" %}selected{% endif %}>Employee</option>
+                            <option value="admin" {% if user.role == "admin" %}selected{% endif %}>Admin</option>
+                        </select>
+
+                        <button type="submit">Save Changes</button>
+                    </form>
+
+                    {% if user.username != session["username"] %}
+                        <form action="/delete_user/{{ user.id }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit" class="delete-button">Delete User</button>
+                        </form>
+                    {% else %}
+                        <p class="security-note">You cannot delete your own account.</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ article.title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="login-page">
+    <div class="login-card my-tickets-page">
+
+        <div class="ticket-detail-topbar">
+            <a href="/knowledge_base" class="portal-button secondary-button">
+                ← Back to Knowledge Base
+            </a>
+        </div>
+
+        <div class="portal-badge">HELP ARTICLE</div>
+
+        <h1>📘 {{ article.title }}</h1>
+        <p class="login-subtitle">
+            Follow these guided steps before submitting a support ticket.
+        </p>
+
+        <div class="ticket-detail-grid">
+            <div>
+                <small>Category</small>
+                <strong>{{ article.category }}</strong>
+            </div>
+
+            <div>
+                <small>Estimated Resolution</small>
+                <strong>{{ article.estimated_time }}</strong>
+            </div>
+
+            <div>
+                <small>Difficulty</small>
+                <strong>{{ article.difficulty if article.difficulty else "Easy" }}</strong>
+            </div>
+
+            <div>
+                <small>Support Path</small>
+                <strong>Self-Service First</strong>
+            </div>
+        </div>
+
+        <div class="ticket-detail-grid">
+            <div>
+                <small>Views</small>
+                <strong>{{ article_stats.views }}</strong>
+            </div>
+
+            <div>
+                <small>Helpful</small>
+                <strong>{{ article_stats.helpful_percent }}%</strong>
+            </div>
+
+            <div>
+                <small>Feedback Votes</small>
+                <strong>{{ article_stats.feedback_count }}</strong>
+            </div>
+
+            <div>
+                <small>Last Updated</small>
+                <strong>{{ article.last_updated }}</strong>
+            </div>
+        </div>
+
+        <div class="ticket-detail-section kb-steps-panel">
+            <h3>✅ Recommended Steps</h3>
+
+            <div class="kb-step-list">
+                {% for step in article.steps %}
+                    <label class="kb-step-card kb-check-step">
+                        <input type="checkbox" class="step-check" onchange="updateStepProgress()">
+                        <span>Step {{ loop.index }}</span>
+                        <p>{{ step }}</p>
+                    </label>
+                {% endfor %}
+            </div>
+
+            <div class="kb-progress-wrap">
+                <p id="stepProgressText">0 of {{ article.steps|length }} steps completed</p>
+                <div class="sla-progress-bar">
+                    <div id="stepProgressFill" class="sla-progress-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>💡 Helpful Tips</h3>
+
+            <div class="kb-tip-grid">
+                {% for tip in article.tips %}
+                    <div class="kb-tip-card">
+                        <strong>✅</strong>
+                        <p>{{ tip }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>Was this article helpful?</h3>
+            <p>Your feedback helps improve self-service support.</p>
+
+            {% if request.args.get("feedback") == "submitted" %}
+                <div class="feedback-response success-box">
+                    ✅ Feedback submitted. Thank you for helping improve NexusDesk.
+                </div>
+            {% endif %}
+
+            <form action="/knowledge_base/{{ article.slug }}/feedback" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="feedback-choice-grid">
+                    <button type="submit" name="was_helpful" value="yes">
+                        👍 Yes, this solved my issue
+                    </button>
+
+                    <button type="button" class="secondary-button" onclick="showPartialFeedback()">
+                        🙂 Partially helped
+                    </button>
+
+                    <button type="button" class="secondary-button" onclick="showNoFeedback()">
+                        👎 No, I still need help
+                    </button>
+                </div>
+
+                <div id="feedbackDetailsBox" class="feedback-response" style="display: none;">
+                    <h3 id="feedbackTitle">Tell us what happened</h3>
+                    <p>This helps IT improve the article and point you in the right direction.</p>
+
+                    <label>What best describes the issue?</label>
+                    <select name="feedback_reason">
+                        <option value="">Select a reason</option>
+                        <option value="Instructions unclear">Instructions unclear</option>
+                        <option value="Missing steps">Missing steps</option>
+                        <option value="Steps did not work">Steps did not work</option>
+                        <option value="Wrong article">Wrong article</option>
+                        <option value="Issue is different">My issue is different</option>
+                        <option value="Other">Other</option>
+                    </select>
+
+                    <textarea
+                        name="feedback"
+                        placeholder="Example: The reset portal was not available, the instructions were confusing, or my issue is different..."></textarea>
+
+                    <div class="ticket-detail-section related-help-box">
+                        <h3>Recommended next steps</h3>
+
+                        <div class="kb-tip-grid">
+                            <a href="/contact_it" class="portal-button secondary-button">
+                                💬 Contact IT
+                            </a>
+
+                            <a href="/#ticket-form" class="portal-button admin-button">
+                                🎫 Submit Related Ticket
+                            </a>
+
+                            <a href="/knowledge_base" class="portal-button secondary-button">
+                                📚 View Related Articles
+                            </a>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="feedbackSubmitButton" name="was_helpful" value="no">
+                        Submit Feedback
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>Still need IT support?</h3>
+            <p>Create a related ticket or contact IT if the issue is urgent.</p>
+
+            <div class="portal-actions">
+                <a href="/#ticket-form" class="portal-button admin-button">
+                    🎫 Submit Related Ticket
+                </a>
+
+                <a href="/contact_it" class="portal-button secondary-button">
+                    💬 Contact IT
+                </a>
+            </div>
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>Related Articles</h3>
+            <p>These may also help if this article does not fully solve the issue.</p>
+
+            <div class="kb-tip-grid">
+                {% for related in related_articles %}
+                    <a href="/knowledge_base/{{ related.slug }}" class="portal-button secondary-button">
+                        📘 {{ related.title }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<footer class="login-footer">
+    © 2026 NexusDesk · Help Article
+</footer>
+
+<script>
+    function showNoFeedback() {
+        const box = document.getElementById("feedbackDetailsBox");
+        const title = document.getElementById("feedbackTitle");
+        const submitButton = document.getElementById("feedbackSubmitButton");
+
+        box.style.display = "block";
+        title.textContent = "What did not work?";
+        submitButton.value = "no";
+    }
+
+    function showPartialFeedback() {
+        const box = document.getElementById("feedbackDetailsBox");
+        const title = document.getElementById("feedbackTitle");
+        const submitButton = document.getElementById("feedbackSubmitButton");
+
+        box.style.display = "block";
+        title.textContent = "What partially helped?";
+        submitButton.value = "partial";
+    }
+
+    function updateStepProgress() {
+        const checks = document.querySelectorAll(".step-check");
+        const completed = document.querySelectorAll(".step-check:checked").length;
+        const total = checks.length;
+        const percent = total ? Math.round((completed / total) * 100) : 0;
+
+        document.getElementById("stepProgressText").textContent =
+            completed + " of " + total + " steps completed";
+
+        document.getElementById("stepProgressFill").style.width = percent + "%";
+    }
+</script>
+
+</body>
+</html>

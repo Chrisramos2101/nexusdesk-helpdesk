@@ -1,40 +1,245 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Tickets</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    <div class="container">
-        <div class="card dashboard-card">
-            <h1>🎫 My Submitted Tickets</h1>
-            <p>Track the tickets you submitted</p>
+<div class="login-page">
+    <div class="login-card my-tickets-page">
 
-            {% if tickets %}
-                {% for ticket in tickets %}
-                    <div class="ticket">
-                        <h3>Ticket #{{ ticket.id }} - {{ ticket.issue }}</h3>
-                        <p><strong>Department:</strong> {{ ticket.department }}</p>
-                        <p><strong>Category:</strong> {{ ticket.category }}</p>
-                        <p><strong>Priority:</strong> {{ ticket.priority }}</p>
-                        <p><strong>Status:</strong> {{ ticket.status }}</p>
-                        <p><strong>Assigned To:</strong> {{ ticket.assigned_to if ticket.assigned_to else "Unassigned" }}</p>
-                        <p><strong>Submitted:</strong> {{ ticket.submitted_at }}</p>
-                        <p><strong>Closed:</strong> {{ ticket.closed_at if ticket.closed_at else "Not closed yet" }}</p>
-                        <p><strong>Resolution Time:</strong> {{ ticket.resolution_time if ticket.resolution_time else "Not completed yet" }}</p>
-                        <p><strong>SLA Met:</strong> {{ ticket.sla_met if ticket.sla_met else "Not completed yet" }}</p>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>You have not submitted any tickets yet.</p>
+        <div class="ticket-detail-topbar">
+            <a href="/" class="portal-button secondary-button">
+                ← Back to Employee Portal
+            </a>
+        </div>
+
+        <div class="portal-badge">EMPLOYEE TICKETS</div>
+
+        <h1>🎫 My Tickets</h1>
+        <p class="login-subtitle">
+            Track submitted requests, status updates, priority, SLA progress, and support activity.
+        </p>
+
+        {% set total = tickets|length %}
+        {% set open_count = namespace(value=0) %}
+        {% set closed_count = namespace(value=0) %}
+        {% set high_count = namespace(value=0) %}
+
+        {% for ticket in tickets %}
+            {% if ticket.status != "Closed" %}
+                {% set open_count.value = open_count.value + 1 %}
             {% endif %}
 
-            <a href="/">← Back to Submit Ticket</a>
+            {% if ticket.status == "Closed" %}
+                {% set closed_count.value = closed_count.value + 1 %}
+            {% endif %}
+
+            {% if ticket.priority == "High" %}
+                {% set high_count.value = high_count.value + 1 %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="ticket-kpi-grid">
+            <div class="ticket-kpi-card">
+                <span>📌</span>
+                <h2>{{ total }}</h2>
+                <p>Total Submitted</p>
+            </div>
+
+            <div class="ticket-kpi-card">
+                <span>🟢</span>
+                <h2>{{ open_count.value }}</h2>
+                <p>Open Requests</p>
+            </div>
+
+            <div class="ticket-kpi-card">
+                <span>✅</span>
+                <h2>{{ closed_count.value }}</h2>
+                <p>Resolved</p>
+            </div>
+
+            <div class="ticket-kpi-card">
+                <span>⚠️</span>
+                <h2>{{ high_count.value }}</h2>
+                <p>High Priority</p>
+            </div>
         </div>
+
+        <div class="ticket-toolbar">
+            <input
+                type="text"
+                id="ticketSearch"
+                placeholder="Search tickets by issue, department, status, category, or priority...">
+
+            <select id="statusFilter">
+                <option value="all">All Statuses</option>
+                <option value="open">Open</option>
+                <option value="in progress">In Progress</option>
+                <option value="closed">Closed</option>
+            </select>
+
+            <select id="priorityFilter">
+                <option value="all">All Priorities</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+
+        {% if tickets %}
+            <div class="ticket-card-list">
+
+                {% for ticket in tickets %}
+                <article
+                    class="my-ticket-card"
+                    data-search="{{ ticket.issue }} {{ ticket.department }} {{ ticket.category }} {{ ticket.priority }} {{ ticket.status }}"
+                    data-status="{{ ticket.status|lower }}"
+                    data-priority="{{ ticket.priority|lower }}">
+
+                    <div class="ticket-card-top">
+                        <div>
+                            <span class="ticket-id-pill">Ticket #{{ ticket.id }}</span>
+                            <h2>{{ ticket.issue }}</h2>
+                            <p>{{ ticket.category }} request for {{ ticket.department }}</p>
+                        </div>
+
+                        <div class="ticket-pill-stack">
+                            <span class="status-pill status-{{ ticket.status|lower|replace(' ', '-') }}">
+                                {{ ticket.status }}
+                            </span>
+
+                            <span class="priority-pill priority-{{ ticket.priority|lower }}">
+                                {{ ticket.priority }} Priority
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="ticket-detail-grid">
+                        <div>
+                            <small>Department</small>
+                            <strong>{{ ticket.department }}</strong>
+                        </div>
+
+                        <div>
+                            <small>Assigned To</small>
+                            <strong>{{ ticket.assigned_to if ticket.assigned_to else "Unassigned" }}</strong>
+                        </div>
+
+                        <div>
+                            <small>Submitted</small>
+                            <strong>{{ ticket.submitted_at }}</strong>
+                        </div>
+
+                        <div>
+                            <small>SLA Status</small>
+                            <strong>
+                                {% if ticket.status == "Closed" %}
+                                    Completed
+                                {% elif ticket.sla_due_at %}
+                                    Due {{ ticket.sla_due_at }}
+                                {% else %}
+                                    Pending SLA
+                                {% endif %}
+                            </strong>
+                        </div>
+                    </div>
+
+                    <div class="ticket-timeline">
+                        <div class="timeline-step active">
+                            <span></span>
+                            <p>Submitted</p>
+                        </div>
+
+                        <div class="timeline-step {% if ticket.assigned_to and ticket.assigned_to != 'Unassigned' %}active{% endif %}">
+                            <span></span>
+                            <p>Assigned</p>
+                        </div>
+
+                        <div class="timeline-step {% if ticket.status == 'In Progress' or ticket.status == 'Closed' %}active{% endif %}">
+                            <span></span>
+                            <p>In Progress</p>
+                        </div>
+
+                        <div class="timeline-step {% if ticket.status == 'Closed' %}active{% endif %}">
+                            <span></span>
+                            <p>Resolved</p>
+                        </div>
+                    </div>
+
+                    <div class="ticket-activity-box">
+                        <strong>Latest Activity</strong>
+
+                        {% if ticket.status == "Closed" %}
+                            <p>✅ Ticket resolved. Resolution time: {{ ticket.resolution_time if ticket.resolution_time else "Not recorded" }}.</p>
+                        {% elif ticket.assigned_to and ticket.assigned_to != "Unassigned" %}
+                            <p>🛠️ Your request is assigned to {{ ticket.assigned_to }} and is waiting for an update.</p>
+                        {% else %}
+                            <p>⏳ Your request is waiting for technician assignment.</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="ticket-actions-row">
+                        <a href="/my_tickets/{{ ticket.id }}" class="portal-button admin-button">View Details</a>
+                        <a href="/" class="portal-button secondary-button">Submit Another</a>
+                    </div>
+
+                </article>
+                {% endfor %}
+
+            </div>
+        {% else %}
+            <div class="premium-empty-state">
+                <span>🎉</span>
+                <h2>You’re all caught up</h2>
+                <p>No tickets have been submitted yet. Create a request when you need IT support.</p>
+                <a href="/" class="portal-button admin-button">🚀 Submit Your First Ticket</a>
+            </div>
+        {% endif %}
+
+        <div class="portal-actions">
+            <a href="/" class="portal-button secondary-button">← Back to Employee Portal</a>
+        </div>
+
     </div>
+</div>
+
+<footer class="login-footer">
+    © 2026 NexusDesk · Employee Ticket Center
+</footer>
+
+<script>
+    const searchInput = document.getElementById("ticketSearch");
+    const statusFilter = document.getElementById("statusFilter");
+    const priorityFilter = document.getElementById("priorityFilter");
+    const ticketCards = document.querySelectorAll(".my-ticket-card");
+
+    function filterTickets() {
+        const searchValue = searchInput.value.toLowerCase();
+        const statusValue = statusFilter.value;
+        const priorityValue = priorityFilter.value;
+
+        ticketCards.forEach(card => {
+            const searchText = card.dataset.search.toLowerCase();
+            const status = card.dataset.status;
+            const priority = card.dataset.priority;
+
+            const matchesSearch = searchText.includes(searchValue);
+            const matchesStatus = statusValue === "all" || status === statusValue;
+            const matchesPriority = priorityValue === "all" || priority === priorityValue;
+
+            card.style.display = matchesSearch && matchesStatus && matchesPriority ? "block" : "none";
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener("input", filterTickets);
+        statusFilter.addEventListener("change", filterTickets);
+        priorityFilter.addEventListener("change", filterTickets);
+    }
+</script>
+
 </body>
 </html>

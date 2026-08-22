@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>NexusDesk System Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="login-page">
+    <div class="login-card dashboard-card">
+
+        <div class="portal-badge">SYSTEM MONITORING</div>
+
+        <h1>🖥️ NexusDesk System Dashboard</h1>
+        <p class="login-subtitle">
+            Monitor application activity, users, tickets, and security events.
+        </p>
+
+        <div class="home-stats app-stat-grid">
+            <div class="home-stat">
+                <span class="stat-icon">👥</span>
+                <h2>{{ total_users }}</h2>
+                <p>Total Users</p>
+            </div>
+
+            <div class="home-stat">
+                <span class="stat-icon">🎫</span>
+                <h2>{{ total_tickets }}</h2>
+                <p>Total Tickets</p>
+            </div>
+
+            <div class="home-stat">
+                <span class="stat-icon">🟢</span>
+                <h2>{{ open_tickets }}</h2>
+                <p>Open Tickets</p>
+            </div>
+
+            <div class="home-stat">
+                <span class="stat-icon">🔐</span>
+                <h2>{{ total_logins }}</h2>
+                <p>Login Events</p>
+            </div>
+
+            <div class="home-stat">
+                <span class="stat-icon">🚨</span>
+                <h2>{{ at_risk_accounts }}</h2>
+                <p>At-Risk Accounts</p>
+            </div>
+
+            <div class="home-stat">
+                <span class="stat-icon">📧</span>
+                <h2>{{ email_events }}</h2>
+                <p>Email Events</p>
+            </div>
+
+            <div class="home-stat">
+                <span class="stat-icon">🔐</span>
+                <h2>{{ mfa_success_count }}</h2>
+                <p>MFA Success</p>
+            </div>
+
+            <div class="home-stat">
+                <span class="stat-icon">🚫</span>
+                <h2>{{ mfa_failed_count }}</h2>
+                <p>MFA Failed</p>
+            </div>
+
+        </div>
+
+        <div class="app-section">
+            <h3>🩺 System Health</h3>
+
+            <div class="ticket">
+                <p><strong>Application Status:</strong> {{ system_status }}</p>
+                <p><strong>Database Status:</strong> {{ database_status }}</p>
+                <p><strong>Environment:</strong> {{ app_environment }}</p>
+            </div>
+        </div>
+
+        <div class="app-section">
+            <h3>📋 Recent System Activity</h3>
+
+            {% if recent_activity %}
+                {% for log in recent_activity %}
+                    <div class="ticket">
+                        <p><strong>{{ log.actor }}</strong></p>
+                        <p>{{ log.action }}</p>
+                        <p><small>{{ log.details }}</small></p>
+                        <p><small>{{ log.created_at }}</small></p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No recent audit activity found.</p>
+            {% endif %}
+        </div>
+
+        <div class="app-section">
+            <h3>📧 Recent Email Events</h3>
+
+            {% if recent_email_events %}
+                {% for event in recent_email_events %}
+                    <div class="ticket">
+                        <p><strong>{{ event.actor }}</strong></p>
+                        <p>{{ event.action }}</p>
+                        <p><small>{{ event.details }}</small></p>
+                        <p><small>{{ event.created_at }}</small></p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No recent email events found.</p>
+            {% endif %}
+        </div>
+
+        <div class="app-section">
+            <h3>🚨 Failed Login Monitoring</h3>
+
+            {% if failed_login_users %}
+                {% for user in failed_login_users %}
+                    <div class="ticket">
+                        <p><strong>{{ user.username }}</strong></p>
+                        <p>Failed Attempts: {{ user.failed_attempts }}</p>
+                        <p>Locked Until: {{ user.locked_until if user.locked_until else "Not locked" }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No failed login activity detected.</p>
+            {% endif %}
+        </div>
+
+        <div class="portal-actions">
+
+            <form action="/run_security_cleanup" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <button type="submit" class="portal-button admin-button">
+                    🧹 Run Security Cleanup
+                </button>
+            </form>
+
+            <a href="/" class="portal-button secondary-button">← Back to Admin Portal</a>
+
+            <a href="/dashboard" class="portal-button admin-button">
+                📋 Ticket Dashboard
+            </a>
+
+            <a href="/stats" class="portal-button admin-button">
+                📊 Analytics
+            </a>
+
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

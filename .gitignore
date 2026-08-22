@@ -1,0 +1,47 @@
+# Environment Files
+.env
+.env.production
+.env.local
+
+# Databases
+helpdesk.db
+*.db
+
+# Uploads
+uploads/
+
+# Logs
+logs/
+*.log
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# VS Code
+.vscode/
+
+# Docker
+postgres_data/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Local phase installer backups
+.phase_backups/
+
+# Local AWS Elastic Beanstalk state
+.elasticbeanstalk/
+
+# Obsolete local dependency snapshot
+requirements_old.txt

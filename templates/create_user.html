@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Create User</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="container">
+    <div class="card">
+        <h1>👤 Create User</h1>
+        <p>Add a new NexusDesk account.</p>
+
+        {% if message %}
+            <div class="success-box">{{ message }}</div>
+        {% endif %}
+
+        <form method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <input type="text" name="full_name" placeholder="Full Name" required>
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+
+            <select name="department" required>
+                <option value="">Select Department</option>
+                <option value="Finance">Finance</option>
+                <option value="HR">HR</option>
+                <option value="IT">IT</option>
+                <option value="Management">Management</option>
+                <option value="Operations">Operations</option>
+                <option value="Sales">Sales</option>
+            </select>
+
+            <input type="password" name="password" placeholder="Temporary Password" required>
+
+            <select name="role" required>
+                <option value="">Select Role</option>
+                <option value="employee">Employee</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <button type="submit">Create User</button>
+        </form>
+
+        <a href="/" class="portal-button secondary-button">← Back to Portal</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+services:
+
+  postgres:
+    image: postgres:16
+
+    environment:
+      POSTGRES_DB: nexusdesk
+      POSTGRES_USER: nexusdesk
+      POSTGRES_PASSWORD: nexusdeskpassword
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    restart: unless-stopped
+
+  nexusdesk:
+    build: .
+
+    ports:
+      - "5000:5000"
+
+    # .env is optimized for direct/local development. Docker overrides only
+    # DATABASE_URL so the container talks to the postgres service by hostname.
+    env_file:
+      - .env
+
+    environment:
+      DATABASE_URL: postgresql://nexusdesk:nexusdeskpassword@postgres:5432/nexusdesk
+
+    volumes:
+      - ./uploads:/app/uploads
+
+    restart: unless-stopped
+
+    depends_on:
+      - postgres
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/healthz', timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+volumes:
+  postgres_data:

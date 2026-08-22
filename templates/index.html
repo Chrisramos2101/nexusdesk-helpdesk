@@ -3,20 +3,53 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help Desk System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NexusDesk Portal</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
+
 <div class="login-page">
-    <div class="login-card">
+    <div class="login-card dashboard-card">
+
         <div class="logo-circle">🎧</div>
 
-        <div class="portal-badge">EMPLOYEE PORTAL</div>
+        <div class="portal-badge">
+            {% if role == "admin" %}
+                ADMIN PORTAL
+            {% else %}
+                EMPLOYEE PORTAL
+            {% endif %}
+        </div>
 
-        <h1>NexusDesk Help Desk Portal</h1>
-        <p class="login-subtitle">Submit, track, and manage IT support requests in one secure place.</p>
+        <h1>
+            {% if role == "admin" %}
+                NexusDesk Admin Portal
+            {% else %}
+                NexusDesk Help Desk Portal
+            {% endif %}
+        </h1>
+
+        <p class="login-subtitle">
+            {% if role == "admin" %}
+                Monitor tickets, SLA status, technician workload, users, and system health.
+            {% else %}
+                Submit, track, and manage IT support requests in one secure place.
+            {% endif %}
+        </p>
+
+        <div class="employee-alert-bar">
+            <div>
+                <strong>👤 Signed in as {{ username }}</strong>
+                <p>{{ role | title }} account</p>
+            </div>
+
+            <div>
+                <strong>🔔 {{ my_open_tickets }}</strong>
+                <p>My Open Tickets</p>
+            </div>
+        </div>
 
         {% if submitted == "success" %}
             <div class="success-box">
@@ -24,82 +57,270 @@
             </div>
         {% endif %}
 
-        <div class="home-stats">
+        <div class="home-stats app-stat-grid">
             <div class="home-stat">
+                <span class="stat-icon">🎫</span>
                 <h2>{{ open_tickets }}</h2>
                 <p>Open Tickets</p>
             </div>
 
             <div class="home-stat">
+                <span class="stat-icon">⏰</span>
                 <h2>{{ overdue_tickets }}</h2>
                 <p>Overdue</p>
             </div>
 
             <div class="home-stat">
+                <span class="stat-icon">⚠️</span>
                 <h2>{{ high_priority_tickets }}</h2>
                 <p>High Priority</p>
             </div>
         </div>
 
-        <div class="steps-box portal-info-box">
-            <h3>Request Process</h3>
-            <p><strong>1.</strong> Enter your name and department</p>
-            <p><strong>2.</strong> Describe the issue clearly</p>
-            <p><strong>3.</strong> Select category and priority</p>
-            <p><strong>4.</strong> Submit and track your ticket</p>
+        {% if role != "admin" %}
+
+        <div class="employee-workspace">
+
+            <div class="employee-section-header">
+                <span class="portal-badge">EMPLOYEE WORKSPACE</span>
+                <h2>How can IT help you today?</h2>
+                <p>Submit a request, track progress, or find quick answers from one place.</p>
+            </div>
+
+            <div class="quick-card-grid employee-action-grid">
+                <a href="#ticket-form" class="quick-card">
+                    <span>🚀</span>
+                    <strong>Submit Request</strong>
+                    <small>Create a new IT support ticket</small>
+                </a>
+
+                <a href="/my_tickets" class="quick-card">
+                    <span>📁</span>
+                    <strong>Track Tickets</strong>
+                    <small>View status and updates</small>
+                </a>
+
+                <a href="/knowledge_base" class="quick-card">
+                    <span>📚</span>
+                    <strong>Knowledge Base</strong>
+                    <small>Find answers faster</small>
+                </a>
+
+                <a href="/contact_it" class="quick-card">
+                    <span>💬</span>
+                    <strong>Contact IT</strong>
+                    <small>Support hours and help options</small>
+                </a>
+
+                <a href="/change_password" class="quick-card">
+                    <span>🔐</span>
+                    <strong>Change Password</strong>
+                    <small>Update account security</small>
+                </a>
+
+                <a href="/profile" class="quick-card">
+                    <span>👤</span>
+                    <strong>My Profile</strong>
+                    <small>View account details</small>
+                </a>
+            </div>
+
+            <div class="response-grid">
+                <div class="response-card">
+                    <strong>Low Priority</strong>
+                    <p>General request</p>
+                    <span>2–3 business days</span>
+                </div>
+
+                <div class="response-card">
+                    <strong>Medium Priority</strong>
+                    <p>Work is impacted</p>
+                    <span>1 business day</span>
+                </div>
+
+                <div class="response-card high-response">
+                    <strong>High Priority</strong>
+                    <p>Unable to work/security issue</p>
+                    <span>Same-day review</span>
+                </div>
+            </div>
+
+            <div class="form-section premium-ticket-form" id="ticket-form">
+                <div class="form-header">
+                    <span class="portal-badge">NEW SUPPORT REQUEST</span>
+                    <h3>Submit a Ticket</h3>
+                    <p>Give IT the right details so your request can be resolved faster.</p>
+                </div>
+
+                <form action="/submit" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="form-step">
+                        <span>Step 1</span>
+                        <strong>Identify the request</strong>
+                    </div>
+
+                    <label for="name">Your Name</label>
+                    <input id="name" type="text" name="name" placeholder="Enter your full name" required>
+                    <small class="field-hint">Use your full name so IT can identify your request.</small>
+
+                    <label for="department">Department</label>
+                    <select id="department" name="department" required>
+                        <option value="">Select Department</option>
+                        <option value="Finance">Finance</option>
+                        <option value="HR">HR</option>
+                        <option value="IT">IT</option>
+                        <option value="Management">Management</option>
+                        <option value="Operations">Operations</option>
+                        <option value="Sales">Sales</option>
+                    </select>
+
+                    <div class="form-step">
+                        <span>Step 2</span>
+                        <strong>Describe the issue</strong>
+                    </div>
+
+                    <label for="issue">Issue Description</label>
+                    <textarea id="issue" name="issue" placeholder="Example: I cannot access my email, laptop, printer, VPN, or business application..." required>{{ prefill_issue }}</textarea>
+                    <small class="field-hint">Include error messages, device name, app name, screenshots, or when the issue started.</small>
+
+                    <div class="form-step">
+                        <span>Step 3</span>
+                        <strong>Classify the request</strong>
+                    </div>
+
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Hardware" {% if prefill_category == "Hardware" %}selected{% endif %}>Hardware</option>
+                        <option value="Software" {% if prefill_category == "Software" %}selected{% endif %}>Software</option>
+                        <option value="Network" {% if prefill_category == "Network" %}selected{% endif %}>Network</option>
+                        <option value="Account Access" {% if prefill_category == "Account Access" %}selected{% endif %}>Account Access</option>
+                        <option value="Security" {% if prefill_category == "Security" %}selected{% endif %}>Security</option>
+                        <option value="Other" {% if prefill_category == "Other" %}selected{% endif %}>Other</option>
+                    </select>
+
+                    <label for="priority">Priority</label>
+                    <select id="priority" name="priority" required>
+                        <option value="">Select Priority</option>
+                        <option value="Low" {% if prefill_priority == "Low" %}selected{% endif %}>Low</option>
+                        <option value="Medium" {% if prefill_priority == "Medium" %}selected{% endif %}>Medium</option>
+                        <option value="High" {% if prefill_priority == "High" %}selected{% endif %}>High</option>
+                    </select>
+                    <small class="field-hint">Low = general request. Medium = work impacted. High = unable to work or security issue.</small>
+
+                    <div class="form-step">
+                        <span>Step 4</span>
+                        <strong>Attach evidence</strong>
+                    </div>
+
+                    <label for="attachment" class="upload-zone" id="uploadZone">
+                        <span>📎 Upload screenshot or file</span>
+                        <small>PNG, JPG, PDF, TXT, DOC, or DOCX up to 10MB</small>
+                        <strong id="selectedFileName">No file selected</strong>
+                    </label>
+
+                    <input
+                        class="hidden-file-input"
+                        type="file"
+                        name="attachment"
+                        id="attachment"
+                        accept=".png,.jpg,.jpeg,.pdf,.txt,.doc,.docx">
+
+                    <button type="submit" id="employeeSubmitButton">
+                        🚀 Submit Ticket Request
+                    </button>
+                </form>
+            </div>
+
+            <div class="empty-state-card">
+                <span>✅</span>
+                <strong>You’re all caught up</strong>
+                <p>No urgent action is needed right now. Submitted requests will appear in My Tickets.</p>
+            </div>
+
         </div>
 
-        <form action="/submit" method="POST">
-            <input type="text" name="name" placeholder="👤 Your Name" required>
+        {% endif %}
 
-            <select name="department" required>
-                <option value="">🏢 Select Department</option>
-                <option value="Finance">Finance</option>
-                <option value="HR">HR</option>
-                <option value="IT">IT</option>
-                <option value="Management">Management</option>
-                <option value="Operations">Operations</option>
-                <option value="Sales">Sales</option>
-            </select>
+        {% if role == "admin" %}
 
-            <textarea name="issue" placeholder="📝 Describe the issue..." required></textarea>
+        <div class="app-section">
+            <h3>Admin Command Center</h3>
 
-            <select name="category" required>
-                <option value="">🗂️ Select Category</option>
-                <option value="Hardware">Hardware</option>
-                <option value="Software">Software</option>
-                <option value="Network">Network</option>
-                <option value="Account Access">Account Access</option>
-                <option value="Security">Security</option>
-                <option value="Other">Other</option>
-            </select>
+            <div class="quick-card-grid">
+                <a href="/dashboard" class="quick-card">
+                    <span>📋</span>
+                    <strong>Ticket Queue</strong>
+                    <small>Manage active support requests</small>
+                </a>
 
-            <select name="priority" required>
-                <option value="">⚠️ Select Priority</option>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
-            </select>
+                <a href="/stats" class="quick-card">
+                    <span>📊</span>
+                    <strong>Analytics</strong>
+                    <small>Review SLA and ticket trends</small>
+                </a>
 
-            <button type="submit">🚀 Submit Ticket Request</button>
-        </form>
+                <a href="/dashboard?status=Open&priority=High" class="quick-card">
+                    <span>🚨</span>
+                    <strong>Critical Tickets</strong>
+                    <small>View high-priority issues</small>
+                </a>
+
+                <a href="/dashboard?status=In Progress" class="quick-card">
+                    <span>🛠️</span>
+                    <strong>In Progress</strong>
+                    <small>Track assigned work</small>
+                </a>
+
+                <a href="/create_user" class="quick-card">
+                    <span>👤</span>
+                    <strong>Create User</strong>
+                    <small>Add employee or admin accounts</small>
+                </a>
+
+                <a href="/users" class="quick-card">
+                    <span>👥</span>
+                    <strong>Manage Users</strong>
+                    <small>Edit roles and account access</small>
+                </a>
+
+                <a href="/profile" class="quick-card">
+                    <span>👤</span>
+                    <strong>My Profile</strong>
+                    <small>View your admin account details</small>
+                </a>
+
+                <a href="/system_dashboard" class="quick-card">
+                    <span>🩺</span>
+                    <strong>System Dashboard</strong>
+                    <small>Monitor security and health</small>
+                </a>
+            </div>
+        </div>
+
+        {% endif %}
 
         <div class="portal-actions">
 
-            <a href="/my_tickets" class="portal-button secondary-button">
-                📁 View My Tickets
-            </a>
+            {% if role != "admin" %}
+                <a href="/my_tickets" class="portal-button secondary-button">
+                    📁 View My Tickets
+                </a>
+            {% endif %}
 
             {% if role == "admin" %}
+                <a href="/system_dashboard" class="portal-button admin-button">
+                    🩺 System Dashboard
+                </a>
 
-            <a href="/dashboard" class="portal-button admin-button">
-                🖥️ IT Dashboard
-            </a>
+                <a href="/dashboard" class="portal-button admin-button">
+                    🖥️ IT Dashboard
+                </a>
 
-            <a href="/stats" class="portal-button admin-button">
-                📊 Stats Dashboard
-            </a>
-
+                <a href="/stats" class="portal-button admin-button">
+                    📊 Stats Dashboard
+                </a>
             {% endif %}
 
             <a href="/logout" class="portal-button logout-button">
@@ -108,12 +329,41 @@
 
         </div>
 
-        <p class="security-note">Role-based access protected system</p>
+        <p class="security-note">
+            🔐 Role-based access protected system
+        </p>
+
     </div>
 </div>
 
 <footer class="login-footer">
     © 2026 NexusDesk Help Desk Portal · Secure Internal System
 </footer>
+
+<script>
+    const attachmentInput = document.getElementById("attachment");
+    const selectedFileName = document.getElementById("selectedFileName");
+    const uploadZone = document.getElementById("uploadZone");
+    const submitButton = document.getElementById("employeeSubmitButton");
+    const ticketForm = document.querySelector(".premium-ticket-form form");
+
+    if (attachmentInput) {
+        attachmentInput.addEventListener("change", function () {
+            if (this.files.length > 0) {
+                selectedFileName.textContent = "Selected: " + this.files[0].name;
+                uploadZone.classList.add("file-selected");
+            }
+        });
+    }
+
+    if (ticketForm) {
+        ticketForm.addEventListener("submit", function () {
+            submitButton.textContent = "Submitting request...";
+            submitButton.disabled = true;
+            submitButton.classList.add("loading-button");
+        });
+    }
+</script>
+
 </body>
 </html>

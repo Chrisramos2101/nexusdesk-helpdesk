@@ -83,7 +83,7 @@
             <input 
                 type="text" 
                 name="search" 
-                placeholder="Search name, department, or issue..."
+                placeholder="Search name, issue, department, category, priority, assigned tech, or submitter..."
                 value="{{ search_query }}">
 
             <select name="priority">
@@ -158,11 +158,13 @@
 
                 <div class="quick-actions">
                     <form action="/assign_me/{{ ticket.id }}" method="POST">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="small-action-button">Assign to Me</button>
                     </form>
 
                     {% if ticket.status != "Closed" %}
                         <form action="/quick_close/{{ ticket.id }}" method="POST">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <button type="submit" class="small-action-button close-action-button">Quick Close</button>
                         </form>
                     {% endif %}
@@ -175,6 +177,7 @@
                 <div id="edit-form-{{ ticket.id }}" class="hidden-edit-form">
 
                 <form action="/update_ticket/{{ ticket.id }}" method="POST" class="update-form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                     <label for="name-{{ ticket.id }}">Name</label>
                     <input
@@ -223,10 +226,15 @@
 
                     <label for="assigned_to-{{ ticket.id }}">Assigned To</label>
                     <select name="assigned_to" id="assigned_to-{{ ticket.id }}" required>
-                        <option value="Unassigned" {% if ticket.assigned_to == "Unassigned" %}selected{% endif %}>Unassigned</option>
-                        <option value="Chris" {% if ticket.assigned_to == "Chris" %}selected{% endif %}>Chris</option>
-                        <option value="Alex" {% if ticket.assigned_to == "Alex" %}selected{% endif %}>Alex</option>
-                        <option value="Jordan" {% if ticket.assigned_to == "Jordan" %}selected{% endif %}>Jordan</option>
+                        <option value="Unassigned" {% if ticket.assigned_to == "Unassigned" %}selected{% endif %}>
+                            Unassigned
+                        </option>
+
+                        {% for tech in technicians %}
+                            <option value="{{ tech.username }}" {% if ticket.assigned_to == tech.username %}selected{% endif %}>
+                                {{ tech.username }}
+                            </option>
+                        {% endfor %}
                     </select>
 
                     <label for="notes-{{ ticket.id }}">Add Timeline Note</label>
@@ -234,6 +242,23 @@
 
                     <button type="submit">Save Update</button>
                 </form>
+                </div>
+
+                <div class="attachment-section">
+                    <h4>Attachments</h4>
+
+                    {% if attachments_by_ticket.get(ticket.id) %}
+                        {% for attachment in attachments_by_ticket.get(ticket.id) %}
+                            <p>
+                                📎
+                                <a href="/attachment/{{ attachment.stored_filename }}">
+                                    {{ attachment.original_filename }}
+                                </a>
+                            </p>
+                        {% endfor %}
+                    {% else %}
+                        <p>No attachments.</p>
+                    {% endif %}
                 </div>
 
                 <div class="timeline">
@@ -252,6 +277,7 @@
                 </div>
 
                 <form action="/delete_ticket/{{ ticket.id }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button type="submit" class="delete-button">Delete Ticket</button>
                 </form>
             </div>

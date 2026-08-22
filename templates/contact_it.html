@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Contact IT</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="login-page">
+    <div class="login-card my-tickets-page">
+
+        <div class="ticket-detail-topbar">
+            <a href="/" class="portal-button secondary-button">← Back to Employee Portal</a>
+        </div>
+
+        <div class="portal-badge">IT SUPPORT CENTER</div>
+
+        <h1>💬 Contact IT Support</h1>
+        <p class="login-subtitle">
+            Choose the right support path based on urgency, impact, and issue type.
+        </p>
+
+        <div class="stats-list-grid kb-premium-grid">
+            <div class="mini-stat-card contact-path-card critical-path">
+                <h3>🚨 Critical Issue</h3>
+                <p><strong>Examples:</strong> outage, security incident, unable to work.</p>
+                <p><strong>Response:</strong> Immediate escalation.</p>
+                <a href="/?priority=High&category=Security&issue=Critical issue - please describe the problem below.#ticket-form" class="portal-button admin-button">
+                    Create Critical Ticket →
+                </a>
+            </div>
+
+            <div class="mini-stat-card contact-path-card high-path">
+                <h3>⚠️ High Priority</h3>
+                <p><strong>Examples:</strong> locked account, broken device, urgent software issue.</p>
+                <p><strong>Response:</strong> Same-day review.</p>
+                <a href="/?priority=High&category=Other&issue=High priority issue - please describe the problem below.#ticket-form" class="portal-button admin-button">
+                    Create High Priority Ticket →
+                </a>
+            </div>
+
+            <div class="mini-stat-card contact-path-card standard-path">
+                <h3>🛠️ Standard Request</h3>
+                <p><strong>Examples:</strong> access request, software question, equipment help.</p>
+                <p><strong>Response:</strong> Normal ticket queue.</p>
+                <a href="/?priority=Medium&category=Other&issue=Standard request - please describe the request below.#ticket-form" class="portal-button secondary-button">
+                    Create Standard Ticket →
+                </a>
+            </div>
+
+            <div class="mini-stat-card contact-path-card self-service-path">
+                <h3>📚 Self-Service</h3>
+                <p><strong>Examples:</strong> password reset, Wi-Fi, slow computer.</p>
+                <p><strong>Response:</strong> Try guided help first.</p>
+                <a href="/knowledge_base" class="portal-button secondary-button">
+                    Open Knowledge Base →
+                </a>
+            </div>
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>📞 Support Contact Information</h3>
+
+            <div class="ticket-detail-grid">
+                <div>
+                    <small>Email</small>
+                    <strong>it-support@nexusdesk.local</strong>
+                </div>
+
+                <div>
+                    <small>Phone</small>
+                    <strong>(555) 123-4567</strong>
+                </div>
+
+                <div>
+                    <small>Hours</small>
+                    <strong>Mon–Fri · 8 AM–5 PM</strong>
+                </div>
+
+                <div>
+                    <small>Status</small>
+                    <strong>Support Available</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>⏱ SLA Response Expectations</h3>
+
+            <div class="kb-tip-grid">
+                <div class="kb-tip-card">
+                    <strong>Critical</strong>
+                    <p>1 hour</p>
+                </div>
+
+                <div class="kb-tip-card">
+                    <strong>High</strong>
+                    <p>4 business hours</p>
+                </div>
+
+                <div class="kb-tip-card">
+                    <strong>Medium</strong>
+                    <p>1 business day</p>
+                </div>
+
+                <div class="kb-tip-card">
+                    <strong>Low</strong>
+                    <p>3 business days</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="portal-actions">
+            <a href="/#ticket-form" class="portal-button admin-button">🎫 Submit a Ticket</a>
+            <a href="/knowledge_base" class="portal-button secondary-button">📚 Knowledge Base</a>
+        </div>
+
+    </div>
+</div>
+
+<footer class="login-footer">
+    © 2026 NexusDesk · Contact IT
+</footer>
+</body>
+</html>

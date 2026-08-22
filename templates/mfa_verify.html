@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>MFA Verification</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="login-page">
+    <div class="login-card">
+
+        <div class="logo-circle">🔐</div>
+
+        <div class="portal-badge">MULTI-FACTOR AUTHENTICATION</div>
+
+        <h1>Verify Your Login</h1>
+
+        <p class="login-subtitle">
+            Enter the 6-digit verification code sent to your email.
+        </p>
+
+        {% if error %}
+            <div class="error-box">{{ error }}</div>
+        {% endif %}
+
+        <form action="/mfa_verify" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <input
+                type="text"
+                name="mfa_code"
+                placeholder="Enter 6-digit code"
+                maxlength="6"
+                required>
+
+            <button type="submit">Verify Code</button>
+        </form>
+
+        <div class="portal-actions">
+            <a href="/login" class="portal-button secondary-button">
+                ← Back to Login
+            </a>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>

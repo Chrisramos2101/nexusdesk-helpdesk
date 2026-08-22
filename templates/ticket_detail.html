@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Ticket Detail</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="login-page">
+    <div class="login-card my-tickets-page">
+
+        <div class="ticket-detail-topbar">
+            <a href="/my_tickets" class="portal-button secondary-button">
+                ← Back to My Tickets
+            </a>
+        </div>
+
+        <div class="portal-actions" style="margin-bottom: 18px;">
+            <a href="/my_tickets" class="portal-button secondary-button">
+                ← Back to My Tickets
+            </a>
+        </div>
+
+        <div class="portal-badge">TICKET DETAILS</div>
+
+        <h1>NEX-2026-{{ "%06d"|format(ticket.id) }}</h1>
+        <p class="login-subtitle">{{ ticket.issue }}</p>
+
+        <div class="ticket-pill-stack">
+            <span class="status-pill status-{{ ticket.status|lower|replace(' ', '-') }}">
+                {{ ticket.status }}
+            </span>
+
+            <span class="priority-pill priority-{{ ticket.priority|lower }}">
+                {{ ticket.priority }} Priority
+            </span>
+        </div>
+
+        <div class="ticket-detail-grid">
+            <div>
+                <small>Department</small>
+                <strong>{{ ticket.department }}</strong>
+            </div>
+
+            <div>
+                <small>Category</small>
+                <strong>{{ ticket.category }}</strong>
+            </div>
+
+            <div>
+                <small>Assigned To</small>
+                <strong>{{ ticket.assigned_to if ticket.assigned_to else "Unassigned" }}</strong>
+            </div>
+
+            <div>
+                <small>Ticket Age</small>
+                <strong>{{ ticket_age }}</strong>
+            </div>
+        </div>
+
+        <div class="ticket-activity-box">
+            <strong>SLA Progress</strong>
+            <p>{{ sla_progress }}% of SLA window used</p>
+
+            <div class="sla-progress-bar">
+                <div class="sla-progress-fill" data-progress="{{ sla_progress }}"></div>
+            </div>
+
+            <p>
+                {% if ticket.status == "Closed" %}
+                    ✅ Ticket completed.
+                {% elif ticket.sla_due_at %}
+                    Due {{ ticket.sla_due_at }}
+                {% else %}
+                    SLA pending.
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="ticket-timeline">
+            <div class="timeline-step active">
+                <span></span>
+                <p>Submitted</p>
+            </div>
+
+            <div class="timeline-step {% if ticket.assigned_to and ticket.assigned_to != 'Unassigned' %}active{% endif %}">
+                <span></span>
+                <p>Assigned</p>
+            </div>
+
+            <div class="timeline-step {% if ticket.status == 'In Progress' or ticket.status == 'Closed' %}active{% endif %}">
+                <span></span>
+                <p>In Progress</p>
+            </div>
+
+            <div class="timeline-step {% if ticket.status == 'Closed' %}active{% endif %}">
+                <span></span>
+                <p>Resolved</p>
+            </div>
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>📝 Request Details</h3>
+            <p>{{ ticket.issue }}</p>
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>📎 Attachments</h3>
+
+            {% if attachments %}
+                {% for attachment in attachments %}
+                    <a class="attachment-preview" href="/attachment/{{ attachment.stored_filename }}">
+                        📄 {{ attachment.original_filename }}
+                        <span>Download</span>
+                    </a>
+                {% endfor %}
+            {% else %}
+                <p>No attachments uploaded.</p>
+            {% endif %}
+        </div>
+
+        <div class="ticket-detail-section">
+            <h3>💬 Comments & Updates</h3>
+
+            <form action="/my_tickets/{{ ticket.id }}/comment" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <div class="mention-wrapper">
+                    <textarea
+                        id="commentBox"
+                        name="comment"
+                        placeholder="Add a comment or update for IT... Use @ to mention a user."
+                        required></textarea>
+
+                    <div id="mentionSuggestions" class="mention-suggestions"></div>
+                </div>
+
+                <button type="submit">💬 Add Comment</button>
+            </form>
+
+            {% if notes %}
+                <div class="ticket-note-list">
+                    {% for note in notes %}
+                        <div class="ticket-note-card">
+                            <strong>{{ note.created_by }}</strong>
+                            <small>{{ note.created_at }}</small>
+                            <p>{{ note.note }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="premium-empty-state">
+                    <span>💬</span>
+                    <h2>No updates yet</h2>
+                    <p>IT will notify you as soon as work begins.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="portal-actions">
+            <a href="/my_tickets" class="portal-button secondary-button">
+                ← Back to My Tickets
+            </a>
+
+            <a href="/" class="portal-button admin-button">
+                ➕ Submit Another Ticket
+            </a>
+
+            <button onclick="window.print()">
+                🖨️ Print Ticket
+            </button>
+        </div>
+
+    </div>
+</div>
+
+<footer class="login-footer">
+    © 2026 NexusDesk · Ticket Detail Center
+</footer>
+
+<script>
+    const commentBox = document.getElementById("commentBox");
+    const mentionSuggestions = document.getElementById("mentionSuggestions");
+
+    if (commentBox) {
+        commentBox.addEventListener("input", async function () {
+            const text = commentBox.value;
+            const cursorPosition = commentBox.selectionStart;
+            const textBeforeCursor = text.slice(0, cursorPosition);
+            const match = textBeforeCursor.match(/@([a-zA-Z0-9_]*)$/);
+
+            if (!match) {
+                mentionSuggestions.style.display = "none";
+                return;
+            }
+
+            const query = match[1];
+
+            const response = await fetch(`/api/users/search?q=${query}`);
+            const users = await response.json();
+
+            if (!users.length) {
+                mentionSuggestions.style.display = "none";
+                return;
+            }
+
+            mentionSuggestions.replaceChildren();
+
+            users.forEach((user) => {
+                const button = document.createElement("button");
+                button.type = "button";
+
+                const usernameLabel = document.createElement("strong");
+                usernameLabel.textContent = `@${user.username}`;
+
+                const detailLabel = document.createElement("span");
+                detailLabel.textContent = user.full_name || user.role || "";
+
+                button.append(usernameLabel, detailLabel);
+                button.addEventListener("click", () => insertMention(user.username));
+                mentionSuggestions.appendChild(button);
+            });
+
+            mentionSuggestions.style.display = "grid";
+        });
+    }
+
+    function insertMention(username) {
+        const text = commentBox.value;
+        const cursorPosition = commentBox.selectionStart;
+        const before = text.slice(0, cursorPosition).replace(/@([a-zA-Z0-9_]*)$/, `@${username} `);
+        const after = text.slice(cursorPosition);
+
+        commentBox.value = before + after;
+        mentionSuggestions.style.display = "none";
+        commentBox.focus();
+    }
+
+    const slaFill = document.querySelector(".sla-progress-fill");
+
+    if (slaFill) {
+        slaFill.style.width = slaFill.dataset.progress + "%";
+    }
+</script>
+
+</body>
+</html>

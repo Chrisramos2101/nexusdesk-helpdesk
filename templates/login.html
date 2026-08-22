@@ -3,74 +3,194 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help Desk Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NexusDesk Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-<div class="login-page">
-    <div class="login-card">
-        <div class="logo-circle">🔐</div>
 
-        <h1>NexusDesk Secure Login</h1>
-        <p class="login-subtitle">Access your employee support portal or IT admin dashboard.</p>
+<div class="saas-login-page">
+
+    <section class="login-showcase">
+        <div class="showcase-badge">ENTERPRISE IT OPERATIONS</div>
+
+        <h1>Modern Help Desk & Ticket Operations Platform</h1>
+
+        <p>
+            Manage support tickets, SLA performance, technician workload,
+            security events, and user access from one secure dashboard.
+        </p>
+
+        <div class="showcase-preview-card">
+            <div class="preview-header">
+                <span>📊 NexusDesk Live Overview</span>
+                <span class="live-pill">LIVE</span>
+            </div>
+
+            <div class="preview-grid">
+                <div>
+                    <strong>128</strong>
+                    <small>Tickets Managed</small>
+                </div>
+                <div>
+                    <strong>98%</strong>
+                    <small>SLA Visibility</small>
+                </div>
+                <div>
+                    <strong>24/7</strong>
+                    <small>Audit Monitoring</small>
+                </div>
+            </div>
+
+            <div class="mini-activity">
+                <p>🎫 Ticket assigned to technician</p>
+                <p>🔐 MFA verification completed</p>
+                <p>📧 Password reset email sent</p>
+            </div>
+        </div>
+
+        <div class="feature-list">
+            <div>🔐 MFA Protected Access</div>
+            <div>👥 Role-Based Admin & Employee Portals</div>
+            <div>🛡️ Audit Logging & Security Monitoring</div>
+            <div>📈 SLA Tracking & Analytics</div>
+            <div>🐳 Docker + PostgreSQL Architecture</div>
+        </div>
+    </section>
+
+    <section class="login-card saas-login-card">
+
+        <div class="brand-header">
+            <div class="logo-circle">🎧</div>
+            <div>
+                <h1>NexusDesk</h1>
+                <p>Secure IT Service Management</p>
+            </div>
+        </div>
+
+        <p class="login-subtitle">
+            Sign in to access your employee support portal or IT admin command center.
+        </p>
+
+        <div class="trust-badges">
+            <span>🔐 MFA</span>
+            <span>🛡️ CSRF</span>
+            <span>👥 RBAC</span>
+        </div>
 
         {% if error %}
-            <p class="error-message">{{ error }}</p>
+            <div class="error-banner">
+                ⚠ {{ error }}
+            </div>
         {% endif %}
 
-        <form action="/login" method="POST">
-            <input type="text" name="username" placeholder="👤 Username" required>
+        <form action="/login" method="POST" onsubmit="showLoading()">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-            <input type="password" name="password" placeholder="🔒 Password" required>
+            <label for="username">Username</label>
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Enter your username"
+                autocomplete="username"
+                required>
 
-            <button type="submit">Login to Portal</button>
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required>
+
+                <button
+                    type="button"
+                    class="password-toggle"
+                    onclick="togglePassword()"
+                    aria-label="Show or hide password">
+                    👁
+                </button>
+            </div>
+
+            <button type="submit" id="loginButton" class="primary-login-button">
+                Login to Portal
+            </button>
         </form>
 
         <div class="login-links">
-            <a href="#" onclick="showForgotPassword()">Forgot password?</a>
+            <a href="/forgot_password">Forgot password?</a>
             <span>•</span>
             <a href="#" onclick="showContactIT()">Contact IT Support</a>
         </div>
 
-        <p class="security-note">Role-based access protected system</p>
-    </div>
+        <div class="security-note">
+            🔐 Protected by MFA • CSRF Protection • Encrypted Sessions
+        </div>
+    </section>
+
 </div>
 
 <footer class="login-footer">
-    © 2026 NexusDesk Help Desk Portal · Secure Internal System
+    © 2026 NexusDesk · Secure Internal IT Operations Platform
 </footer>
 
 <div id="customModal" class="modal-overlay">
     <div class="modal-card">
         <button class="modal-close" onclick="closeModal()">×</button>
-        <div class="modal-icon" id="modalIcon">🔐</div>
-        <h2 id="modalTitle">Title</h2>
+        <div class="modal-icon" id="modalIcon">🎧</div>
+        <h2 id="modalTitle">Contact IT Support</h2>
         <p id="modalText">Message</p>
     </div>
 </div>
 
 <script>
-    function showForgotPassword() {
-        document.getElementById("modalIcon").textContent = "🔐";
-        document.getElementById("modalTitle").textContent = "Demo Login Information";
-        document.getElementById("modalText").innerHTML =
-            "<strong>Employee Portal</strong><br>" +
-            "Username: employee<br>" +
-            "Password: employee123<br><br>" +
-            "<strong>IT Admin Portal</strong><br>" +
-            "Username: admin<br>" +
-            "Password: admin123";
+    function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const toggleButton = document.querySelector(".password-toggle");
 
-        document.getElementById("customModal").classList.add("show-modal");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleButton.textContent = "🙈";
+        } else {
+            passwordInput.type = "password";
+            toggleButton.textContent = "👁";
+        }
+    }
+
+    function showLoading() {
+        const button = document.getElementById("loginButton");
+
+        button.innerHTML = "Authenticating...";
+        button.disabled = true;
+        button.classList.add("loading-button");
     }
 
     function showContactIT() {
         document.getElementById("modalIcon").textContent = "🎧";
         document.getElementById("modalTitle").textContent = "Contact IT Support";
-        document.getElementById("modalText").innerHTML =
-            "Please contact your system administrator or submit a help desk ticket after logging in.";
+        document.getElementById("modalText").innerHTML = `
+        <div class="support-contact-list">
+            <h3>Quick Support Options</h3>
+
+            <p>🔐 Forgot Password?</p>
+            <a href="/forgot_password" class="dashboard-link">
+                Request Password Reset →
+            </a>
+
+            <p style="margin-top:15px;">📧 Email Support</p>
+            <p>it-support@nexusdesk.local</p>
+
+            <p>☎️ Phone Support</p>
+            <p>(555) 123-4567</p>
+
+            <p>🕒 Business Hours</p>
+            <p>Monday–Friday 8:00 AM–5:00 PM</p>
+        </div>
+        `;
 
         document.getElementById("customModal").classList.add("show-modal");
     }

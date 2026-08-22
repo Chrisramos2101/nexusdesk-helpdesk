@@ -1,0 +1,7 @@
+{
+  "include": ["app.py", "database", "routes", "services"],
+  "exclude": [".venv", ".phase_backups", "tests"],
+  "typeCheckingMode": "basic",
+  "reportMissingTypeStubs": "none",
+  "reportUnusedImport": "warning"
+}
