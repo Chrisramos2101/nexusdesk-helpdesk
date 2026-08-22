@@ -2,7 +2,7 @@ services:
   - type: web
     name: nexusdesk-helpdesk
     runtime: docker
-    plan: starter
+    plan: free
     region: ohio
     branch: main
     autoDeployTrigger: checksPass
@@ -10,10 +10,6 @@ services:
     numInstances: 1
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    disk:
-      name: nexusdesk-uploads
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: FLASK_ENV
         value: production
@@ -22,7 +18,7 @@ services:
       - key: LOG_TO_STDOUT
         value: "True"
       - key: UPLOAD_FOLDER
-        value: /var/data/uploads
+        value: /tmp/nexusdesk/uploads
       - key: MAX_UPLOAD_MB
         value: "10"
       - key: SECRET_KEY
@@ -46,9 +42,7 @@ services:
 
 databases:
   - name: nexusdesk-postgres
-    plan: basic-256mb
+    plan: free
     region: ohio
     postgresMajorVersion: "16"
-    diskSizeGB: 1
-    storageAutoscalingEnabled: false
     ipAllowList: []
