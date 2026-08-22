@@ -1,14 +1,17 @@
-bind = "0.0.0.0:5000"
+import os
 
-workers = 2
 
-threads = 4
+bind = f"0.0.0.0:{os.getenv('PORT', '5000')}"
 
-timeout = 120
+workers = int(os.getenv("WEB_CONCURRENCY", "2"))
+threads = int(os.getenv("GUNICORN_THREADS", "4"))
+timeout = int(os.getenv("GUNICORN_TIMEOUT", "120"))
 
 worker_class = "gthread"
 
-accesslog = "logs/access.log"
-errorlog = "logs/error.log"
+# Cloud platforms collect stdout/stderr. These defaults also make local Docker
+# logs visible through `docker compose logs`.
+accesslog = os.getenv("GUNICORN_ACCESS_LOG", "-")
+errorlog = os.getenv("GUNICORN_ERROR_LOG", "-")
 
-loglevel = "info"
+loglevel = os.getenv("LOG_LEVEL", "info")

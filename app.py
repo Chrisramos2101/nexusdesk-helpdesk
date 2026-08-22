@@ -10,7 +10,9 @@ load_dotenv()
 from flask import Flask, request, send_from_directory
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.exceptions import HTTPException
+from werkzeug.middleware.proxy_fix import ProxyFix
 
+from database.config import DATABASE_URL
 from database.schema import init_db
 from health import register_health_route
 from routes.admin import admin_bp
@@ -20,9 +22,28 @@ from routes.knowledge import knowledge_bp
 from routes.tickets import tickets_bp
 from services.email_service import mail
 from services.monitoring_service import log_system_event
+from services.production_config import (
+    prepare_runtime_directories,
+    validate_production_environment,
+)
 
+
+# Fail fast on invalid production configuration before accepting traffic.
+validate_production_environment()
+prepare_runtime_directories()
 
 app = Flask(__name__)
+
+# Render and similar platforms terminate HTTPS at a trusted reverse proxy.
+# Only enable this when deployment explicitly opts in.
+if os.getenv("TRUST_PROXY_HEADERS", "False").lower() == "true":
+    app.wsgi_app = ProxyFix(
+        app.wsgi_app,
+        x_for=1,
+        x_proto=1,
+        x_host=1,
+        x_port=1,
+    )
 
 
 @app.errorhandler(Exception)
@@ -64,7 +85,8 @@ def apply_security_headers(response):
 
     return response
 
-app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+app.config["TEMPLATES_AUTO_RELOAD"] = os.getenv("FLASK_ENV") != "production"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=60)
@@ -116,7 +138,7 @@ def favicon():
 
 # For direct/local SQLite development, run the idempotent schema initializer on
 # every startup. This upgrades older helpdesk.db files without deleting data.
-if not os.getenv("DATABASE_URL", "helpdesk.db").startswith("postgresql://"):
+if not DATABASE_URL.startswith("postgresql://"):
     with app.app_context():
         init_db()
 

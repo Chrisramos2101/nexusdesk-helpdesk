@@ -16,6 +16,10 @@ def _normalize_database_url(value: str) -> str:
     if value.startswith("sqlite:///"):
         return value[len("sqlite:///"):]
 
+    # Some platforms/tools still emit the legacy postgres:// scheme.
+    if value.startswith("postgres://"):
+        return "postgresql://" + value[len("postgres://"):]
+
     return value
 
 
