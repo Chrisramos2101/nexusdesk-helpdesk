@@ -3,21 +3,40 @@ __pycache__/
 *.pyo
 *.pyd
 
+# Environment files / secrets
 .env
+.env.*
+!.env.production.example
 
+# Virtual environments
 venv/
 .venv/
 
+# Runtime data
 uploads/
+logs/
 
+# Local databases
 helpdesk.db
+*.db
 
+# Editor / OS files
 .vscode/
-
-.git/
-
-*.log
-
-.pytest_cache/
-
+.idea/
 .DS_Store
+Thumbs.db
+
+# Git / test / backup files
+.git/
+.pytest_cache/
+.phase_backups/
+
+# Elastic Beanstalk local metadata
+.elasticbeanstalk/
+
+# Logs / backups
+*.log
+*.bak
+
+# Old dependency files
+requirements_old.txt

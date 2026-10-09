@@ -178,10 +178,13 @@ def run_security_cleanup():
         "RUN_SECURITY_CLEANUP",
         "system",
         "",
-        "Cleaned expired MFA codes and used reset tokens"
+        (
+            "Security cleanup completed: expired MFA codes, "
+            "used reset tokens, and old rate-limit records checked."
+        )
     )
 
-    return redirect("/system_dashboard")
+    return redirect("/system_dashboard?cleanup=success")
 
 
 
@@ -257,8 +260,17 @@ def system_dashboard():
     """)
     recent_email_events = cursor.fetchall()
 
-    system_status = "Healthy"
-    database_status = "Connected"
+    try:
+        cursor.execute("SELECT 1")
+        cursor.fetchone()
+
+        database_status = "Connected"
+        system_status = "Healthy"
+
+    except Exception:
+        database_status = "Unavailable"
+        system_status = "Degraded"
+
     app_environment = os.getenv("FLASK_ENV", "development")
 
     cursor.execute("""

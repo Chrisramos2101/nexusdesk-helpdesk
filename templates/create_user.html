@@ -1,51 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <title>Create User</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Create User | NexusDesk</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
 </head>
 
 <body>
-<div class="container">
-    <div class="card">
-        <h1>👤 Create User</h1>
-        <p>Add a new NexusDesk account.</p>
+
+<div class="container create-user-page">
+
+    <div class="card create-user-card">
+
+        <div class="logo-circle">👤</div>
+
+        <div class="portal-badge">
+            ADMINISTRATION
+        </div>
+
+        <h1>Create User</h1>
+
+        <p class="create-user-subtitle">
+            Create a new employee or administrator account.
+        </p>
+
+
+        <!-- =====================================================
+             SUCCESS / ERROR MESSAGE
+        ====================================================== -->
 
         {% if message %}
-            <div class="success-box">{{ message }}</div>
+
+            {% if message == "User created successfully." %}
+                <div class="success-box">
+                    ✓ {{ message }}
+                </div>
+            {% else %}
+                <div class="create-user-error">
+                    ⚠ {{ message }}
+                </div>
+            {% endif %}
+
         {% endif %}
 
-        <form method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-            <input type="text" name="full_name" placeholder="Full Name" required>
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="email" name="email" placeholder="Email Address" required>
+        <!-- =====================================================
+             ACCOUNT INFORMATION
+        ====================================================== -->
 
-            <select name="department" required>
-                <option value="">Select Department</option>
-                <option value="Finance">Finance</option>
-                <option value="HR">HR</option>
-                <option value="IT">IT</option>
-                <option value="Management">Management</option>
-                <option value="Operations">Operations</option>
-                <option value="Sales">Sales</option>
-            </select>
+        <div class="create-user-section">
 
-            <input type="password" name="password" placeholder="Temporary Password" required>
+            <div class="create-user-section-header">
+                <h2>Account Information</h2>
 
-            <select name="role" required>
-                <option value="">Select Role</option>
-                <option value="employee">Employee</option>
-                <option value="admin">Admin</option>
-            </select>
+                <p>
+                    Enter the user's contact details and account information.
+                </p>
+            </div>
 
-            <button type="submit">Create User</button>
-        </form>
 
-        <a href="/" class="portal-button secondary-button">← Back to Portal</a>
+            <form method="POST">
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+
+                <!-- Full Name -->
+
+                <label for="full_name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="full_name"
+                    name="full_name"
+                    placeholder="Enter the user's full name"
+                    autocomplete="name"
+                    required
+                >
+
+
+                <!-- Username -->
+
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Create a username"
+                    autocomplete="off"
+                    required
+                >
+
+                <small class="create-user-hint">
+                    Used by the user to sign in to NexusDesk.
+                </small>
+
+
+                <!-- Email -->
+
+                <label for="email">
+                    Email Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter the user's email address"
+                    autocomplete="email"
+                    required
+                >
+
+                <small class="create-user-hint">
+                    Used for MFA verification and password recovery.
+                </small>
+
+
+                <!-- Department -->
+
+                <label for="department">
+                    Department
+                </label>
+
+                <select
+                    id="department"
+                    name="department"
+                    required
+                >
+
+                    <option value="">
+                        Select Department
+                    </option>
+
+                    <option value="Finance">
+                        Finance
+                    </option>
+
+                    <option value="HR">
+                        Human Resources
+                    </option>
+
+                    <option value="IT">
+                        Information Technology
+                    </option>
+
+                    <option value="Management">
+                        Management
+                    </option>
+
+                    <option value="Operations">
+                        Operations
+                    </option>
+
+                    <option value="Sales">
+                        Sales
+                    </option>
+
+                </select>
+
+
+                <!-- Temporary Password -->
+
+                <label for="password">
+                    Temporary Password
+                </label>
+
+                <div class="create-password-field">
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter a temporary password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <button
+                        type="button"
+                        class="create-password-toggle"
+                        id="passwordToggle"
+                        onclick="toggleCreatePassword()"
+                        aria-label="Show temporary password"
+                    >
+                        Show
+                    </button>
+
+                </div>
+
+
+                <div class="create-password-requirements">
+
+                    <strong>Password requirements</strong>
+
+                    <ul>
+                        <li>At least 8 characters</li>
+                        <li>One uppercase letter</li>
+                        <li>One lowercase letter</li>
+                        <li>One number</li>
+                        <li>One special character</li>
+                    </ul>
+
+                </div>
+
+                <small class="create-user-hint">
+                    The user can change this password after signing in.
+                </small>
+
+
+                <!-- Role -->
+
+                <label for="role">
+                    Account Role
+                </label>
+
+                <select
+                    id="role"
+                    name="role"
+                    required
+                    onchange="updateRoleDescription()"
+                >
+
+                    <option value="">
+                        Select Role
+                    </option>
+
+                    <option value="employee">
+                        Employee
+                    </option>
+
+                    <option value="admin">
+                        Administrator
+                    </option>
+
+                </select>
+
+
+                <div
+                    id="roleDescription"
+                    class="create-role-description"
+                >
+                    Select the level of access this account should have.
+                </div>
+
+
+                <!-- Submit -->
+
+                <button
+                    type="submit"
+                    class="create-user-submit"
+                >
+                    👤 Create User
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- =====================================================
+             SECURITY NOTE
+        ====================================================== -->
+
+        <div class="create-user-security-note">
+            🔐 New accounts are protected by password requirements,
+            multi-factor authentication, and role-based access controls.
+        </div>
+
+
+        <!-- =====================================================
+             NAVIGATION
+        ====================================================== -->
+
+        <div class="create-user-actions">
+
+            <a
+                href="/"
+                class="portal-button secondary-button"
+            >
+                ← Back to Admin Portal
+            </a>
+
+        </div>
+
     </div>
+
 </div>
+
+
+<script>
+function toggleCreatePassword() {
+    const passwordInput = document.getElementById("password");
+    const passwordToggle = document.getElementById("passwordToggle");
+
+    if (passwordInput.type === "password") {
+        passwordInput.type = "text";
+        passwordToggle.textContent = "Hide";
+        passwordToggle.setAttribute(
+            "aria-label",
+            "Hide temporary password"
+        );
+    } else {
+        passwordInput.type = "password";
+        passwordToggle.textContent = "Show";
+        passwordToggle.setAttribute(
+            "aria-label",
+            "Show temporary password"
+        );
+    }
+}
+
+
+function updateRoleDescription() {
+    const role = document.getElementById("role").value;
+    const description = document.getElementById("roleDescription");
+
+    if (role === "admin") {
+        description.textContent =
+            "Administrators can manage tickets, users, analytics, and system monitoring.";
+    } else if (role === "employee") {
+        description.textContent =
+            "Employees can submit, view, and track their own IT support requests.";
+    } else {
+        description.textContent =
+            "Select the level of access this account should have.";
+    }
+}
+</script>
+
 </body>
 </html>

@@ -1,75 +1,551 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <title>Manage Users</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Manage Users | NexusDesk</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
 </head>
 
-<body>
-<div class="container">
-    <div class="card dashboard-card">
-        <h1>👥 Manage Users</h1>
-        <p>View, edit, and remove NexusDesk user accounts.</p>
 
-        <div class="portal-actions">
-            <a href="/create_user" class="portal-button admin-button">➕ Create User</a>
-            <a href="/dashboard" class="portal-button secondary-button">← Back to Dashboard</a>
+<body>
+
+{% set department_labels = {
+    "Finance": "Finance",
+    "HR": "Human Resources",
+    "IT": "Information Technology",
+    "Management": "Management",
+    "Operations": "Operations",
+    "Sales": "Sales"
+} %}
+
+
+<div class="container manage-users-page">
+
+    <div class="card dashboard-card manage-users-card">
+
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="logo-circle">
+            👥
         </div>
 
+
+        <div class="portal-badge">
+            ADMINISTRATION
+        </div>
+
+
+        <h1>
+            Manage Users
+        </h1>
+
+
+        <p class="manage-users-subtitle">
+            Manage NexusDesk user accounts, roles, departments, and access.
+        </p>
+
+
+
+        <!-- =====================================================
+             TOP ACTIONS
+        ====================================================== -->
+
+        <div class="manage-users-actions">
+
+            <a
+                href="/create_user"
+                class="portal-button admin-button"
+            >
+                ➕ Create User
+            </a>
+
+
+            <a
+                href="/"
+                class="portal-button secondary-button"
+            >
+                ← Back to Admin Portal
+            </a>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             USER ACCOUNTS
+        ====================================================== -->
+
         {% if users %}
-            {% for user in users %}
-                <div class="ticket">
-                    <h3>{{ user.full_name if user.full_name else "No Name" }} — {{ user.username }}</h3>
 
-                    <p><strong>Email:</strong> {{ user.email if user.email else "No email" }}</p>
-                    <p><strong>Department:</strong> {{ user.department if user.department else "No department" }}</p>
-                    <p><strong>Role:</strong> {{ user.role }}</p>
-                    <p><strong>Last Login:</strong> {{ user.last_login if user.last_login else "Never" }}</p>
-                    <p><strong>Last Logout:</strong> {{ user.last_logout if user.last_logout else "Never" }}</p>
+            <div class="user-management-list">
 
-                    <form action="/edit_user/{{ user.id }}" method="POST" class="update-form">
-                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                {% for user in users %}
 
-                        <label>Full Name</label>
-                        <input type="text" name="full_name" value="{{ user.full_name }}">
+                    <details class="user-management-card">
 
-                        <label>Email</label>
-                        <input type="email" name="email" value="{{ user.email }}">
 
-                        <label>Department</label>
-                        <select name="department" required>
-                            <option value="Finance" {% if user.department == "Finance" %}selected{% endif %}>Finance</option>
-                            <option value="HR" {% if user.department == "HR" %}selected{% endif %}>HR</option>
-                            <option value="IT" {% if user.department == "IT" %}selected{% endif %}>IT</option>
-                            <option value="Management" {% if user.department == "Management" %}selected{% endif %}>Management</option>
-                            <option value="Operations" {% if user.department == "Operations" %}selected{% endif %}>Operations</option>
-                            <option value="Sales" {% if user.department == "Sales" %}selected{% endif %}>Sales</option>
-                        </select>
+                        <!-- =========================================
+                             COLLAPSED USER SUMMARY
+                        ========================================== -->
 
-                        <label>Role</label>
-                        <select name="role" required>
-                            <option value="employee" {% if user.role == "employee" %}selected{% endif %}>Employee</option>
-                            <option value="admin" {% if user.role == "admin" %}selected{% endif %}>Admin</option>
-                        </select>
+                        <summary>
 
-                        <button type="submit">Save Changes</button>
-                    </form>
+                            <div class="user-summary-main">
 
-                    {% if user.username != session["username"] %}
-                        <form action="/delete_user/{{ user.id }}" method="POST">
-                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="delete-button">Delete User</button>
-                        </form>
-                    {% else %}
-                        <p class="security-note">You cannot delete your own account.</p>
-                    {% endif %}
-                </div>
-            {% endfor %}
+                                <div class="user-summary-icon">
+                                    👤
+                                </div>
+
+
+                                <div class="user-summary-info">
+
+                                    <strong>
+                                        {{ user.full_name if user.full_name else "No Name" }}
+                                    </strong>
+
+
+                                    <span>
+                                        {{ user.username }}
+                                        ·
+                                        {{ department_labels.get(
+                                            user.department,
+                                            user.department if user.department else "No Department"
+                                        ) }}
+                                    </span>
+
+
+                                    <small>
+                                        Last login:
+                                        {{ user.last_login if user.last_login else "Never" }}
+                                    </small>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="user-summary-right">
+
+                                {% if user.role == "admin" %}
+
+                                    <span class="user-role-badge role-admin">
+                                        Administrator
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="user-role-badge role-employee">
+                                        Employee
+                                    </span>
+
+                                {% endif %}
+
+                            </div>
+
+                        </summary>
+
+
+
+                        <!-- =========================================
+                             EXPANDED CONTENT
+                        ========================================== -->
+
+                        <div class="user-management-content">
+
+
+                            <!-- =====================================
+                                 ACCOUNT OVERVIEW
+                            ====================================== -->
+
+                            <div class="user-account-meta">
+
+                                <div class="user-meta-row">
+
+                                    <span>
+                                        Username
+                                    </span>
+
+                                    <strong>
+                                        {{ user.username }}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="user-meta-row">
+
+                                    <span>
+                                        Department
+                                    </span>
+
+                                    <strong>
+                                        {{ department_labels.get(
+                                            user.department,
+                                            user.department if user.department else "No Department"
+                                        ) }}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="user-meta-row">
+
+                                    <span>
+                                        Account Role
+                                    </span>
+
+                                    <strong>
+                                        {% if user.role == "admin" %}
+                                            Administrator
+                                        {% else %}
+                                            Employee
+                                        {% endif %}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="user-meta-row">
+
+                                    <span>
+                                        Last Login
+                                    </span>
+
+                                    <strong>
+                                        {{ user.last_login if user.last_login else "Never" }}
+                                    </strong>
+
+                                </div>
+
+
+                                <div class="user-meta-row">
+
+                                    <span>
+                                        Last Logout
+                                    </span>
+
+                                    <strong>
+                                        {{ user.last_logout if user.last_logout else "Never" }}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <!-- =====================================
+                                 PROFILE & ACCESS
+                            ====================================== -->
+
+                            <div class="user-edit-section">
+
+                                <div class="user-section-header">
+
+                                    <h2>
+                                        Profile & Access
+                                    </h2>
+
+                                    <p>
+                                        Update this user's contact information,
+                                        department, and account permissions.
+                                    </p>
+
+                                </div>
+
+
+                                <form
+                                    action="/edit_user/{{ user.id }}"
+                                    method="POST"
+                                    class="user-edit-form"
+                                >
+
+                                    <input
+                                        type="hidden"
+                                        name="csrf_token"
+                                        value="{{ csrf_token() }}"
+                                    >
+
+
+
+                                    <!-- Full Name -->
+
+                                    <label for="full_name_{{ user.id }}">
+                                        Full Name
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        id="full_name_{{ user.id }}"
+                                        name="full_name"
+                                        value="{{ user.full_name if user.full_name else '' }}"
+                                        autocomplete="name"
+                                        required
+                                    >
+
+
+
+                                    <!-- Email -->
+
+                                    <label for="email_{{ user.id }}">
+                                        Email Address
+                                    </label>
+
+                                    <input
+                                        type="email"
+                                        id="email_{{ user.id }}"
+                                        name="email"
+                                        value="{{ user.email if user.email else '' }}"
+                                        autocomplete="email"
+                                        required
+                                    >
+
+                                    <small class="manage-user-hint">
+                                        Used for MFA verification and password recovery.
+                                    </small>
+
+
+
+                                    <!-- Department -->
+
+                                    <label for="department_{{ user.id }}">
+                                        Department
+                                    </label>
+
+                                    <select
+                                        id="department_{{ user.id }}"
+                                        name="department"
+                                        required
+                                    >
+
+                                        <option
+                                            value="Finance"
+                                            {% if user.department == "Finance" %}selected{% endif %}
+                                        >
+                                            Finance
+                                        </option>
+
+
+                                        <option
+                                            value="HR"
+                                            {% if user.department == "HR" %}selected{% endif %}
+                                        >
+                                            Human Resources
+                                        </option>
+
+
+                                        <option
+                                            value="IT"
+                                            {% if user.department == "IT" %}selected{% endif %}
+                                        >
+                                            Information Technology
+                                        </option>
+
+
+                                        <option
+                                            value="Management"
+                                            {% if user.department == "Management" %}selected{% endif %}
+                                        >
+                                            Management
+                                        </option>
+
+
+                                        <option
+                                            value="Operations"
+                                            {% if user.department == "Operations" %}selected{% endif %}
+                                        >
+                                            Operations
+                                        </option>
+
+
+                                        <option
+                                            value="Sales"
+                                            {% if user.department == "Sales" %}selected{% endif %}
+                                        >
+                                            Sales
+                                        </option>
+
+                                    </select>
+
+
+
+                                    <!-- Role -->
+
+                                    <label for="role_{{ user.id }}">
+                                        Account Role
+                                    </label>
+
+                                    <select
+                                        id="role_{{ user.id }}"
+                                        name="role"
+                                        required
+                                    >
+
+                                        <option
+                                            value="employee"
+                                            {% if user.role == "employee" %}selected{% endif %}
+                                        >
+                                            Employee
+                                        </option>
+
+
+                                        <option
+                                            value="admin"
+                                            {% if user.role == "admin" %}selected{% endif %}
+                                        >
+                                            Administrator
+                                        </option>
+
+                                    </select>
+
+
+
+                                    <!-- Current access note -->
+
+                                    <div class="manage-user-role-note">
+
+                                        {% if user.role == "admin" %}
+
+                                            🔐 This account currently has
+                                            administrator access.
+
+                                        {% else %}
+
+                                            👤 This account currently has
+                                            employee access.
+
+                                        {% endif %}
+
+                                    </div>
+
+
+
+                                    <button
+                                        type="submit"
+                                        class="manage-user-save"
+                                    >
+                                        💾 Save Changes
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+
+
+                            <!-- =====================================
+                                 DANGER ZONE
+                            ====================================== -->
+
+                            {% if user.username != session["username"] %}
+
+                                <div class="user-danger-zone">
+
+                                    <div class="user-danger-zone-header">
+
+                                        <h3>
+                                            Danger Zone
+                                        </h3>
+
+                                        <p>
+                                            Deleting this account permanently removes
+                                            the user's access to NexusDesk.
+                                        </p>
+
+                                    </div>
+
+
+                                    <form
+                                        action="/delete_user/{{ user.id }}"
+                                        method="POST"
+                                        onsubmit="
+                                            return confirm(
+                                                'Delete this NexusDesk account? This action cannot be undone.'
+                                            );
+                                        "
+                                    >
+
+                                        <input
+                                            type="hidden"
+                                            name="csrf_token"
+                                            value="{{ csrf_token() }}"
+                                        >
+
+
+                                        <button
+                                            type="submit"
+                                            class="delete-button manage-user-delete"
+                                        >
+                                            🗑️ Delete User
+                                        </button>
+
+                                    </form>
+
+                                </div>
+
+
+                            {% else %}
+
+                                <div class="user-current-account-note">
+
+                                    🔐 You are currently signed in with this account.
+                                    Your own administrator account cannot be deleted.
+
+                                </div>
+
+                            {% endif %}
+
+
+                        </div>
+
+                    </details>
+
+                {% endfor %}
+
+            </div>
+
+
         {% else %}
-            <p>No users found.</p>
+
+            <div class="manage-users-empty">
+
+                <strong>
+                    No users found.
+                </strong>
+
+                <p>
+                    Create a NexusDesk account to get started.
+                </p>
+
+            </div>
+
         {% endif %}
+
+
+
+        <!-- =====================================================
+             SECURITY NOTE
+        ====================================================== -->
+
+        <p class="security-note manage-users-security-note">
+            🔐 User management is restricted to administrator accounts.
+        </p>
+
+
     </div>
+
 </div>
+
 </body>
+
 </html>

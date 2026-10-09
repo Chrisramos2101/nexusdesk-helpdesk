@@ -17,7 +17,7 @@ The project began as a local Flask application and was progressively hardened th
 ### Authentication & security
 
 - Password hashing with Werkzeug
-- Email-based multi-factor authentication
+- Email-based multi-factor authentication with code resend and a temporary 30-minute trusted-browser window
 - Password-reset tokens with expiration and one-time use
 - Case-insensitive account-recovery email lookup
 - Login lockout and rate limiting
@@ -35,7 +35,7 @@ The project began as a local Flask application and was progressively hardened th
 - High / Medium / Low priorities
 - Ticket categories
 - Technician assignment
-- SLA tracking and SLA outcomes
+- Business-hour SLA tracking and outcomes: High within 4 business hours, Medium within 1 business day, and Low within 3 business days
 - Ticket notes
 - File attachment workflow
 - Search and filtering
@@ -48,9 +48,11 @@ The project began as a local Flask application and was progressively hardened th
 - User creation, editing, and deletion
 - Department management
 - User profile management
+- Administrator-created support requests
 - Knowledge base
-- Knowledge-base views and feedback
-- Notifications and ticket activity
+- Knowledge-base views and employee feedback
+- Administrator knowledge-base feedback review
+- Branded transactional email notifications
 - Operational dashboards and analytics
 
 ### Portfolio demonstration data
@@ -258,7 +260,7 @@ A portfolio-oriented engineering summary is available in [`docs/PORTFOLIO_CASE_S
 
 ## Release
 
-Current release target: **v1.0.0**
+Current release: **v1.1.0**
 
 See:
 

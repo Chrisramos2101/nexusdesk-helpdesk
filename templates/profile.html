@@ -1,63 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <title>My Profile</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>My Profile | NexusDesk</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-<div class="container">
-    <div class="card">
+
+<div class="container profile-page">
+
+    <div class="card profile-card">
+
         <div class="logo-circle">👤</div>
 
+        {% if user.role == "admin" %}
+            <div class="portal-badge">
+                ADMINISTRATOR ACCESS
+            </div>
+        {% else %}
+            <div class="portal-badge">
+                EMPLOYEE ACCOUNT
+            </div>
+        {% endif %}
+
         <h1>My Profile</h1>
-        <p>View your NexusDesk account information.</p>
 
-        <div class="ticket">
+        <p class="profile-subtitle">
+            Manage your NexusDesk account information and security.
+        </p>
+
+
+        {% if request.args.get("updated") == "1" %}
+            <div class="success-box profile-success">
+                ✓ Profile updated successfully.
+            </div>
+        {% endif %}
+
+
+        <!-- =====================================================
+             PROFILE INFORMATION
+        ====================================================== -->
+
+        <div class="profile-section">
+
+            <div class="profile-section-header">
+                <h2>Profile Information</h2>
+
+                <p>
+                    Keep your contact and department information up to date.
+                </p>
+            </div>
+
+
             <form action="/update_profile" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                <label>Full Name</label>
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+
+                <label for="full_name">
+                    Full Name
+                </label>
+
                 <input
                     type="text"
+                    id="full_name"
                     name="full_name"
                     value="{{ user.full_name if user.full_name else '' }}"
-                    required>
+                    autocomplete="name"
+                    required
+                >
 
-                <label>Email</label>
+
+                <label for="email">
+                    Email
+                </label>
+
                 <input
                     type="email"
+                    id="email"
                     name="email"
                     value="{{ user.email if user.email else '' }}"
-                    required>
+                    autocomplete="email"
+                    required
+                >
 
-                <label>Department</label>
-                <select name="department" required>
-                    <option value="Finance" {% if user.department == "Finance" %}selected{% endif %}>Finance</option>
-                    <option value="HR" {% if user.department == "HR" %}selected{% endif %}>HR</option>
-                    <option value="IT" {% if user.department == "IT" %}selected{% endif %}>IT</option>
-                    <option value="Management" {% if user.department == "Management" %}selected{% endif %}>Management</option>
-                    <option value="Operations" {% if user.department == "Operations" %}selected{% endif %}>Operations</option>
-                    <option value="Sales" {% if user.department == "Sales" %}selected{% endif %}>Sales</option>
+                <small class="profile-field-hint">
+                    Used for verification codes and password recovery.
+                </small>
+
+
+                <label for="department">
+                    Department
+                </label>
+
+                <select
+                    id="department"
+                    name="department"
+                    required
+                >
+
+                    <option
+                        value="Finance"
+                        {% if user.department == "Finance" %}selected{% endif %}
+                    >
+                        Finance
+                    </option>
+
+                    <option
+                        value="HR"
+                        {% if user.department == "HR" %}selected{% endif %}
+                    >
+                        HR
+                    </option>
+
+                    <option
+                        value="IT"
+                        {% if user.department == "IT" %}selected{% endif %}
+                    >
+                        IT
+                    </option>
+
+                    <option
+                        value="Management"
+                        {% if user.department == "Management" %}selected{% endif %}
+                    >
+                        Management
+                    </option>
+
+                    <option
+                        value="Operations"
+                        {% if user.department == "Operations" %}selected{% endif %}
+                    >
+                        Operations
+                    </option>
+
+                    <option
+                        value="Sales"
+                        {% if user.department == "Sales" %}selected{% endif %}
+                    >
+                        Sales
+                    </option>
+
                 </select>
 
-                <button type="submit">💾 Save Profile</button>
+
+                <button
+                    type="submit"
+                    class="profile-save-button"
+                >
+                    💾 Save Profile
+                </button>
+
             </form>
 
-            <div class="steps-box">
-                <p><strong>Username:</strong> {{ user.username }}</p>
-                <p><strong>Role:</strong> {{ user.role }}</p>
-                <p><strong>Last Login:</strong> {{ user.last_login if user.last_login else "Never" }}</p>
-                <p><strong>Last Logout:</strong> {{ user.last_logout if user.last_logout else "Never" }}</p>
-            </div>
         </div>
 
-        <div class="portal-actions">
-            <a href="/change_password" class="portal-button admin-button">🔐 Change Password</a>
-            <a href="/" class="portal-button secondary-button">← Back to Portal</a>
+
+        <!-- =====================================================
+             SECURITY & ACCESS
+        ====================================================== -->
+
+        <div class="profile-section security-access-section">
+
+            <div class="profile-section-header">
+                <h2>Security & Access</h2>
+
+                <p>
+                    Review your account access and recent sign-in activity.
+                </p>
+            </div>
+
+
+            <div class="profile-detail-list">
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Username
+                    </span>
+
+                    <strong>
+                        {{ user.username }}
+                    </strong>
+                </div>
+
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Account Type
+                    </span>
+
+                    <strong>
+                        {% if user.role == "admin" %}
+                            Administrator
+                        {% else %}
+                            Employee
+                        {% endif %}
+                    </strong>
+                </div>
+
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Multi-Factor Authentication
+                    </span>
+
+                    <strong class="profile-security-enabled">
+                        ✓ Enabled
+                    </strong>
+                </div>
+
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Last Login
+                    </span>
+
+                    <strong>
+                        {{ user.last_login if user.last_login else "Never" }}
+                    </strong>
+                </div>
+
+
+                <div class="profile-detail-row">
+                    <span class="profile-detail-label">
+                        Last Logout
+                    </span>
+
+                    <strong>
+                        {{ user.last_logout if user.last_logout else "Never" }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            {% if user.role == "admin" %}
+                <div class="profile-admin-note">
+                    🔐 Administrator access is protected by
+                    role-based permissions and multi-factor authentication.
+                </div>
+            {% else %}
+                <div class="profile-admin-note">
+                    🔐 Your NexusDesk account is protected by
+                    multi-factor authentication.
+                </div>
+            {% endif %}
+
         </div>
+
+
+        <!-- =====================================================
+             ACCOUNT ACTIONS
+        ====================================================== -->
+
+        <div class="profile-actions">
+
+            <a
+                href="/change_password"
+                class="portal-button admin-button"
+            >
+                🔐 Change Password
+            </a>
+
+
+            <a
+                href="/"
+                class="portal-button secondary-button"
+            >
+                {% if user.role == "admin" %}
+                    ← Back to Admin Portal
+                {% else %}
+                    ← Back to Employee Portal
+                {% endif %}
+            </a>
+
+        </div>
+
     </div>
+
 </div>
+
 </body>
 </html>

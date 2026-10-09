@@ -89,7 +89,7 @@ def apply_security_headers(response):
 app.config["TEMPLATES_AUTO_RELOAD"] = os.getenv("FLASK_ENV") != "production"
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=60)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(hours=10)
 app.config["MAIL_SERVER"] = os.getenv("MAIL_SERVER")
 app.config["MAIL_PORT"] = int(os.getenv("MAIL_PORT", 587))
 app.config["MAIL_USE_TLS"] = os.getenv("MAIL_USE_TLS", "True") == "True"

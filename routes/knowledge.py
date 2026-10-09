@@ -16,8 +16,8 @@ knowledge_articles = {
         "last_updated": "06/29/2026",
         "steps": [
             "Go to the company password reset portal.",
-            "Enter your username or employee ID.",
-            "Verify your identity using email or phone verification.",
+            "Enter your email associated with your account.",
+            "Verify your identity using your email.",
             "Create a new password using company password rules.",
             "Try logging in again after 2–3 minutes."
         ],
@@ -237,7 +237,7 @@ def submit_article_feedback(slug):
         return redirect("/knowledge_base")
 
     was_helpful = request.form.get("was_helpful", "").strip().lower()
-    if was_helpful not in {"yes", "no"}:
+    if was_helpful not in {"yes", "partial", "no"}:
         return redirect(f"/knowledge_base/{slug}")
 
     feedback = request.form.get("feedback", "").strip()[:2000]
@@ -271,3 +271,42 @@ def submit_article_feedback(slug):
     connection.close()
 
     return redirect(f"/knowledge_base/{slug}?feedback=submitted")
+
+
+@knowledge_bp.route("/admin/article-feedback")
+@login_required
+def admin_article_feedback():
+    if session.get("role") != "admin":
+        return redirect("/")
+
+    connection = get_db_connection()
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT
+            id,
+            article_slug,
+            username,
+            was_helpful,
+            feedback,
+            created_at
+        FROM article_feedback
+        ORDER BY id DESC
+    """)
+    feedback_rows = cursor.fetchall()
+
+    connection.close()
+
+    total_feedback = len(feedback_rows)
+    solved_count = sum(1 for row in feedback_rows if row["was_helpful"] == "yes")
+    partial_count = sum(1 for row in feedback_rows if row["was_helpful"] == "partial")
+    no_count = sum(1 for row in feedback_rows if row["was_helpful"] == "no")
+
+    return render_template(
+        "admin_article_feedback.html",
+        feedback_rows=feedback_rows,
+        total_feedback=total_feedback,
+        solved_count=solved_count,
+        partial_count=partial_count,
+        no_count=no_count
+    )

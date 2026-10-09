@@ -1,245 +1,911 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
-    <title>My Tickets</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>My Tickets | NexusDesk</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
 </head>
 
+
 <body>
+
 <div class="login-page">
+
     <div class="login-card my-tickets-page">
 
-        <div class="ticket-detail-topbar">
-            <a href="/" class="portal-button secondary-button">
-                ← Back to Employee Portal
-            </a>
+
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
+
+        <div class="portal-badge">
+            EMPLOYEE TICKETS
         </div>
 
-        <div class="portal-badge">EMPLOYEE TICKETS</div>
 
-        <h1>🎫 My Tickets</h1>
+        <h1>
+            🎫 My Tickets
+        </h1>
+
+
         <p class="login-subtitle">
-            Track submitted requests, status updates, priority, SLA progress, and support activity.
+            Track submitted requests, status updates, priority,
+            SLA progress, and support activity.
         </p>
 
+
+
+        <!-- =====================================================
+             DISPLAY LABELS
+             Backend values remain unchanged.
+        ====================================================== -->
+
+        {% set department_labels = {
+            "HR": "Human Resources",
+            "IT": "Information Technology"
+        } %}
+
+
+        {% set category_labels = {
+            "Hardware": "Hardware & Devices",
+            "Software": "Software & Applications",
+            "Network": "Network & Connectivity",
+            "Account Access": "Account & Access",
+            "Security": "Security & Privacy",
+            "Other": "Other / General Support"
+        } %}
+
+
+
+        <!-- =====================================================
+             TICKET COUNTS
+        ====================================================== -->
+
         {% set total = tickets|length %}
+
         {% set open_count = namespace(value=0) %}
+        {% set progress_count = namespace(value=0) %}
         {% set closed_count = namespace(value=0) %}
         {% set high_count = namespace(value=0) %}
 
+
         {% for ticket in tickets %}
-            {% if ticket.status != "Closed" %}
+
+            {% if ticket.status == "Open" %}
                 {% set open_count.value = open_count.value + 1 %}
             {% endif %}
+
+
+            {% if ticket.status == "In Progress" %}
+                {% set progress_count.value = progress_count.value + 1 %}
+            {% endif %}
+
 
             {% if ticket.status == "Closed" %}
                 {% set closed_count.value = closed_count.value + 1 %}
             {% endif %}
 
+
             {% if ticket.priority == "High" %}
                 {% set high_count.value = high_count.value + 1 %}
             {% endif %}
+
         {% endfor %}
 
-        <div class="ticket-kpi-grid">
-            <div class="ticket-kpi-card">
-                <span>📌</span>
-                <h2>{{ total }}</h2>
-                <p>Total Submitted</p>
-            </div>
 
-            <div class="ticket-kpi-card">
-                <span>🟢</span>
-                <h2>{{ open_count.value }}</h2>
-                <p>Open Requests</p>
-            </div>
 
-            <div class="ticket-kpi-card">
-                <span>✅</span>
-                <h2>{{ closed_count.value }}</h2>
-                <p>Resolved</p>
-            </div>
+        <!-- =====================================================
+             QUICK FILTER CARDS
+        ====================================================== -->
 
-            <div class="ticket-kpi-card">
-                <span>⚠️</span>
-                <h2>{{ high_count.value }}</h2>
-                <p>High Priority</p>
-            </div>
+        <div class="ticket-kpi-grid ticket-filter-grid">
+
+
+            <button
+                type="button"
+                class="ticket-kpi-card ticket-filter-card active"
+                data-status-filter="all"
+                data-priority-filter="all"
+                aria-pressed="true"
+            >
+
+                <span>
+                    📌
+                </span>
+
+                <h2>
+                    {{ total }}
+                </h2>
+
+                <p>
+                    Total Submitted
+                </p>
+
+            </button>
+
+
+
+            <button
+                type="button"
+                class="ticket-kpi-card ticket-filter-card"
+                data-status-filter="open"
+                data-priority-filter="all"
+                aria-pressed="false"
+            >
+
+                <span>
+                    🟢
+                </span>
+
+                <h2>
+                    {{ open_count.value }}
+                </h2>
+
+                <p>
+                    Open
+                </p>
+
+            </button>
+
+
+
+            <button
+                type="button"
+                class="ticket-kpi-card ticket-filter-card"
+                data-status-filter="in progress"
+                data-priority-filter="all"
+                aria-pressed="false"
+            >
+
+                <span>
+                    🛠️
+                </span>
+
+                <h2>
+                    {{ progress_count.value }}
+                </h2>
+
+                <p>
+                    In Progress
+                </p>
+
+            </button>
+
+
+
+            <button
+                type="button"
+                class="ticket-kpi-card ticket-filter-card"
+                data-status-filter="closed"
+                data-priority-filter="all"
+                aria-pressed="false"
+            >
+
+                <span>
+                    ✅
+                </span>
+
+                <h2>
+                    {{ closed_count.value }}
+                </h2>
+
+                <p>
+                    Resolved
+                </p>
+
+            </button>
+
+
+
+            <button
+                type="button"
+                class="ticket-kpi-card ticket-filter-card"
+                data-status-filter="all"
+                data-priority-filter="high"
+                aria-pressed="false"
+            >
+
+                <span>
+                    ⚠️
+                </span>
+
+                <h2>
+                    {{ high_count.value }}
+                </h2>
+
+                <p>
+                    High Priority
+                </p>
+
+            </button>
+
+
         </div>
 
+
+
+        <!-- =====================================================
+             SEARCH & FILTERS
+        ====================================================== -->
+
         <div class="ticket-toolbar">
+
             <input
                 type="text"
                 id="ticketSearch"
-                placeholder="Search tickets by issue, department, status, category, or priority...">
+                placeholder="Search tickets by issue, department, status, category, or priority..."
+            >
+
 
             <select id="statusFilter">
-                <option value="all">All Statuses</option>
-                <option value="open">Open</option>
-                <option value="in progress">In Progress</option>
-                <option value="closed">Closed</option>
+
+                <option value="all">
+                    All Statuses
+                </option>
+
+                <option value="open">
+                    Open
+                </option>
+
+                <option value="in progress">
+                    In Progress
+                </option>
+
+                <option value="closed">
+                    Resolved
+                </option>
+
             </select>
+
 
             <select id="priorityFilter">
-                <option value="all">All Priorities</option>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
+
+                <option value="all">
+                    All Priorities
+                </option>
+
+                <option value="low">
+                    Low
+                </option>
+
+                <option value="medium">
+                    Medium
+                </option>
+
+                <option value="high">
+                    High
+                </option>
+
             </select>
+
         </div>
 
+
+
+        <!-- =====================================================
+             TICKET LIST
+        ====================================================== -->
+
         {% if tickets %}
+
+
             <div class="ticket-card-list">
 
+
                 {% for ticket in tickets %}
+
+
                 <article
                     class="my-ticket-card"
-                    data-search="{{ ticket.issue }} {{ ticket.department }} {{ ticket.category }} {{ ticket.priority }} {{ ticket.status }}"
+                    data-search="
+                        {{ ticket.issue }}
+                        {{ ticket.department }}
+                        {{ department_labels.get(ticket.department, ticket.department) }}
+                        {{ ticket.category }}
+                        {{ category_labels.get(ticket.category, ticket.category) }}
+                        {{ ticket.priority }}
+                        {{ ticket.status }}
+                    "
                     data-status="{{ ticket.status|lower }}"
-                    data-priority="{{ ticket.priority|lower }}">
+                    data-priority="{{ ticket.priority|lower }}"
+                >
+
+
+                    <!-- =========================================
+                         CARD HEADER
+                    ========================================== -->
 
                     <div class="ticket-card-top">
+
+
                         <div>
-                            <span class="ticket-id-pill">Ticket #{{ ticket.id }}</span>
-                            <h2>{{ ticket.issue }}</h2>
-                            <p>{{ ticket.category }} request for {{ ticket.department }}</p>
+
+                            <span class="ticket-id-pill">
+                                NEX-2026-{{ "%06d"|format(ticket.id) }}
+                            </span>
+
+
+                            <h2>
+                                {{ ticket.issue }}
+                            </h2>
+
+
+                            <p>
+                                {{ category_labels.get(ticket.category, ticket.category) }}
+                                request for
+                                {{ department_labels.get(ticket.department, ticket.department) }}
+                            </p>
+
                         </div>
 
+
+
                         <div class="ticket-pill-stack">
-                            <span class="status-pill status-{{ ticket.status|lower|replace(' ', '-') }}">
+
+                            <span
+                                class="status-pill status-{{ ticket.status|lower|replace(' ', '-') }}"
+                            >
                                 {{ ticket.status }}
                             </span>
 
-                            <span class="priority-pill priority-{{ ticket.priority|lower }}">
+
+                            <span
+                                class="priority-pill priority-{{ ticket.priority|lower }}"
+                            >
                                 {{ ticket.priority }} Priority
                             </span>
+
                         </div>
+
+
                     </div>
+
+
+
+                    <!-- =========================================
+                         TICKET INFORMATION
+                    ========================================== -->
 
                     <div class="ticket-detail-grid">
-                        <div>
-                            <small>Department</small>
-                            <strong>{{ ticket.department }}</strong>
-                        </div>
+
 
                         <div>
-                            <small>Assigned To</small>
-                            <strong>{{ ticket.assigned_to if ticket.assigned_to else "Unassigned" }}</strong>
-                        </div>
 
-                        <div>
-                            <small>Submitted</small>
-                            <strong>{{ ticket.submitted_at }}</strong>
-                        </div>
+                            <small>
+                                Department
+                            </small>
 
-                        <div>
-                            <small>SLA Status</small>
                             <strong>
-                                {% if ticket.status == "Closed" %}
-                                    Completed
-                                {% elif ticket.sla_due_at %}
-                                    Due {{ ticket.sla_due_at }}
-                                {% else %}
-                                    Pending SLA
-                                {% endif %}
+                                {{ department_labels.get(ticket.department, ticket.department) }}
                             </strong>
+
                         </div>
+
+
+
+                        <div>
+
+                            <small>
+                                Assigned To
+                            </small>
+
+                            <strong>
+                                {{ ticket.assigned_to if ticket.assigned_to else "Unassigned" }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <div>
+
+                            <small>
+                                Submitted
+                            </small>
+
+                            <strong>
+                                {{ ticket.submitted_at }}
+                            </strong>
+
+                        </div>
+
+
+
+                        <div>
+
+                            <small>
+                                SLA Status
+                            </small>
+
+                            <strong>
+
+                                {% if ticket.status == "Closed" %}
+
+                                    Completed
+
+                                {% elif ticket.sla_due_at %}
+
+                                    Due {{ ticket.sla_due_at }}
+
+                                {% else %}
+
+                                    Pending SLA
+
+                                {% endif %}
+
+                            </strong>
+
+                        </div>
+
+
                     </div>
+
+
+
+                    <!-- =========================================
+                         TICKET TIMELINE
+                    ========================================== -->
 
                     <div class="ticket-timeline">
+
+
                         <div class="timeline-step active">
+
                             <span></span>
-                            <p>Submitted</p>
+
+                            <p>
+                                Submitted
+                            </p>
+
                         </div>
 
-                        <div class="timeline-step {% if ticket.assigned_to and ticket.assigned_to != 'Unassigned' %}active{% endif %}">
+
+
+                        <div
+                            class="timeline-step
+                            {% if ticket.assigned_to and ticket.assigned_to != 'Unassigned' %}
+                                active
+                            {% endif %}"
+                        >
+
                             <span></span>
-                            <p>Assigned</p>
+
+                            <p>
+                                Assigned
+                            </p>
+
                         </div>
 
-                        <div class="timeline-step {% if ticket.status == 'In Progress' or ticket.status == 'Closed' %}active{% endif %}">
+
+
+                        <div
+                            class="timeline-step
+                            {% if ticket.status == 'In Progress' or ticket.status == 'Closed' %}
+                                active
+                            {% endif %}"
+                        >
+
                             <span></span>
-                            <p>In Progress</p>
+
+                            <p>
+                                In Progress
+                            </p>
+
                         </div>
 
-                        <div class="timeline-step {% if ticket.status == 'Closed' %}active{% endif %}">
+
+
+                        <div
+                            class="timeline-step
+                            {% if ticket.status == 'Closed' %}
+                                active
+                            {% endif %}"
+                        >
+
                             <span></span>
-                            <p>Resolved</p>
+
+                            <p>
+                                Resolved
+                            </p>
+
                         </div>
+
+
                     </div>
+
+
+
+                    <!-- =========================================
+                         LATEST ACTIVITY
+                    ========================================== -->
 
                     <div class="ticket-activity-box">
-                        <strong>Latest Activity</strong>
+
+                        <strong>
+                            Latest Activity
+                        </strong>
+
 
                         {% if ticket.status == "Closed" %}
-                            <p>✅ Ticket resolved. Resolution time: {{ ticket.resolution_time if ticket.resolution_time else "Not recorded" }}.</p>
+
+                            <p>
+                                ✅ Ticket resolved.
+                                Resolution time:
+                                {{ ticket.resolution_time if ticket.resolution_time else "Not recorded" }}.
+                            </p>
+
+
+                        {% elif ticket.status == "In Progress" %}
+
+                            <p>
+                                🛠️ Your request is currently being worked on by
+                                {{ ticket.assigned_to if ticket.assigned_to else "IT support" }}.
+                            </p>
+
+
                         {% elif ticket.assigned_to and ticket.assigned_to != "Unassigned" %}
-                            <p>🛠️ Your request is assigned to {{ ticket.assigned_to }} and is waiting for an update.</p>
+
+                            <p>
+                                👤 Your request has been assigned to
+                                {{ ticket.assigned_to }}
+                                and is awaiting progress.
+                            </p>
+
+
                         {% else %}
-                            <p>⏳ Your request is waiting for technician assignment.</p>
+
+                            <p>
+                                ⏳ Your request is waiting for technician assignment.
+                            </p>
+
+
                         {% endif %}
+
                     </div>
+
+
+
+                    <!-- =========================================
+                         ACTIONS
+                    ========================================== -->
 
                     <div class="ticket-actions-row">
-                        <a href="/my_tickets/{{ ticket.id }}" class="portal-button admin-button">View Details</a>
-                        <a href="/" class="portal-button secondary-button">Submit Another</a>
+
+
+                        <a
+                            href="/my_tickets/{{ ticket.id }}"
+                            class="portal-button admin-button"
+                        >
+                            👁 View Details
+                        </a>
+
+
+                        <a
+                            href="/#ticket-form"
+                            class="portal-button secondary-button"
+                        >
+                            ➕ Submit Another
+                        </a>
+
+
                     </div>
 
+
                 </article>
+
+
                 {% endfor %}
 
+
             </div>
+
+
+
+            <!-- =============================================
+                 FILTER EMPTY STATE
+            ============================================== -->
+
+            <div
+                id="ticketNoResults"
+                class="premium-empty-state ticket-filter-empty"
+                style="display: none;"
+            >
+
+                <span>
+                    🔎
+                </span>
+
+                <h2>
+                    No matching tickets
+                </h2>
+
+                <p>
+                    Try another search term or choose a different
+                    status or priority.
+                </p>
+
+            </div>
+
+
         {% else %}
+
+
+            <!-- =============================================
+                 NO TICKETS
+            ============================================== -->
+
             <div class="premium-empty-state">
-                <span>🎉</span>
-                <h2>You’re all caught up</h2>
-                <p>No tickets have been submitted yet. Create a request when you need IT support.</p>
-                <a href="/" class="portal-button admin-button">🚀 Submit Your First Ticket</a>
+
+                <span>
+                    🎉
+                </span>
+
+                <h2>
+                    No tickets submitted yet
+                </h2>
+
+                <p>
+                    Create a support request whenever you need
+                    assistance from IT.
+                </p>
+
+                <a
+                    href="/#ticket-form"
+                    class="portal-button admin-button"
+                >
+                    🚀 Submit Your First Ticket
+                </a>
+
             </div>
+
+
         {% endif %}
 
+
+
+        <!-- =====================================================
+             NAVIGATION
+        ====================================================== -->
+
         <div class="portal-actions">
-            <a href="/" class="portal-button secondary-button">← Back to Employee Portal</a>
+
+            <a
+                href="/"
+                class="portal-button secondary-button"
+            >
+                ← Back to Employee Portal
+            </a>
+
         </div>
 
+
     </div>
+
 </div>
+
+
 
 <footer class="login-footer">
     © 2026 NexusDesk · Employee Ticket Center
 </footer>
 
+
+
 <script>
-    const searchInput = document.getElementById("ticketSearch");
-    const statusFilter = document.getElementById("statusFilter");
-    const priorityFilter = document.getElementById("priorityFilter");
-    const ticketCards = document.querySelectorAll(".my-ticket-card");
 
-    function filterTickets() {
-        const searchValue = searchInput.value.toLowerCase();
-        const statusValue = statusFilter.value;
-        const priorityValue = priorityFilter.value;
+const searchInput =
+    document.getElementById("ticketSearch");
 
-        ticketCards.forEach(card => {
-            const searchText = card.dataset.search.toLowerCase();
-            const status = card.dataset.status;
-            const priority = card.dataset.priority;
+const statusFilter =
+    document.getElementById("statusFilter");
 
-            const matchesSearch = searchText.includes(searchValue);
-            const matchesStatus = statusValue === "all" || status === statusValue;
-            const matchesPriority = priorityValue === "all" || priority === priorityValue;
+const priorityFilter =
+    document.getElementById("priorityFilter");
 
-            card.style.display = matchesSearch && matchesStatus && matchesPriority ? "block" : "none";
-        });
+const ticketCards =
+    document.querySelectorAll(".my-ticket-card");
+
+const filterCards =
+    document.querySelectorAll(".ticket-filter-card");
+
+const ticketNoResults =
+    document.getElementById("ticketNoResults");
+
+
+
+function filterTickets() {
+
+    const searchValue =
+        searchInput
+            ? searchInput.value.toLowerCase()
+            : "";
+
+    const statusValue =
+        statusFilter
+            ? statusFilter.value
+            : "all";
+
+    const priorityValue =
+        priorityFilter
+            ? priorityFilter.value
+            : "all";
+
+
+    let visibleCount = 0;
+
+
+    ticketCards.forEach(card => {
+
+        const searchText =
+            card.dataset.search.toLowerCase();
+
+        const status =
+            card.dataset.status;
+
+        const priority =
+            card.dataset.priority;
+
+
+        const matchesSearch =
+            searchText.includes(searchValue);
+
+        const matchesStatus =
+            statusValue === "all" ||
+            status === statusValue;
+
+        const matchesPriority =
+            priorityValue === "all" ||
+            priority === priorityValue;
+
+
+        const shouldShow =
+            matchesSearch &&
+            matchesStatus &&
+            matchesPriority;
+
+
+        card.style.display =
+            shouldShow
+                ? "block"
+                : "none";
+
+
+        if (shouldShow) {
+            visibleCount++;
+        }
+
+    });
+
+
+    if (ticketNoResults) {
+
+        ticketNoResults.style.display =
+            visibleCount === 0
+                ? "block"
+                : "none";
+
     }
 
-    if (searchInput) {
-        searchInput.addEventListener("input", filterTickets);
-        statusFilter.addEventListener("change", filterTickets);
-        priorityFilter.addEventListener("change", filterTickets);
-    }
+}
+
+
+
+function syncActiveFilterCard() {
+
+    filterCards.forEach(card => {
+
+        const matchesStatus =
+            card.dataset.statusFilter ===
+            statusFilter.value;
+
+        const matchesPriority =
+            card.dataset.priorityFilter ===
+            priorityFilter.value;
+
+
+        const isActive =
+            matchesStatus &&
+            matchesPriority;
+
+
+        card.classList.toggle(
+            "active",
+            isActive
+        );
+
+
+        card.setAttribute(
+            "aria-pressed",
+            isActive
+                ? "true"
+                : "false"
+        );
+
+    });
+
+}
+
+
+
+filterCards.forEach(card => {
+
+    card.addEventListener(
+        "click",
+        function () {
+
+            if (searchInput) {
+                searchInput.value = "";
+            }
+
+
+            statusFilter.value =
+                card.dataset.statusFilter;
+
+            priorityFilter.value =
+                card.dataset.priorityFilter;
+
+
+            syncActiveFilterCard();
+            filterTickets();
+
+        }
+    );
+
+});
+
+
+
+if (searchInput) {
+
+    searchInput.addEventListener(
+        "input",
+        filterTickets
+    );
+
+}
+
+
+
+if (statusFilter) {
+
+    statusFilter.addEventListener(
+        "change",
+        function () {
+
+            syncActiveFilterCard();
+            filterTickets();
+
+        }
+    );
+
+}
+
+
+
+if (priorityFilter) {
+
+    priorityFilter.addEventListener(
+        "change",
+        function () {
+
+            syncActiveFilterCard();
+            filterTickets();
+
+        }
+    );
+
+}
+
 </script>
 
+
 </body>
+
 </html>

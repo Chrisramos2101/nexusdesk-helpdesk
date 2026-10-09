@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Submit Support Request | NexusDesk</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <div class="logo-circle">
+            🎫
+        </div>
+
+        <div class="portal-badge">
+            ADMIN REQUEST
+        </div>
+
+        <h1>Submit a Support Request</h1>
+
+        <p>
+            Create a NexusDesk support ticket for your account.
+        </p>
+
+        <div class="form-section premium-ticket-form">
+
+            <div class="form-header">
+
+                <span class="portal-badge">
+                    NEW SUPPORT REQUEST
+                </span>
+
+                <h3>Create Ticket</h3>
+
+                <p>
+                    Provide the details needed to document and resolve
+                    the support request.
+                </p>
+
+            </div>
+
+            <div class="security-note">
+                👤 <strong>Automatic Assignment:</strong>
+                This ticket will be assigned to
+                <strong>{{ user.username }}</strong>
+                when submitted.
+            </div>
+
+
+            <form
+                action="/submit"
+                method="POST"
+                enctype="multipart/form-data"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+
+                <!-- STEP 1 -->
+
+                <div class="form-step">
+                    <span>Step 1</span>
+                    <strong>Identify the request</strong>
+                </div>
+
+
+                <label for="name">
+                    Requester By:
+                </label>
+
+                <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    value="{{ user.full_name if user.full_name else user.username }}"
+                    required
+                >
+
+                <small class="field-hint">
+                    The administrator account will be recorded as the ticket submitter..
+                </small>
+
+
+                <label for="department">
+                    Department
+                </label>
+
+                <select
+                    id="department"
+                    name="department"
+                    required
+                >
+
+                    <option value="">
+                        Select Department
+                    </option>
+
+                    <option
+                        value="Finance"
+                        {% if user.department == "Finance" %}selected{% endif %}
+                    >
+                        Finance
+                    </option>
+
+                    <option
+                        value="HR"
+                        {% if user.department == "HR" %}selected{% endif %}
+                    >
+                        Human Resources
+                    </option>
+
+                    <option
+                        value="IT"
+                        {% if user.department == "IT" %}selected{% endif %}
+                    >
+                        Information Technology
+                    </option>
+
+                    <option
+                        value="Management"
+                        {% if user.department == "Management" %}selected{% endif %}
+                    >
+                        Management
+                    </option>
+
+                    <option
+                        value="Operations"
+                        {% if user.department == "Operations" %}selected{% endif %}
+                    >
+                        Operations
+                    </option>
+
+                    <option
+                        value="Sales"
+                        {% if user.department == "Sales" %}selected{% endif %}
+                    >
+                        Sales
+                    </option>
+
+                </select>
+
+
+                <!-- STEP 2 -->
+
+                <div class="form-step">
+                    <span>Step 2</span>
+                    <strong>Describe the issue</strong>
+                </div>
+
+
+                <label for="issue">
+                    Issue Description
+                </label>
+
+                <textarea
+                    id="issue"
+                    name="issue"
+                    placeholder="Describe the issue, affected device or application, error messages, and relevant details..."
+                    required
+                ></textarea>
+
+                <small class="field-hint">
+                    Include enough information for the ticket history
+                    to clearly document the support request.
+                </small>
+
+
+                <!-- STEP 3 -->
+
+                <div class="form-step">
+                    <span>Step 3</span>
+                    <strong>Classify the request</strong>
+                </div>
+
+
+                <label for="category">
+                    Category
+                </label>
+
+                <select
+                    id="category"
+                    name="category"
+                    required
+                >
+
+                    <option value="">
+                        Select Category
+                    </option>
+
+                    <option value="Hardware">
+                        Hardware & Devices
+                    </option>
+
+                    <option value="Software">
+                        Software & Applications
+                    </option>
+
+                    <option value="Network">
+                        Network & Connectivity
+                    </option>
+
+                    <option value="Account Access">
+                        Account & Access
+                    </option>
+
+                    <option value="Security">
+                        Security & Privacy
+                    </option>
+
+                    <option value="Other">
+                        Other / General Support
+                    </option>
+
+                </select>
+
+
+                <label for="priority">
+                    Priority
+                </label>
+
+                <select
+                    id="priority"
+                    name="priority"
+                    required
+                >
+
+                    <option value="">
+                        Select Priority
+                    </option>
+
+                    <option value="Low">
+                        Low
+                    </option>
+
+                    <option value="Medium">
+                        Medium
+                    </option>
+
+                    <option value="High">
+                        High
+                    </option>
+
+                </select>
+
+                <small class="field-hint">
+                    Low = general request. Medium = work impacted.
+                    High = unable to work or security issue.
+                </small>
+
+
+                <!-- STEP 4 -->
+
+                <div class="form-step">
+                    <span>Step 4</span>
+                    <strong>Attach evidence</strong>
+                </div>
+
+
+                <label
+                    for="attachment"
+                    class="upload-zone"
+                    id="uploadZone"
+                >
+
+                    <span>
+                        📎 Upload screenshot or file
+                    </span>
+
+                    <small>
+                        PNG, JPG, PDF, TXT, DOC, or DOCX up to 10MB
+                    </small>
+
+                    <strong id="selectedFileName">
+                        No file selected
+                    </strong>
+
+                </label>
+
+
+                <input
+                    class="hidden-file-input"
+                    type="file"
+                    name="attachment"
+                    id="attachment"
+                    accept=".png,.jpg,.jpeg,.pdf,.txt,.doc,.docx"
+                >
+
+
+                <button
+                    type="submit"
+                    id="adminSubmitButton"
+                >
+                    🎫 Create & Assign Ticket
+                </button>
+
+            </form>
+
+        </div>
+
+        <div class="portal-actions">
+            <a href="/" class="portal-button secondary-button">
+                ← Back to Admin Portal
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const attachmentInput =
+    document.getElementById("attachment");
+
+const selectedFileName =
+    document.getElementById("selectedFileName");
+
+const uploadZone =
+    document.getElementById("uploadZone");
+
+const submitButton =
+    document.getElementById("adminSubmitButton");
+
+const ticketForm =
+    document.querySelector(
+        ".premium-ticket-form form"
+    );
+
+
+if (attachmentInput) {
+
+    attachmentInput.addEventListener(
+        "change",
+        function () {
+
+            if (this.files.length > 0) {
+
+                selectedFileName.textContent =
+                    "Selected: " +
+                    this.files[0].name;
+
+                uploadZone.classList.add(
+                    "file-selected"
+                );
+            }
+
+        }
+    );
+}
+
+
+if (ticketForm) {
+
+    ticketForm.addEventListener(
+        "submit",
+        function () {
+
+            submitButton.textContent =
+                "Creating ticket...";
+
+            submitButton.disabled = true;
+
+            submitButton.classList.add(
+                "loading-button"
+            );
+
+        }
+    );
+}
+
+</script>
+
+</body>
+</html>

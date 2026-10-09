@@ -2,22 +2,45 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>NexusDesk System Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>NexusDesk System Health & Security</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
+
 <div class="login-page">
-    <div class="login-card dashboard-card">
+    <div class="login-card dashboard-card system-monitor-page">
 
-        <div class="portal-badge">SYSTEM MONITORING</div>
+        <div class="portal-badge">
+            SYSTEM MONITORING
+        </div>
 
-        <h1>🖥️ NexusDesk System Dashboard</h1>
+        <h1>🖥️ NexusDesk System Health & Security</h1>
+
         <p class="login-subtitle">
-            Monitor application activity, users, tickets, and security events.
+            Monitor application health, authentication activity,
+            security events, and service status.
         </p>
 
+        {% if request.args.get("cleanup") == "success" %}
+            <div class="success-box system-cleanup-success">
+                ✓ Security cleanup completed successfully.
+                Expired or used security records were checked and cleared where applicable.
+            </div>
+        {% endif %}
+
+
+        <!-- =====================================================
+             SYSTEM METRICS
+        ====================================================== -->
+
         <div class="home-stats app-stat-grid">
+
             <div class="home-stat">
                 <span class="stat-icon">👥</span>
                 <h2>{{ total_users }}</h2>
@@ -39,7 +62,7 @@
             <div class="home-stat">
                 <span class="stat-icon">🔐</span>
                 <h2>{{ total_logins }}</h2>
-                <p>Login Events</p>
+                <p>Auth Events</p>
             </div>
 
             <div class="home-stat">
@@ -68,89 +91,323 @@
 
         </div>
 
-        <div class="app-section">
+
+        <!-- =====================================================
+             SYSTEM HEALTH
+        ====================================================== -->
+
+        <div class="app-section system-health-section">
+
             <h3>🩺 System Health</h3>
 
-            <div class="ticket">
-                <p><strong>Application Status:</strong> {{ system_status }}</p>
-                <p><strong>Database Status:</strong> {{ database_status }}</p>
-                <p><strong>Environment:</strong> {{ app_environment }}</p>
+            <p class="section-description">
+                Current application and database service status.
+            </p>
+
+            <div class="system-health-grid">
+
+                <div class="system-health-row">
+                    <span>Application Status</span>
+
+                    <strong class="health-status
+                        {% if system_status == 'Healthy' %}
+                            health-success
+                        {% else %}
+                            health-danger
+                        {% endif %}
+                    ">
+                        ● {{ system_status }}
+                    </strong>
+                </div>
+
+                <div class="system-health-row">
+                    <span>Database Status</span>
+
+                    <strong class="health-status
+                        {% if database_status == 'Connected' %}
+                            health-success
+                        {% else %}
+                            health-danger
+                        {% endif %}
+                    ">
+                        ● {{ database_status }}
+                    </strong>
+                </div>
+
+                <div class="system-health-row">
+                    <span>Environment</span>
+
+                    <strong>
+                        {{ app_environment | title }}
+                    </strong>
+                </div>
+
             </div>
+
         </div>
 
-        <div class="app-section">
-            <h3>📋 Recent System Activity</h3>
 
-            {% if recent_activity %}
-                {% for log in recent_activity %}
-                    <div class="ticket">
-                        <p><strong>{{ log.actor }}</strong></p>
-                        <p>{{ log.action }}</p>
-                        <p><small>{{ log.details }}</small></p>
-                        <p><small>{{ log.created_at }}</small></p>
+        <!-- =====================================================
+             RECENT SYSTEM ACTIVITY
+        ====================================================== -->
+
+        <details class="monitor-section">
+
+            <summary>
+                <span class="monitor-summary-title">
+                    📋 Recent System Activity
+                </span>
+
+                <span class="monitor-summary-meta">
+                    {% if recent_activity %}
+                        {{ recent_activity | length }} recent
+                    {% else %}
+                        No activity
+                    {% endif %}
+                </span>
+            </summary>
+
+
+            <div class="monitor-content">
+
+                {% if recent_activity %}
+
+                    {% for log in recent_activity %}
+
+                        <div class="monitor-event">
+
+                            <div class="monitor-event-header">
+                                <strong>{{ log.actor }}</strong>
+
+                                <span>
+                                    {{ log.created_at }}
+                                </span>
+                            </div>
+
+                            <div class="monitor-event-action">
+                                {{ log.action | replace("_", " ") | title }}
+                            </div>
+
+                            <p>
+                                {{ log.details }}
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="monitor-empty">
+                        No recent system activity found.
                     </div>
-                {% endfor %}
-            {% else %}
-                <p>No recent audit activity found.</p>
-            {% endif %}
-        </div>
 
-        <div class="app-section">
-            <h3>📧 Recent Email Events</h3>
+                {% endif %}
 
-            {% if recent_email_events %}
-                {% for event in recent_email_events %}
-                    <div class="ticket">
-                        <p><strong>{{ event.actor }}</strong></p>
-                        <p>{{ event.action }}</p>
-                        <p><small>{{ event.details }}</small></p>
-                        <p><small>{{ event.created_at }}</small></p>
+            </div>
+
+        </details>
+
+
+        <!-- =====================================================
+             RECENT EMAIL EVENTS
+        ====================================================== -->
+
+        <details class="monitor-section">
+
+            <summary>
+                <span class="monitor-summary-title">
+                    📧 Recent Email Events
+                </span>
+
+                <span class="monitor-summary-meta">
+                    {% if recent_email_events %}
+                        {{ recent_email_events | length }} recent
+                    {% else %}
+                        No events
+                    {% endif %}
+                </span>
+            </summary>
+
+
+            <div class="monitor-content">
+
+                {% if recent_email_events %}
+
+                    {% for event in recent_email_events %}
+
+                        <div class="monitor-event">
+
+                            <div class="monitor-event-header">
+                                <strong>{{ event.actor }}</strong>
+
+                                <span>
+                                    {{ event.created_at }}
+                                </span>
+                            </div>
+
+                            <div class="monitor-event-action">
+                                {{ event.action | replace("_", " ") | title }}
+                            </div>
+
+                            <p>
+                                {{ event.details }}
+                            </p>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="monitor-empty">
+                        No recent email events found.
                     </div>
-                {% endfor %}
-            {% else %}
-                <p>No recent email events found.</p>
-            {% endif %}
-        </div>
 
-        <div class="app-section">
-            <h3>🚨 Failed Login Monitoring</h3>
+                {% endif %}
 
-            {% if failed_login_users %}
-                {% for user in failed_login_users %}
-                    <div class="ticket">
-                        <p><strong>{{ user.username }}</strong></p>
-                        <p>Failed Attempts: {{ user.failed_attempts }}</p>
-                        <p>Locked Until: {{ user.locked_until if user.locked_until else "Not locked" }}</p>
+            </div>
+
+        </details>
+
+
+        <!-- =====================================================
+             FAILED LOGIN MONITORING
+        ====================================================== -->
+
+        <details class="monitor-section">
+
+            <summary>
+                <span class="monitor-summary-title">
+                    🚨 Failed Login Monitoring
+                </span>
+
+                {% if failed_login_users %}
+
+                    <span class="monitor-summary-meta monitor-warning">
+                        {{ failed_login_users | length }} flagged
+                    </span>
+
+                {% else %}
+
+                    <span class="monitor-summary-meta monitor-ok">
+                        ✓ No issues
+                    </span>
+
+                {% endif %}
+            </summary>
+
+
+            <div class="monitor-content">
+
+                {% if failed_login_users %}
+
+                    {% for user in failed_login_users %}
+
+                        <div class="monitor-event">
+
+                            <div class="monitor-event-header">
+                                <strong>
+                                    {{ user.username }}
+                                </strong>
+                            </div>
+
+                            <div class="monitor-security-details">
+
+                                <p>
+                                    <span>Failed Attempts</span>
+                                    <strong>
+                                        {{ user.failed_attempts }}
+                                    </strong>
+                                </p>
+
+                                <p>
+                                    <span>Locked Until</span>
+                                    <strong>
+                                        {{ user.locked_until
+                                            if user.locked_until
+                                            else "Not locked" }}
+                                    </strong>
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="monitor-empty monitor-safe">
+                        ✓ No failed login activity detected.
                     </div>
-                {% endfor %}
-            {% else %}
-                <p>No failed login activity detected.</p>
-            {% endif %}
-        </div>
 
-        <div class="portal-actions">
+                {% endif %}
 
-            <form action="/run_security_cleanup" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            </div>
 
-                <button type="submit" class="portal-button admin-button">
+        </details>
+
+
+        <!-- =====================================================
+             SECURITY ACTIONS
+        ====================================================== -->
+
+        <div class="system-action-section">
+
+            <div>
+                <h3>Security Maintenance</h3>
+
+                <p>
+                    Remove expired MFA codes and used password-reset records.
+                </p>
+            </div>
+
+            <form
+                action="/run_security_cleanup"
+                method="POST"
+            >
+
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <button
+                    type="submit"
+                    class="portal-button admin-button"
+                >
                     🧹 Run Security Cleanup
                 </button>
+
             </form>
 
-            <a href="/" class="portal-button secondary-button">← Back to Admin Portal</a>
+        </div>
 
-            <a href="/dashboard" class="portal-button admin-button">
-                📋 Ticket Dashboard
-            </a>
 
-            <a href="/stats" class="portal-button admin-button">
-                📊 Analytics
+        <!-- =====================================================
+             NAVIGATION
+        ====================================================== -->
+
+        <div class="portal-actions system-dashboard-actions">
+
+            <a
+                href="/"
+                class="portal-button secondary-button"
+            >
+                ← Back to Admin Portal
             </a>
 
         </div>
+
+
+        <p class="security-note">
+            🔐 System monitoring is restricted to administrator accounts.
+        </p>
 
     </div>
 </div>
+
 </body>
 </html>

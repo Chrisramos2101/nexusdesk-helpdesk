@@ -2,48 +2,121 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>MFA Verification</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MFA Verification | NexusDesk</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
 </head>
 
 <body>
+
 <div class="login-page">
-    <div class="login-card">
+    <div class="login-card mfa-card">
 
         <div class="logo-circle">🔐</div>
 
-        <div class="portal-badge">MULTI-FACTOR AUTHENTICATION</div>
+        <div class="portal-badge">
+            SECURE SIGN-IN
+        </div>
 
-        <h1>Verify Your Login</h1>
+        <h1>Check Your Email</h1>
 
         <p class="login-subtitle">
-            Enter the 6-digit verification code sent to your email.
+            We sent a 6-digit verification code to
+            <strong class="masked-email">{{ masked_email }}</strong>.
+            Enter the code below to finish signing in to NexusDesk.
         </p>
 
+        <div class="mfa-expiration-note">
+            ⏱ This codes expires in <strong>10 minutes</strong>.
+        </div>
+
         {% if error %}
-            <div class="error-box">{{ error }}</div>
+            <div class="error-box mfa-status-message" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        {% if message %}
+            <div class="success-box mfa-status-message">
+                ✓ {{ message }}
+            </div>
         {% endif %}
 
         <form action="/mfa_verify" method="POST">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+            <input
+                type="hidden"
+                name="csrf_token"
+                value="{{ csrf_token() }}"
+            >
+
+            <label for="mfa_code">
+                Verification Code
+            </label>
 
             <input
                 type="text"
+                id="mfa_code"
                 name="mfa_code"
-                placeholder="Enter 6-digit code"
+                placeholder="Enter your 6-digit code"
                 maxlength="6"
-                required>
+                minlength="6"
+                inputmode="numeric"
+                pattern="[0-9]{6}"
+                autocomplete="one-time-code"
+                autofocus
+                required
+            >
 
-            <button type="submit">Verify Code</button>
+            <button type="submit">
+                Continue to NexusDesk
+            </button>
+
         </form>
 
-        <div class="portal-actions">
-            <a href="/login" class="portal-button secondary-button">
-                ← Back to Login
-            </a>
+        <div class="mfa-resend-section">
+
+            <span>Didn't receive the code?</span>
+
+            <form
+                action="/mfa_resend"
+                method="POST"
+                class="mfa-resend-form"
+            >
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <button
+                    type="submit"
+                    class="mfa-resend-button"
+                >
+                    Resend Code
+                </button>
+            </form>
+
+        </div>
+
+        <a
+            href="/login"
+            class="portal-button secondary-button mfa-back-button"
+        >
+            ← Back to Sign In
+        </a>
+
+        <div class="reset-security-note">
+            🔒 This extra verification step helps protect your account.
         </div>
 
     </div>
 </div>
+
 </body>
 </html>

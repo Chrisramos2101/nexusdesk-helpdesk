@@ -50,11 +50,39 @@ def test_email_falls_back_to_smtp_when_brevo_missing(monkeypatch):
 
     called = {}
 
-    def fake_smtp(subject, recipient, body):
-        called["values"] = (subject, recipient, body)
+    def fake_smtp(subject, recipient, body, html_body=None):
+        called["values"] = (subject, recipient, body, html_body)
         return True
 
     monkeypatch.setattr(email_service, "_send_via_smtp", fake_smtp)
 
     assert email_service.send_email("Subject", "user@example.com", "Body")
-    assert called["values"] == ("Subject", "user@example.com", "Body")
+    assert called["values"] == ("Subject", "user@example.com", "Body", None)
+
+def test_brevo_email_includes_html_content(monkeypatch):
+    monkeypatch.setenv("BREVO_API_KEY", "test-api-key")
+    monkeypatch.setenv("BREVO_SENDER_EMAIL", "verified@example.com")
+
+    captured = {}
+
+    def fake_urlopen(request, timeout):
+        captured["body"] = json.loads(
+            request.data.decode("utf-8")
+        )
+        return FakeResponse()
+
+    monkeypatch.setattr(
+        email_service.urllib.request,
+        "urlopen",
+        fake_urlopen
+    )
+
+    assert email_service.send_email(
+        "Password Reset",
+        "recipient@example.com",
+        "Plain text version",
+        html_body="<h1>Reset Your Password</h1>"
+    )
+
+    assert captured["body"]["textContent"] == "Plain text version"
+    assert captured["body"]["htmlContent"] == "<h1>Reset Your Password</h1>"

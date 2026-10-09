@@ -2,6 +2,45 @@
 
 All notable NexusDesk release milestones are documented here.
 
+## [1.1.0] - 2026-10-08
+
+### Added
+
+- Business-hour SLA calculation using Monday-Friday, 8:00 AM-5:00 PM support hours
+- Final SLA targets of 4 business hours for High, 1 business day for Medium, and 3 business days for Low priority tickets
+- Temporary 30-minute MFA browser trust after successful verification
+- MFA verification-code resend workflow
+- Administrator support-request submission workflow
+- Administrator knowledge-base feedback review
+- Expanded employee ticket tracking and ticket-detail experience
+- Enhanced operational analytics and technician workload reporting
+- Branded HTML transactional emails with plain-text fallbacks
+- Professional NexusDesk ticket references
+
+### Improved
+
+- Employee and administrator portal UX
+- User-management interface and department labeling
+- Ticket status, SLA, and resolution presentation
+- Analytics chart responsiveness and automatic scaling
+- Ticket filtering and dashboard navigation
+- Knowledge-base feedback workflow
+- MFA and password-recovery email presentation
+- Ticket submission, assignment, resolution, and mention notifications
+
+### Security
+
+- Preserved MFA trust only for the original temporary trust window
+- Maintained rate limiting for login, MFA, and password-recovery workflows
+- Hardened Docker build context to exclude environment files and local runtime data
+- Continued protection of secrets through Git and Docker ignore rules
+
+### Demo / Portfolio
+
+- Expanded realistic local demo data for product demonstrations
+- Refined administrator and employee workflows for portfolio presentation
+- Completed final UI, analytics, notification, and account-management polish
+
 ## [1.0.0] - 2026-08-22
 
 ### Added

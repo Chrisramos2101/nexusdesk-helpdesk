@@ -3,373 +3,1059 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help Desk Stats</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Help Desk Analytics | NexusDesk</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 </head>
 
+
 <body>
 
-    <div class="container">
-        <div class="card dashboard-card">
-            <h1>📊 Help Desk Analytics</h1>
-            <p>Overview of ticket activity and performance</p>
+<div class="container analytics-page">
 
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <h2>{{ total_tickets }}</h2>
-                    <p>Total Tickets</p>
-                </div>
+    <div class="card dashboard-card analytics-card">
 
-                <div class="stat-box">
-                    <h2>{{ open_tickets }}</h2>
-                    <p>Open Tickets</p>
-                </div>
+        <div class="logo-circle">📊</div>
 
-                <div class="stat-box">
-                    <h2>{{ in_progress_tickets }}</h2>
-                    <p>In Progress</p>
-                </div>
-
-                <div class="stat-box">
-                    <h2>{{ closed_tickets }}</h2>
-                    <p>Closed Tickets</p>
-                </div>
-
-                <div class="stat-box">
-                    <h2>{{ high_priority_tickets }}</h2>
-                    <p>High Priority</p>
-                </div>
-            </div>
-
-            <h2>Ticket Status Overview</h2>
-
-            <div class="stats-grid">
-                <div class="stat-box">
-                    <h2>{{ sla_met_count }}</h2>
-                    <p>SLA Met</p>
-                </div>
-
-                <div class="stat-box">
-                    <h2>{{ sla_missed_count }}</h2>
-                    <p>SLA Missed</p>
-                </div>
-
-                <div class="stat-box">
-                    <h2>{{ overdue_tickets }}</h2>
-                    <p>Overdue Tickets</p>
-                </div>
-            </div>
-
-            <h2>Visual Analytics</h2>
-
-            <div class="chart-dashboard">
-                <div class="chart-card">
-                    <h3>Status Breakdown</h3>
-                    <canvas id="statusChart"></canvas>
-                </div>
-
-                <div class="chart-card">
-                    <h3>SLA Performance</h3>
-                    <canvas id="slaChart"></canvas>
-                </div>
-
-                <div class="chart-card">
-                    <h3>Tickets by Priority</h3>
-                    <canvas id="priorityChart"></canvas>
-                </div>
-
-                <div class="chart-card">
-                    <h3>Tickets by Category</h3>
-                    <canvas id="categoryChart"></canvas>
-                </div>
-
-                <div class="chart-card">
-                    <h3>Tickets by Department</h3>
-                    <canvas id="departmentChart"></canvas>
-                </div>
-
-                <div class="chart-card">
-                    <h3>Technician Workload</h3>
-                    <canvas id="techChart"></canvas>
-                </div>
-            </div>
-
-            <h2>SLA Performance</h2>
-
-            <div class="chart-box">
-                <div class="chart-row">
-                    <span>Met</span>
-                    <div class="bar-bg">
-                        <div class="bar-fill closed-bar" data-percent="{{ (sla_met_count / closed_tickets * 100) if closed_tickets else 0 }}"></div>
-                    </div>
-                    <span>{{ sla_met_count }}</span>
-                </div>
-
-                <div class="chart-row">
-                    <span>Missed</span>
-                    <div class="bar-bg">
-                        <div class="bar-fill missed-bar" data-percent="{{ (sla_missed_count / closed_tickets * 100) if closed_tickets else 0 }}"></div>
-                    </div>
-                    <span>{{ sla_missed_count }}</span>
-                </div>
-            </div>
-
-            <h2>SLA Misses by Technician</h2>
-
-            <div class="stats-list-grid">
-                {% if sla_missed_by_tech %}
-                    {% for tech in sla_missed_by_tech %}
-                        <div class="mini-stat-card danger-mini-card">
-                            <h3>{{ tech.assigned_to }}</h3>
-                            <p>{{ tech.total }} missed SLA ticket(s)</p>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="mini-stat-card">
-                        <p>No missed SLA data yet.</p>
-                    </div>
-                {% endif %}
-            </div>
-
-            <div class="chart-box">
-                <div class="chart-row">
-                    <span>Open</span>
-                    <div class="bar-bg">
-                      <div class="bar-fill" data-percent="{{ open_percent }}"></div>
-                    </div>
-                    <span>{{ open_tickets }}</span>
-                </div>
-
-                <div class="chart-row">
-                    <span>In Progress</span>
-                    <div class="bar-bg">
-                        <div class="bar-fill" data-percent="{{ progress_percent }}"></div>
-                    </div>
-                    <span>{{ in_progress_tickets }}</span>
-                </div>
-
-                <div class="chart-row">
-                    <span>Closed</span>
-                    <div class="bar-bg">
-                        <div class="bar-fill closed-bar" data-percent="{{ closed_percent }}"></div>
-                    </div>
-                    <span>{{ closed_tickets }}</span>
-                </div>
-            </div>
-
-            <h2>Tickets by Priority</h2>
-
-            <div class="chart-box">
-                {% if priority_stats %}
-                    {% for priority in priority_stats %}
-                        <div class="chart-row">
-                            <span>{{ priority.priority }}</span>
-                            <div class="bar-bg">
-                                <div class="bar-fill" data-percent="{{ priority.percent }}"></div>
-                            </div>
-                            <span>{{ priority.total }}</span>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <p>No priority data available.</p>
-                {% endif %}
-            </div>
-
-            <h2>Tickets by Department</h2>
-
-            <div class="stats-list-grid">
-                {% if department_stats %}
-                    {% for department in department_stats %}
-                        <div class="mini-stat-card">
-                            <h3>{{ department.department }}</h3>
-                            <p>{{ department.total }} ticket(s)</p>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="mini-stat-card">
-                        <p>No department data available.</p>
-                    </div>
-                {% endif %}
-            </div>
-
-            <h2>Tickets Completed by IT Worker</h2>
-
-            <div class="stats-list-grid">
-                {% if completed_by_stats %}
-                    {% for worker in completed_by_stats %}
-                        <div class="mini-stat-card success-mini-card">
-                            <h3>{{ worker.completed_by }}</h3>
-                            <p>{{ worker.total }} completed ticket(s)</p>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="mini-stat-card">
-                        <p>No completed ticket data yet.</p>
-                    </div>
-                {% endif %}
-            </div>
-
-            <div class="portal-actions">
-                <a href="/dashboard" class="portal-button secondary-button">
-                    🖥️ Back to IT Dashboard
-                </a>
-
-                <a href="/" class="portal-button secondary-button">
-                    🎫 Back to Submit Ticket
-                </a>
-            </div>
+        <div class="portal-badge">
+            ANALYTICS
         </div>
+
+        <h1>Help Desk Analytics</h1>
+
+        <p class="analytics-subtitle">
+            Review ticket performance, SLA trends,
+            technician workload, and support activity.
+        </p>
+
+
+        <!-- =====================================================
+             TICKET OVERVIEW
+        ====================================================== -->
+
+        <section class="analytics-section">
+
+            <div class="analytics-section-header">
+
+                <h2>Ticket Overview</h2>
+
+                <p>
+                    Current and historical ticket activity across NexusDesk.
+                </p>
+
+            </div>
+
+
+            <div class="analytics-kpi-grid analytics-kpi-grid-four">
+
+                <div class="analytics-kpi">
+                    <span class="analytics-kpi-icon">🎫</span>
+
+                    <strong>
+                        {{ total_tickets }}
+                    </strong>
+
+                    <span>
+                        Total Tickets
+                    </span>
+                </div>
+
+
+                <div class="analytics-kpi">
+                    <span class="analytics-kpi-icon">📥</span>
+
+                    <strong>
+                        {{ open_tickets }}
+                    </strong>
+
+                    <span>
+                        Open Tickets
+                    </span>
+                </div>
+
+
+                <div class="analytics-kpi">
+                    <span class="analytics-kpi-icon">🛠️</span>
+
+                    <strong>
+                        {{ in_progress_tickets }}
+                    </strong>
+
+                    <span>
+                        In Progress
+                    </span>
+                </div>
+
+
+                <div class="analytics-kpi">
+                    <span class="analytics-kpi-icon">✅</span>
+
+                    <strong>
+                        {{ closed_tickets }}
+                    </strong>
+
+                    <span>
+                        Closed Tickets
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PRIORITY BREAKDOWN
+        ====================================================== -->
+
+        <section class="analytics-section">
+
+            <div class="analytics-section-header">
+
+                <h2>Priority Breakdown</h2>
+
+                <p>
+                    Ticket volume by assigned support priority.
+                </p>
+
+            </div>
+
+
+            <div class="analytics-kpi-grid analytics-kpi-grid-three">
+
+                <div class="analytics-kpi priority-low-kpi">
+
+                    <span class="analytics-kpi-icon">
+                        🟢
+                    </span>
+
+                    <strong>
+                        {{ low_priority_tickets }}
+                    </strong>
+
+                    <span>
+                        Low Priority
+                    </span>
+
+                </div>
+
+
+                <div class="analytics-kpi priority-medium-kpi">
+
+                    <span class="analytics-kpi-icon">
+                        🟡
+                    </span>
+
+                    <strong>
+                        {{ medium_priority_tickets }}
+                    </strong>
+
+                    <span>
+                        Medium Priority
+                    </span>
+
+                </div>
+
+
+                <div class="analytics-kpi priority-high-kpi">
+
+                    <span class="analytics-kpi-icon">
+                        🔴
+                    </span>
+
+                    <strong>
+                        {{ high_priority_tickets }}
+                    </strong>
+
+                    <span>
+                        High Priority
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SLA PERFORMANCE
+        ====================================================== -->
+
+        <section class="analytics-section">
+
+            <div class="analytics-section-header">
+
+                <h2>SLA Performance</h2>
+
+                <p>
+                    Measure completed SLA performance and active SLA risk.
+                </p>
+
+            </div>
+
+
+            <div class="analytics-kpi-grid analytics-kpi-grid-three">
+
+                <div class="analytics-kpi sla-met-kpi">
+
+                    <span class="analytics-kpi-icon">
+                        ✅
+                    </span>
+
+                    <strong>
+                        {{ sla_met_count }}
+                    </strong>
+
+                    <span>
+                        SLA Met
+                    </span>
+
+                </div>
+
+
+                <div class="analytics-kpi sla-missed-kpi">
+
+                    <span class="analytics-kpi-icon">
+                        ❌
+                    </span>
+
+                    <strong>
+                        {{ sla_missed_count }}
+                    </strong>
+
+                    <span>
+                        SLA Missed
+                    </span>
+
+                </div>
+
+
+                <div class="analytics-kpi sla-overdue-kpi">
+
+                    <span class="analytics-kpi-icon">
+                        ⏰
+                    </span>
+
+                    <strong>
+                        {{ overdue_tickets }}
+                    </strong>
+
+                    <span>
+                        Currently Overdue
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="analytics-definition-note">
+
+                <div>
+                    <strong>SLA Missed</strong>
+                    means a completed ticket was resolved after its deadline.
+                </div>
+
+                <div>
+                    <strong>Currently Overdue</strong>
+                    means an active ticket has passed its SLA deadline
+                    and still needs attention.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             VISUAL ANALYTICS
+        ====================================================== -->
+
+        <section class="analytics-section">
+
+            <div class="analytics-section-header">
+
+                <h2>Visual Analytics</h2>
+
+                <p>
+                    Compare ticket distribution, support demand,
+                    and technician workload.
+                </p>
+
+            </div>
+
+
+            <div class="analytics-chart-grid">
+
+
+                <!-- Status Breakdown -->
+
+                <div class="analytics-chart-card">
+
+                    <h3>Status Breakdown</h3>
+
+                    <p>
+                        Distribution of tickets by current status.
+                    </p>
+
+                    <div class="analytics-chart-canvas">
+                        <canvas id="statusChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- SLA Performance -->
+
+                <div class="analytics-chart-card">
+
+                    <h3>SLA Performance</h3>
+
+                    <p>
+                        Completed tickets that met or missed SLA.
+                    </p>
+
+                    <div class="analytics-chart-canvas">
+                        <canvas id="slaChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Priority -->
+
+                <div class="analytics-chart-card">
+
+                    <h3>Tickets by Priority</h3>
+
+                    <p>
+                        Ticket volume across Low, Medium, and High priority.
+                    </p>
+
+                    <div class="analytics-chart-canvas">
+                        <canvas id="priorityChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Category -->
+
+                <div class="analytics-chart-card">
+
+                    <h3>Tickets by Category</h3>
+
+                    <p>
+                        Most common types of support requests.
+                    </p>
+
+                    <div class="analytics-chart-canvas">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Department -->
+
+                <div class="analytics-chart-card">
+
+                    <h3>Tickets by Department</h3>
+
+                    <p>
+                        Support demand across business departments.
+                    </p>
+
+                    <div class="analytics-chart-canvas">
+                        <canvas id="departmentChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Technician Workload -->
+
+                <div class="analytics-chart-card">
+
+                    <h3>Active Technician Workload</h3>
+
+                    <p>
+                        Current open and in-progress tickets assigned
+                        to each technician.
+                    </p>
+
+                    <div class="analytics-chart-canvas">
+                        <canvas id="techChart"></canvas>
+                    </div>
+
+                </div>
+
+
+                <!-- Ticket Volume Trend -->
+
+                <div class="analytics-chart-card analytics-chart-wide">
+
+                    <h3>7-Day Ticket Volume Trend</h3>
+
+                    <p>
+                        New support tickets created during the last seven days.
+                    </p>
+
+                    <div class="analytics-chart-canvas analytics-trend-canvas">
+                        <canvas id="ticketTrendChart"></canvas>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             OPERATIONAL INSIGHTS
+        ====================================================== -->
+
+        <section class="analytics-section">
+
+            <div class="analytics-section-header">
+
+                <h2>Operational Insights</h2>
+
+                <p>
+                    Technician-level performance and completed work.
+                </p>
+
+            </div>
+
+
+            <div class="analytics-insights-grid">
+
+
+                <!-- SLA Misses -->
+
+                <div class="analytics-insight-panel">
+
+                    <div class="analytics-insight-header">
+
+                        <div>
+                            <h3>SLA Misses by Technician</h3>
+
+                            <p>
+                                Closed tickets that exceeded their SLA target.
+                            </p>
+                        </div>
+
+                        <span class="analytics-insight-icon">
+                            ⏰
+                        </span>
+
+                    </div>
+
+
+                    {% if sla_missed_by_tech %}
+
+                        <div class="analytics-insight-list">
+
+                            {% for tech in sla_missed_by_tech %}
+
+                                <div class="analytics-insight-row">
+
+                                    <span>
+                                        {{ tech.assigned_to }}
+                                    </span>
+
+                                    <strong class="analytics-danger-value">
+                                        {{ tech.total }}
+                                    </strong>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="analytics-empty-state">
+                            ✓ No technician SLA misses recorded.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- Completed Tickets -->
+
+                <div class="analytics-insight-panel">
+
+                    <div class="analytics-insight-header">
+
+                        <div>
+                            <h3>Tickets Completed by Technician</h3>
+
+                            <p>
+                                Closed tickets attributed to each technician.
+                            </p>
+                        </div>
+
+                        <span class="analytics-insight-icon">
+                            ✅
+                        </span>
+
+                    </div>
+
+
+                    {% if completed_by_stats %}
+
+                        <div class="analytics-insight-list">
+
+                            {% for worker in completed_by_stats %}
+
+                                <div class="analytics-insight-row">
+
+                                    <span>
+                                        {{ worker.completed_by }}
+                                    </span>
+
+                                    <strong class="analytics-success-value">
+                                        {{ worker.total }}
+                                    </strong>
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="analytics-empty-state">
+                            No completed technician data available yet.
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             NAVIGATION
+        ====================================================== -->
+
+        <div class="analytics-actions">
+
+            <a
+                href="/"
+                class="portal-button secondary-button"
+            >
+                ← Back to Admin Portal
+            </a>
+
+        </div>
+
+
+        <p class="security-note analytics-footer-note">
+            📊 Analytics are calculated from current NexusDesk ticket records.
+        </p>
+
     </div>
+
+</div>
+
+
+<!-- =========================================================
+     CHART DATA
+========================================================= -->
 
 <script id="chart-data" type="application/json">
 {
-    "statusData": {{ [open_tickets, in_progress_tickets, closed_tickets] | tojson }},
-    "slaData": {{ [sla_met_count, sla_missed_count] | tojson }},
-    "priorityLabels": {{ priority_stats | map(attribute="priority") | list | tojson }},
-    "priorityData": {{ priority_stats | map(attribute="total") | list | tojson }},
-    "categoryLabels": {{ category_stats | map(attribute="category") | list | tojson }},
-    "categoryData": {{ category_stats | map(attribute="total") | list | tojson }},
-    "departmentLabels": {{ department_stats | map(attribute="department") | list | tojson }},
-    "departmentData": {{ department_stats | map(attribute="total") | list | tojson }},
-    "techLabels": {{ assigned_stats | map(attribute="assigned_to") | list | tojson }},
-    "techData": {{ assigned_stats | map(attribute="total") | list | tojson }}
+    "statusData":
+        {{ [open_tickets, in_progress_tickets, closed_tickets] | tojson }},
+
+    "slaData":
+        {{ [sla_met_count, sla_missed_count] | tojson }},
+
+    "priorityLabels":
+        {{ priority_stats | map(attribute="priority") | list | tojson }},
+
+    "priorityData":
+        {{ priority_stats | map(attribute="total") | list | tojson }},
+
+    "categoryLabels":
+        {{ category_stats | map(attribute="category") | list | tojson }},
+
+    "categoryData":
+        {{ category_stats | map(attribute="total") | list | tojson }},
+
+    "departmentLabels":
+        {{ department_stats | map(attribute="department") | list | tojson }},
+
+    "departmentData":
+        {{ department_stats | map(attribute="total") | list | tojson }},
+
+    "techLabels":
+        {{ assigned_stats | map(attribute="assigned_to") | list | tojson }},
+
+    "techData":
+        {{ assigned_stats | map(attribute="total") | list | tojson }},
+
+    "dailyLabels":
+        {{ daily_stats | map(attribute="label") | list | tojson }},
+
+    "dailyData":
+        {{ daily_stats | map(attribute="total") | list | tojson }}
 }
 </script>
 
+
 <script>
-    const chartData = JSON.parse(document.getElementById("chart-data").textContent);
 
-    document.querySelectorAll(".bar-fill").forEach(function(bar) {
-        const percent = bar.getAttribute("data-percent");
-        if (percent) {
-            bar.style.width = percent + "%";
+const chartData = JSON.parse(
+    document.getElementById("chart-data").textContent
+);
+
+Chart.register(ChartDataLabels);
+
+
+/* =========================================================
+   Shared Chart Options
+========================================================= */
+
+const axisChartOptions = {
+
+    responsive: true,
+
+    maintainAspectRatio: false,
+
+    layout: {
+        padding: {
+            top: 28,
+            right: 12,
+            bottom: 8,
+            left: 8
         }
-    });
+    },
 
-    Chart.register(ChartDataLabels);
+    plugins: {
 
-    const chartOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                labels: {
-                    color: "white"
-                }
+        legend: {
+            display: false
+        },
+
+        datalabels: {
+
+            color: "#f8fafc",
+
+            anchor: "end",
+
+            align: "top",
+
+            offset: 4,
+
+            clamp: true,
+
+            clip: false,
+
+            font: {
+                weight: "bold"
             },
-            datalabels: {
-                color: "white",
-                anchor: "end",
-                align: "top",
-                font: {
-                    weight: "bold"
-                }
+
+            formatter: function(value) {
+                return value > 0 ? value : "";
+            }
+        }
+    },
+
+    scales: {
+
+        x: {
+
+            ticks: {
+                color: "#cbd5e1",
+                autoSkip: false,
+                maxRotation: 35,
+                minRotation: 0
+            },
+
+            grid: {
+                color: "rgba(148, 163, 184, 0.10)"
             }
         },
-        scales: {
-            x: {
-                ticks: { color: "white" },
-                grid: { color: "#334155" }
+
+        y: {
+
+            beginAtZero: true,
+
+            grace: "20%",
+
+            ticks: {
+                color: "#cbd5e1",
+                precision: 0
             },
-            y: {
-                beginAtZero: true,
-                ticks: { color: "white" },
-                grid: { color: "#334155" }
+
+            grid: {
+                color: "rgba(148, 163, 184, 0.10)"
             }
         }
-    };
+    }
+};
 
-    const doughnutOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: {
-                labels: {
-                    color: "white"
-                }
+
+const doughnutOptions = {
+
+    responsive: true,
+
+    maintainAspectRatio: false,
+
+    cutout: "58%",
+
+    plugins: {
+
+        legend: {
+
+            position: "top",
+
+            labels: {
+
+                color: "#e5e7eb",
+
+                usePointStyle: true,
+
+                padding: 16
+            }
+        },
+
+        datalabels: {
+
+            color: "#ffffff",
+
+            font: {
+                weight: "bold",
+                size: 13
             },
-            datalabels: {
-                color: "white",
-                font: {
-                    weight: "bold",
-                    size: 14
-                },
-                formatter: function(value) {
-                    return value;
-                }
+
+            formatter: function(value) {
+                return value > 0 ? value : "";
             }
         }
-    };
+    }
+};
 
-    new Chart(document.getElementById("statusChart"), {
+
+const lineChartOptions = {
+
+    responsive: true,
+
+    maintainAspectRatio: false,
+
+    layout: {
+        padding: {
+            top: 18,
+            right: 12,
+            bottom: 8,
+            left: 8
+        }
+    },
+
+    plugins: {
+
+        legend: {
+            display: false
+        },
+
+        datalabels: {
+            display: false
+        }
+    },
+
+    scales: {
+
+        x: {
+
+            ticks: {
+                color: "#cbd5e1",
+                autoSkip: false,
+                maxRotation: 35,
+                minRotation: 0
+            },
+
+            grid: {
+                color: "rgba(148, 163, 184, 0.08)"
+            }
+        },
+
+        y: {
+
+            beginAtZero: true,
+
+            grace: "15%",
+
+            ticks: {
+                color: "#cbd5e1",
+                precision: 0
+            },
+
+            grid: {
+                color: "rgba(148, 163, 184, 0.10)"
+            }
+        }
+    }
+};
+
+
+/* =========================================================
+   STATUS BREAKDOWN
+========================================================= */
+
+new Chart(
+    document.getElementById("statusChart"),
+    {
+
         type: "doughnut",
-        data: {
-            labels: ["Open", "In Progress", "Closed"],
-            datasets: [{
-                data: chartData.statusData }]
-        },
-        options: doughnutOptions
-    });
 
-    new Chart(document.getElementById("slaChart"), {
+        data: {
+
+            labels: [
+                "Open",
+                "In Progress",
+                "Closed"
+            ],
+
+            datasets: [{
+
+                data: chartData.statusData,
+
+                backgroundColor: [
+                    "#3b82f6",
+                    "#f59e0b",
+                    "#22c55e"
+                ],
+
+                borderColor: "#1f2937",
+
+                borderWidth: 2
+            }]
+        },
+
+        options: doughnutOptions
+    }
+);
+
+
+/* =========================================================
+   SLA PERFORMANCE
+========================================================= */
+
+new Chart(
+    document.getElementById("slaChart"),
+    {
+
         type: "doughnut",
-        data: {
-            labels: ["SLA Met", "SLA Missed"],
-            datasets: [{
-                data: chartData.slaData }]
-        },
-        options: doughnutOptions
-    });
 
-    new Chart(document.getElementById("priorityChart"), {
+        data: {
+
+            labels: [
+                "SLA Met",
+                "SLA Missed"
+            ],
+
+            datasets: [{
+
+                data: chartData.slaData,
+
+                backgroundColor: [
+                    "#22c55e",
+                    "#ef4444"
+                ],
+
+                borderColor: "#1f2937",
+
+                borderWidth: 2
+            }]
+        },
+
+        options: doughnutOptions
+    }
+);
+
+
+/* =========================================================
+   PRIORITY
+========================================================= */
+
+new Chart(
+    document.getElementById("priorityChart"),
+    {
+
         type: "bar",
+
         data: {
+
             labels: chartData.priorityLabels,
-            datasets: [{
-                label: "Tickets",
-                data: chartData.priorityData }]
-        },
-        options: chartOptions
-    });
 
-    new Chart(document.getElementById("categoryChart"), {
+            datasets: [{
+
+                data: chartData.priorityData,
+
+                backgroundColor: [
+                    "#3b82f6",
+                    "#f59e0b",
+                    "#ef4444"
+                ],
+
+                borderRadius: 6
+            }]
+        },
+
+        options: axisChartOptions
+    }
+);
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+new Chart(
+    document.getElementById("categoryChart"),
+    {
+
         type: "bar",
+
         data: {
+
             labels: chartData.categoryLabels,
+
             datasets: [{
-                label: "Tickets",
-                data: chartData.categoryData
+
+                data: chartData.categoryData,
+
+                backgroundColor: "#3b82f6",
+
+                borderRadius: 6
             }]
         },
-        options: chartOptions
-    });
 
-    new Chart(document.getElementById("departmentChart"), {
+        options: axisChartOptions
+    }
+);
+
+
+/* =========================================================
+   DEPARTMENT
+========================================================= */
+
+new Chart(
+    document.getElementById("departmentChart"),
+    {
+
         type: "bar",
+
         data: {
+
             labels: chartData.departmentLabels,
-            datasets: [{
-                label: "Tickets",
-                data: chartData.departmentData
-            }]
-        },
-        options: chartOptions
-    });
 
-    new Chart(document.getElementById("techChart"), {
-        type: "bar",
-        data: {
-            labels: chartData.techLabels,
             datasets: [{
-                label: "Assigned Tickets",
-                data: chartData.techData
+
+                data: chartData.departmentData,
+
+                backgroundColor: "#60a5fa",
+
+                borderRadius: 6
             }]
         },
-        options: chartOptions
-    });
+
+        options: axisChartOptions
+    }
+);
+
+
+/* =========================================================
+   ACTIVE TECHNICIAN WORKLOAD
+========================================================= */
+
+new Chart(
+    document.getElementById("techChart"),
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels: chartData.techLabels,
+
+            datasets: [{
+
+                data: chartData.techData,
+
+                backgroundColor: "#8b5cf6",
+
+                borderRadius: 6
+            }]
+        },
+
+        options: axisChartOptions
+    }
+);
+
+
+/* =========================================================
+   7-DAY TICKET TREND
+========================================================= */
+
+new Chart(
+    document.getElementById("ticketTrendChart"),
+    {
+
+        type: "line",
+
+        data: {
+
+            labels: chartData.dailyLabels,
+
+            datasets: [{
+
+                data: chartData.dailyData,
+
+                borderColor: "#60a5fa",
+
+                backgroundColor: "rgba(96, 165, 250, 0.15)",
+
+                pointBackgroundColor: "#60a5fa",
+
+                pointBorderColor: "#bfdbfe",
+
+                pointRadius: 4,
+
+                pointHoverRadius: 6,
+
+                borderWidth: 3,
+
+                fill: true,
+
+                tension: 0.3
+            }]
+        },
+
+        options: lineChartOptions
+    }
+);
+
 </script>
 
 </body>

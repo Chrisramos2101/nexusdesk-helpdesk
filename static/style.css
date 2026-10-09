@@ -1878,15 +1878,23 @@ form,
 }
 
 .premium-ticket-form {
-    grid-column: 2;
-    grid-row: 2 / span 3;
     margin: 0;
     padding: 22px;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(59, 130, 246, 0.12),
+            transparent 35%
+        ),
+        rgba(31, 41, 55, 0.92);
+}
+
+/* Employee Portal layout only */
+.employee-workspace .premium-ticket-form {
+    grid-column: 2;
+    grid-row: 2 / span 3;
     position: sticky;
     top: 22px;
-    background:
-        radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 35%),
-        rgba(31, 41, 55, 0.92);
 }
 
 .form-header h3 {
@@ -1953,10 +1961,6 @@ form,
     margin-top: 24px;
 }
 
-.portal-actions .secondary-button {
-    display: none;
-}
-
 .security-note {
     border-top: 1px solid rgba(148, 163, 184, 0.1);
     padding-top: 16px;
@@ -1990,12 +1994,12 @@ form,
 
     .employee-section-header,
     .response-grid,
-    .premium-ticket-form,
-    .empty-state-card {
+    .employee-workspace .premium-ticket-form,
+    .employee-workspace .empty-state-card {
         grid-column: 1;
     }
 
-    .premium-ticket-form {
+    .employee-workspace .premium-ticket-form {
         position: static;
         grid-row: auto;
     }
@@ -2042,26 +2046,6 @@ form,
     .login-card.dashboard-card > h1 {
         font-size: 27px;
     }
-}
-
-.home-stat p::after {
-    display: block;
-    margin-top: 5px;
-    font-size: 11px;
-    color: #86efac;
-    font-weight: 700;
-}
-
-.home-stat:nth-child(1) p::after {
-    content: "All caught up";
-}
-
-.home-stat:nth-child(2) p::after {
-    content: "No SLA risk";
-}
-
-.home-stat:nth-child(3) p::after {
-    content: "No urgent issues";
 }
 
 .quick-card {
@@ -2178,13 +2162,6 @@ form,
     }
 }
 
-.employee-alert-bar div:first-child strong::after {
-    content: "  ·  Everything looks good today";
-    color: #86efac;
-    font-size: 13px;
-    font-weight: 600;
-}
-
 .premium-ticket-form {
     animation: fadeInUp 0.45s ease;
 }
@@ -2215,34 +2192,52 @@ form,
 
 .ticket-kpi-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 14px;
-    margin: 24px 0;
+    margin: 22px 0 18px;
+    align-items: stretch;
 }
 
 .ticket-kpi-card {
-    background: linear-gradient(180deg, rgba(31, 41, 55, 0.96), rgba(15, 23, 42, 0.9));
-    border: 1px solid rgba(148, 163, 184, 0.14);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(92, 130, 255, 0.18);
     border-radius: 16px;
-    padding: 18px;
+    padding: 18px 14px;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
     text-align: center;
-    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.24);
+    text-decoration: none;
+    transition: 0.2s ease;
+    overflow: visible;
+}
+
+.ticket-kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(92, 130, 255, 0.4);
+    background: rgba(255, 255, 255, 0.06);
 }
 
 .ticket-kpi-card span {
-    font-size: 22px;
+    font-size: 1.15rem;
+    line-height: 1;
 }
 
 .ticket-kpi-card h2 {
-    color: #60a5fa;
-    font-size: 32px;
-    margin: 8px 0 2px;
+    margin: 0;
+    font-size: 2rem;
+    line-height: 1;
+    color: #7db5ff;
 }
 
 .ticket-kpi-card p {
     margin: 0;
-    font-size: 13px;
-    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    color: #b7c6e3;
 }
 
 .ticket-toolbar {
@@ -2511,10 +2506,6 @@ form,
     }
 }
 
-/* =========================================================
-   My Tickets — Final SaaS Polish Pass
-========================================================= */
-
 .my-ticket-card {
     position: relative;
     overflow: hidden;
@@ -2650,14 +2641,6 @@ form,
     min-height: 44px;
 }
 
-.ticket-actions-row .portal-button:first-child::before {
-    content: "👁 ";
-}
-
-.ticket-actions-row .portal-button:last-child::before {
-    content: "➕ ";
-}
-
 .ticket-kpi-card {
     transition: 0.22s ease;
 }
@@ -2699,10 +2682,6 @@ form,
 
 .my-ticket-card {
     animation: fadeInUp 0.45s ease;
-}
-
-.ticket-id-pill::before {
-    content: "NEX-2026-";
 }
 
 .premium-empty-state {
@@ -3058,4 +3037,4080 @@ form,
     .feedback-choice-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.success-box strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.success-box small {
+    display: block;
+    line-height: 1.45;
+}
+
+.reset-password-card {
+    max-width: 520px;
+}
+
+.reset-password-card label {
+    margin-top: 18px;
+}
+
+.password-field-wrapper {
+    position: relative;
+}
+
+.password-field-wrapper input {
+    padding-right: 72px;
+    margin-bottom: 0;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: auto;
+    height: auto;
+
+    margin: 0;
+    padding: 6px 9px;
+
+    background: transparent;
+    color: #93c5fd;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    box-shadow: none;
+}
+
+.password-toggle:hover {
+    background: rgba(59, 130, 246, 0.12);
+    transform: translateY(-50%);
+    box-shadow: none;
+}
+
+.password-requirements {
+    margin: 14px 0 20px;
+
+    padding: 14px 16px;
+
+    background: rgba(15, 23, 42, 0.7);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 12px;
+}
+
+.password-requirements strong {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #e5e7eb;
+    font-size: 13px;
+}
+
+.password-rule {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    margin: 7px 0;
+
+    color: #94a3b8;
+    font-size: 12px;
+
+    transition: 0.2s ease;
+}
+
+.password-rule span {
+    width: 14px;
+
+    color: #64748b;
+
+    font-weight: bold;
+}
+
+.password-rule.requirement-met {
+    color: #86efac;
+}
+
+.password-rule.requirement-met span {
+    color: #22c55e;
+}
+
+.password-match {
+    min-height: 20px;
+
+    margin-top: 7px;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.match-success {
+    color: #86efac;
+}
+
+.match-error {
+    color: #fca5a5;
+}
+
+.reset-error {
+    margin: 18px 0;
+
+    padding: 13px 15px;
+
+    background: rgba(127, 29, 29, 0.25);
+
+    border: 1px solid rgba(239, 68, 68, 0.28);
+    border-radius: 10px;
+
+    color: #fecaca;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.reset-submit-button {
+    margin-top: 14px;
+}
+
+.reset-security-note {
+    margin-top: 18px;
+
+    text-align: center;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.reset-success-state {
+    text-align: center;
+}
+
+.success-check {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0 auto 20px;
+
+    border-radius: 50%;
+
+    background: rgba(34, 197, 94, 0.16);
+
+    border: 1px solid rgba(34, 197, 94, 0.32);
+
+    color: #86efac;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    box-shadow: 0 0 28px rgba(34, 197, 94, 0.15);
+}
+
+.reset-success-state h1 {
+    margin-bottom: 10px;
+}
+
+.reset-success-state p {
+    max-width: 420px;
+
+    margin: 0 auto 24px;
+
+    line-height: 1.6;
+}
+
+.reset-signin-button {
+    background: #3b82f6;
+    color: white;
+}
+
+.reset-signin-button:hover {
+    background: #2563eb;
+}
+
+.support-contact-list h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.support-help-item {
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.support-help-item:last-child {
+    border-bottom: none;
+}
+
+.support-help-item p {
+    margin: 6px 0;
+    line-height: 1.6;
+}
+
+.support-help-item strong {
+    color: #e5e7eb;
+}
+
+.support-security-item {
+    margin-top: 4px;
+}
+
+.support-security-item p:last-child {
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.mfa-card {
+    max-width: 500px;
+}
+
+.masked-email {
+    color: #e5e7eb;
+}
+
+.mfa-expiration-note {
+    margin: 14px 0 18px;
+    padding: 12px 14px;
+
+    background: rgba(15, 23, 42, 0.7);
+
+    border: 1px solid rgba(96, 165, 250, 0.16);
+    border-radius: 10px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.mfa-expiration-note strong {
+    color: #bfdbfe;
+}
+
+.mfa-status-message {
+    margin: 14px 0;
+}
+
+.mfa-resend-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    margin-top: 18px;
+
+    color: #94a3b8;
+    font-size: 13px;
+
+    white-space: nowrap;
+}
+
+.mfa-resend-form {
+    display: inline;
+    margin: 0;
+}
+
+.mfa-resend-button {
+    width: auto;
+    height: auto;
+
+    padding: 0;
+    margin: 0;
+
+    background: transparent;
+
+    color: #93c5fd;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    border: none;
+    box-shadow: none;
+}
+
+.mfa-resend-button:hover {
+    background: transparent;
+
+    color: #bfdbfe;
+
+    transform: none;
+    box-shadow: none;
+
+    text-decoration: underline;
+}
+
+.mfa-back-button {
+    margin-top: 18px;
+}
+
+.mfa-card input[name="mfa_code"] {
+    font-size: 18px;
+    letter-spacing: 4px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.mfa-card input[name="mfa_code"]::placeholder {
+    letter-spacing: normal;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.admin-status,
+.kpi-status {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-success {
+    color: #86efac;
+}
+
+.status-info {
+    color: #93c5fd;
+}
+
+.status-warning {
+    color: #fcd34d;
+}
+
+.status-danger {
+    color: #fca5a5;
+}
+
+.profile-page {
+    padding-top: 55px;
+    padding-bottom: 55px;
+}
+
+.profile-card {
+    width: 100%;
+    max-width: 620px;
+}
+
+.profile-card > h1 {
+    margin-bottom: 8px;
+}
+
+.profile-subtitle {
+    margin-top: 0;
+    margin-bottom: 24px;
+
+    color: #cbd5e1;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Profile Sections
+--------------------------------------------------------- */
+
+.profile-section {
+    margin-top: 22px;
+    padding: 22px;
+
+    background: rgba(30, 41, 59, 0.72);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+}
+
+.profile-section-header {
+    margin-bottom: 20px;
+}
+
+.profile-section-header h2 {
+    margin: 0 0 6px;
+
+    color: #f8fafc;
+
+    font-size: 18px;
+}
+
+.profile-section-header p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Editable Profile Fields
+--------------------------------------------------------- */
+
+.profile-section form label {
+    display: block;
+
+    margin-top: 16px;
+    margin-bottom: 7px;
+
+    color: #e5e7eb;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.profile-section form label:first-of-type {
+    margin-top: 0;
+}
+
+.profile-section input,
+.profile-section select {
+    width: 100%;
+}
+
+.profile-field-hint {
+    display: block;
+
+    margin-top: -4px;
+    margin-bottom: 4px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.profile-save-button {
+    margin-top: 20px;
+}
+
+.profile-success {
+    margin-top: 18px;
+    margin-bottom: 8px;
+}
+
+
+/* ---------------------------------------------------------
+   Security & Access
+--------------------------------------------------------- */
+
+.security-access-section {
+    background:
+        linear-gradient(
+            180deg,
+            rgba(30, 41, 59, 0.78),
+            rgba(15, 23, 42, 0.82)
+        );
+}
+
+.profile-detail-list {
+    overflow: hidden;
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
+
+    background: rgba(15, 23, 42, 0.5);
+}
+
+.profile-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 13px 15px;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+
+    font-size: 13px;
+}
+
+.profile-detail-row:last-child {
+    border-bottom: none;
+}
+
+.profile-detail-label {
+    color: #94a3b8;
+}
+
+.profile-detail-row strong {
+    color: #e5e7eb;
+
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.profile-security-enabled {
+    color: #86efac !important;
+}
+
+
+/* ---------------------------------------------------------
+   Security Note
+--------------------------------------------------------- */
+
+.profile-admin-note {
+    margin-top: 16px;
+    padding: 12px 14px;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    border: 1px solid rgba(96, 165, 250, 0.13);
+    border-radius: 10px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Profile Actions
+--------------------------------------------------------- */
+
+.profile-actions {
+    display: grid;
+
+    gap: 10px;
+
+    margin-top: 22px;
+}
+
+.profile-actions .portal-button {
+    margin: 0;
+}
+
+@media (max-width: 700px) {
+
+    .profile-page {
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
+    .profile-card {
+        padding: 24px;
+    }
+
+    .profile-section {
+        padding: 18px;
+    }
+
+    .profile-detail-row {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+    .profile-detail-row strong {
+        text-align: left;
+    }
+}
+
+/* =========================================================
+   System Health & Security Dashboard
+========================================================= */
+
+.system-monitor-page {
+    max-width: 900px;
+}
+
+
+/* ---------------------------------------------------------
+   Section Descriptions
+--------------------------------------------------------- */
+
+.section-description {
+    margin-top: -4px;
+    margin-bottom: 16px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   System Health
+--------------------------------------------------------- */
+
+.system-health-grid {
+    overflow: hidden;
+
+    background: rgba(15, 23, 42, 0.48);
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
+}
+
+.system-health-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 14px 16px;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+
+    font-size: 13px;
+}
+
+.system-health-row:last-child {
+    border-bottom: none;
+}
+
+.system-health-row span {
+    color: #94a3b8;
+}
+
+.system-health-row strong {
+    color: #e5e7eb;
+
+    text-align: right;
+}
+
+.health-status {
+    font-weight: 700;
+}
+
+.health-success {
+    color: #86efac !important;
+}
+
+
+/* =========================================================
+   Collapsible Monitoring Sections
+========================================================= */
+
+.monitor-section {
+    margin-top: 16px;
+
+    overflow: hidden;
+
+    background: rgba(30, 41, 59, 0.78);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+}
+
+
+/* ---------------------------------------------------------
+   Summary / Header
+--------------------------------------------------------- */
+
+.monitor-section summary {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 18px 20px;
+
+    cursor: pointer;
+
+    color: #f8fafc;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    list-style: none;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.monitor-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.monitor-section summary:hover {
+    background: rgba(51, 65, 85, 0.35);
+}
+
+.monitor-section[open] summary {
+    background: rgba(51, 65, 85, 0.25);
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+
+/* Custom Arrow */
+
+.monitor-section summary::after {
+    content: "⌄";
+
+    margin-left: 4px;
+
+    color: #93c5fd;
+
+    font-size: 18px;
+
+    transition: transform 0.2s ease;
+}
+
+.monitor-section[open] summary::after {
+    transform: rotate(180deg);
+}
+
+
+/* ---------------------------------------------------------
+   Summary Metadata
+--------------------------------------------------------- */
+
+.monitor-summary-title {
+    color: #f8fafc;
+}
+
+.monitor-summary-meta {
+    margin-left: auto;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.monitor-ok {
+    color: #86efac;
+}
+
+.monitor-warning {
+    color: #fca5a5;
+}
+
+
+/* ---------------------------------------------------------
+   Expanded Content
+--------------------------------------------------------- */
+
+.monitor-content {
+    padding: 16px;
+}
+
+
+/* ---------------------------------------------------------
+   Activity/Event Cards
+--------------------------------------------------------- */
+
+.monitor-event {
+    padding: 15px;
+
+    background: rgba(15, 23, 42, 0.50);
+
+    border: 1px solid rgba(148, 163, 184, 0.10);
+    border-radius: 10px;
+}
+
+.monitor-event + .monitor-event {
+    margin-top: 10px;
+}
+
+.monitor-event-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin-bottom: 8px;
+}
+
+.monitor-event-header strong {
+    color: #e5e7eb;
+
+    font-size: 13px;
+}
+
+.monitor-event-header span {
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+.monitor-event-action {
+    margin-bottom: 6px;
+
+    color: #bfdbfe;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.monitor-event p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Failed Login Detail
+--------------------------------------------------------- */
+
+.monitor-security-details {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-top: 10px;
+}
+
+.monitor-security-details p {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 10px 12px;
+
+    background: rgba(30, 41, 59, 0.60);
+
+    border-radius: 8px;
+}
+
+.monitor-security-details span {
+    color: #94a3b8;
+}
+
+.monitor-security-details strong {
+    color: #e5e7eb;
+}
+
+
+/* ---------------------------------------------------------
+   Empty / Healthy Monitoring States
+--------------------------------------------------------- */
+
+.monitor-empty {
+    padding: 14px;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+}
+
+.monitor-safe {
+    color: #86efac;
+
+    background: rgba(20, 83, 45, 0.12);
+
+    border: 1px solid rgba(34, 197, 94, 0.18);
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   Security Maintenance
+========================================================= */
+
+.system-action-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 24px;
+
+    margin-top: 20px;
+    padding: 18px 20px;
+
+    background: rgba(30, 41, 59, 0.78);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+}
+
+.system-action-section h3 {
+    margin: 0 0 5px;
+
+    color: #f8fafc;
+
+    font-size: 15px;
+}
+
+.system-action-section p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+.system-action-section form {
+    margin: 0;
+}
+
+.system-action-section .portal-button {
+    width: auto;
+
+    margin: 0;
+
+    white-space: nowrap;
+}
+
+
+/* ---------------------------------------------------------
+   Bottom Navigation
+--------------------------------------------------------- */
+
+.system-dashboard-actions {
+    margin-top: 14px;
+}
+
+.system-dashboard-actions .secondary-button {
+    display: flex;
+    width: 100%;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .system-health-row {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+    .system-health-row strong {
+        text-align: left;
+    }
+
+    .monitor-event-header {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+    .monitor-security-details {
+        grid-template-columns: 1fr;
+    }
+
+    .system-action-section {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .system-action-section .portal-button {
+        width: 100%;
+    }
+}
+
+.health-success {
+    color: #86efac !important;
+}
+
+.health-danger {
+    color: #fca5a5 !important;
+}
+
+.system-cleanup-success {
+    margin-top: 18px;
+    margin-bottom: 18px;
+}
+
+/* =========================================================
+   Create User
+========================================================= */
+
+.create-user-page {
+    padding-top: 55px;
+    padding-bottom: 55px;
+}
+
+.create-user-card {
+    width: 100%;
+    max-width: 620px;
+}
+
+.create-user-card > h1 {
+    margin-bottom: 8px;
+}
+
+.create-user-subtitle {
+    margin-top: 0;
+    margin-bottom: 24px;
+
+    color: #cbd5e1;
+
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Main Form Section
+--------------------------------------------------------- */
+
+.create-user-section {
+    margin-top: 22px;
+    padding: 22px;
+
+    background: rgba(30, 41, 59, 0.72);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+}
+
+.create-user-section-header {
+    margin-bottom: 20px;
+}
+
+.create-user-section-header h2 {
+    margin: 0 0 6px;
+
+    color: #f8fafc;
+
+    font-size: 18px;
+}
+
+.create-user-section-header p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Labels / Inputs
+--------------------------------------------------------- */
+
+.create-user-section label {
+    display: block;
+
+    margin-top: 17px;
+    margin-bottom: 7px;
+
+    color: #e5e7eb;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.create-user-section label:first-of-type {
+    margin-top: 0;
+}
+
+.create-user-section input,
+.create-user-section select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.create-user-hint {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Temporary Password
+--------------------------------------------------------- */
+
+.create-password-field {
+    position: relative;
+}
+
+.create-password-field input {
+    padding-right: 70px;
+}
+
+.create-password-toggle {
+    position: absolute;
+
+    top: 50%;
+    right: 14px;
+
+    width: auto;
+
+    margin: 0;
+    padding: 4px 6px;
+
+    transform: translateY(-50%);
+
+    background: transparent;
+    border: none;
+
+    color: #93c5fd;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.create-password-toggle:hover {
+    background: transparent;
+
+    color: #bfdbfe;
+
+    transform: translateY(-50%);
+}
+
+
+/* ---------------------------------------------------------
+   Password Requirements
+--------------------------------------------------------- */
+
+.create-password-requirements {
+    margin-top: 12px;
+    padding: 14px 16px;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 10px;
+}
+
+.create-password-requirements strong {
+    color: #e5e7eb;
+
+    font-size: 12px;
+}
+
+.create-password-requirements ul {
+    margin: 9px 0 0;
+    padding-left: 18px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+
+/* ---------------------------------------------------------
+   Role Description
+--------------------------------------------------------- */
+
+.create-role-description {
+    margin-top: 10px;
+    padding: 11px 13px;
+
+    background: rgba(15, 23, 42, 0.5);
+
+    border: 1px solid rgba(96, 165, 250, 0.12);
+    border-radius: 9px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Submit Button
+--------------------------------------------------------- */
+
+.create-user-submit {
+    margin-top: 20px;
+}
+
+
+/* ---------------------------------------------------------
+   Error State
+--------------------------------------------------------- */
+
+.create-user-error {
+    margin-top: 18px;
+    margin-bottom: 10px;
+    padding: 14px 16px;
+
+    background: rgba(127, 29, 29, 0.25);
+
+    border: 1px solid rgba(248, 113, 113, 0.28);
+    border-radius: 10px;
+
+    color: #fecaca;
+
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Security Note
+--------------------------------------------------------- */
+
+.create-user-security-note {
+    margin-top: 18px;
+    padding: 13px 15px;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    border: 1px solid rgba(96, 165, 250, 0.13);
+    border-radius: 10px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* ---------------------------------------------------------
+   Navigation
+--------------------------------------------------------- */
+
+.create-user-actions {
+    display: grid;
+
+    gap: 10px;
+
+    margin-top: 14px;
+}
+
+.create-user-actions .portal-button {
+    margin: 0;
+}
+
+
+/* ---------------------------------------------------------
+   Responsive
+--------------------------------------------------------- */
+
+@media (max-width: 700px) {
+
+    .create-user-page {
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
+    .create-user-card {
+        padding: 24px;
+    }
+
+    .create-user-section {
+        padding: 18px;
+    }
+}
+
+/* =========================================================
+   Manage Users
+========================================================= */
+
+.manage-users-page {
+    padding-top: 55px;
+    padding-bottom: 55px;
+}
+
+.manage-users-card {
+    width: 100%;
+    max-width: 900px;
+}
+
+.manage-users-card > h1 {
+    margin-bottom: 8px;
+}
+
+.manage-users-subtitle {
+    margin-top: 0;
+    margin-bottom: 22px;
+
+    color: #cbd5e1;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   Top Actions
+========================================================= */
+
+.manage-users-actions {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+}
+
+.manage-users-actions .portal-button {
+    margin: 0;
+}
+
+/*
+   Overrides the older global rule that hides
+   secondary buttons inside some action containers.
+*/
+
+.manage-users-actions .secondary-button {
+    display: flex;
+}
+
+
+/* =========================================================
+   User List
+========================================================= */
+
+.user-management-list {
+    display: grid;
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   Expandable User Card
+========================================================= */
+
+.user-management-card {
+    overflow: hidden;
+
+    background: rgba(30, 41, 59, 0.78);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+}
+
+.user-management-card summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding: 18px 20px;
+
+    cursor: pointer;
+
+    list-style: none;
+
+    transition: background 0.2s ease;
+}
+
+.user-management-card summary::-webkit-details-marker {
+    display: none;
+}
+
+.user-management-card summary:hover {
+    background: rgba(51, 65, 85, 0.30);
+}
+
+.user-management-card[open] summary {
+    background: rgba(51, 65, 85, 0.22);
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+
+/* Custom expand arrow */
+
+.user-management-card summary::after {
+    content: "⌄";
+
+    color: #93c5fd;
+
+    font-size: 18px;
+
+    transition: transform 0.2s ease;
+}
+
+.user-management-card[open] summary::after {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   User Summary
+========================================================= */
+
+.user-summary-main {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    min-width: 0;
+}
+
+.user-summary-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    background: rgba(59, 130, 246, 0.12);
+
+    border: 1px solid rgba(96, 165, 250, 0.16);
+    border-radius: 50%;
+
+    font-size: 19px;
+}
+
+.user-summary-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    min-width: 0;
+}
+
+.user-summary-info strong {
+    color: #f8fafc;
+
+    font-size: 15px;
+}
+
+.user-summary-info span {
+    color: #cbd5e1;
+
+    font-size: 12px;
+}
+
+.user-summary-info small {
+    color: #64748b;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   Role Badges
+========================================================= */
+
+.user-summary-right {
+    display: flex;
+    align-items: center;
+
+    margin-left: auto;
+}
+
+.user-role-badge {
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+.role-admin {
+    background: rgba(34, 197, 94, 0.13);
+
+    border: 1px solid rgba(34, 197, 94, 0.24);
+
+    color: #86efac;
+}
+
+.role-employee {
+    background: rgba(59, 130, 246, 0.13);
+
+    border: 1px solid rgba(59, 130, 246, 0.22);
+
+    color: #93c5fd;
+}
+
+
+/* =========================================================
+   Expanded Content
+========================================================= */
+
+.user-management-content {
+    padding: 18px;
+}
+
+
+/* =========================================================
+   Account Metadata
+========================================================= */
+
+.user-account-meta {
+    overflow: hidden;
+
+    margin-bottom: 18px;
+
+    background: rgba(15, 23, 42, 0.48);
+
+    border: 1px solid rgba(148, 163, 184, 0.10);
+    border-radius: 10px;
+}
+
+.user-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 11px 14px;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+
+    font-size: 12px;
+}
+
+.user-meta-row:last-child {
+    border-bottom: none;
+}
+
+.user-meta-row span {
+    color: #94a3b8;
+}
+
+.user-meta-row strong {
+    color: #e5e7eb;
+
+    text-align: right;
+}
+
+
+/* =========================================================
+   Edit Section
+========================================================= */
+
+.user-edit-section {
+    padding: 18px;
+
+    background: rgba(15, 23, 42, 0.35);
+
+    border: 1px solid rgba(148, 163, 184, 0.10);
+    border-radius: 11px;
+}
+
+.user-section-header {
+    margin-bottom: 18px;
+}
+
+.user-section-header h2 {
+    margin: 0 0 5px;
+
+    color: #f8fafc;
+
+    font-size: 16px;
+}
+
+.user-section-header p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   Edit Form
+========================================================= */
+
+.user-edit-form label {
+    display: block;
+
+    margin-top: 16px;
+    margin-bottom: 7px;
+
+    color: #e5e7eb;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.user-edit-form label:first-of-type {
+    margin-top: 0;
+}
+
+.user-edit-form input,
+.user-edit-form select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.manage-user-hint {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   Role Note
+========================================================= */
+
+.manage-user-role-note {
+    margin-top: 11px;
+    padding: 11px 13px;
+
+    background: rgba(30, 41, 59, 0.55);
+
+    border: 1px solid rgba(96, 165, 250, 0.10);
+    border-radius: 8px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   Save Button
+========================================================= */
+
+.manage-user-save {
+    margin-top: 18px;
+}
+
+
+/* =========================================================
+   Danger Zone
+========================================================= */
+
+.user-danger-zone {
+    margin-top: 18px;
+    padding: 16px;
+
+    background: rgba(127, 29, 29, 0.11);
+
+    border: 1px solid rgba(248, 113, 113, 0.18);
+    border-radius: 11px;
+}
+
+.user-danger-zone-header {
+    margin-bottom: 14px;
+}
+
+.user-danger-zone-header h3 {
+    margin: 0 0 5px;
+
+    color: #fecaca;
+
+    font-size: 14px;
+}
+
+.user-danger-zone-header p {
+    margin: 0;
+
+    color: #fca5a5;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.user-danger-zone form {
+    margin: 0;
+}
+
+.manage-user-delete {
+    width: 100%;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   Current Account Protection
+========================================================= */
+
+.user-current-account-note {
+    margin-top: 18px;
+    padding: 13px 15px;
+
+    background: rgba(20, 83, 45, 0.12);
+
+    border: 1px solid rgba(34, 197, 94, 0.17);
+    border-radius: 9px;
+
+    color: #86efac;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   Empty State
+========================================================= */
+
+.manage-users-empty {
+    padding: 30px;
+
+    text-align: center;
+
+    background: rgba(30, 41, 59, 0.60);
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
+}
+
+.manage-users-empty strong {
+    color: #f8fafc;
+}
+
+.manage-users-empty p {
+    margin-bottom: 0;
+
+    color: #94a3b8;
+}
+
+
+/* =========================================================
+   Security Footer
+========================================================= */
+
+.manage-users-security-note {
+    margin-top: 22px;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 700px) {
+
+    .manage-users-page {
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
+    .manage-users-card {
+        padding: 22px;
+    }
+
+    .manage-users-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .user-management-card summary {
+        align-items: flex-start;
+        flex-wrap: wrap;
+    }
+
+    .user-summary-right {
+        width: 100%;
+
+        margin-left: 56px;
+    }
+
+    .user-meta-row {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 4px;
+    }
+
+    .user-meta-row strong {
+        text-align: left;
+    }
+
+}
+
+/* =========================================================
+   Help Desk Analytics
+========================================================= */
+
+.analytics-page {
+    padding-top: 55px;
+    padding-bottom: 55px;
+}
+
+.analytics-card {
+    width: 100%;
+    max-width: 1050px;
+}
+
+.analytics-card > h1 {
+    margin-bottom: 8px;
+}
+
+.analytics-subtitle {
+    margin-top: 0;
+    margin-bottom: 28px;
+
+    color: #cbd5e1;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   Analytics Sections
+========================================================= */
+
+.analytics-section {
+    margin-top: 28px;
+}
+
+.analytics-section-header {
+    margin-bottom: 16px;
+}
+
+.analytics-section-header h2 {
+    margin: 0 0 6px;
+
+    color: #f8fafc;
+
+    font-size: 20px;
+}
+
+.analytics-section-header p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   KPI Grids
+========================================================= */
+
+.analytics-kpi-grid {
+    display: grid;
+
+    gap: 14px;
+}
+
+.analytics-kpi-grid-four {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.analytics-kpi-grid-three {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+
+/* =========================================================
+   KPI Cards
+========================================================= */
+
+.analytics-kpi {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    min-height: 115px;
+
+    padding: 18px;
+
+    text-align: center;
+
+    background: rgba(30, 41, 59, 0.78);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+}
+
+.analytics-kpi-icon {
+    margin-bottom: 5px;
+
+    font-size: 18px;
+}
+
+.analytics-kpi strong {
+    color: #60a5fa;
+
+    font-size: 30px;
+    line-height: 1.1;
+}
+
+.analytics-kpi > span:last-child {
+    margin-top: 6px;
+
+    color: #cbd5e1;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   Priority KPI Accents
+========================================================= */
+
+.priority-low-kpi {
+    border-bottom: 3px solid rgba(59, 130, 246, 0.70);
+}
+
+.priority-medium-kpi {
+    border-bottom: 3px solid rgba(245, 158, 11, 0.70);
+}
+
+.priority-high-kpi {
+    border-bottom: 3px solid rgba(239, 68, 68, 0.70);
+}
+
+
+/* =========================================================
+   SLA KPI Accents
+========================================================= */
+
+.sla-met-kpi {
+    border-bottom: 3px solid rgba(34, 197, 94, 0.70);
+}
+
+.sla-missed-kpi {
+    border-bottom: 3px solid rgba(239, 68, 68, 0.70);
+}
+
+.sla-overdue-kpi {
+    border-bottom: 3px solid rgba(245, 158, 11, 0.70);
+}
+
+
+/* =========================================================
+   SLA Explanation
+========================================================= */
+
+.analytics-definition-note {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 12px;
+
+    margin-top: 14px;
+}
+
+.analytics-definition-note > div {
+    padding: 12px 14px;
+
+    background: rgba(15, 23, 42, 0.50);
+
+    border: 1px solid rgba(148, 163, 184, 0.10);
+    border-radius: 9px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.analytics-definition-note strong {
+    color: #e5e7eb;
+}
+
+
+/* =========================================================
+   Chart Grid
+========================================================= */
+
+.analytics-chart-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+/* =========================================================
+   Chart Cards
+========================================================= */
+
+.analytics-chart-card {
+    min-width: 0;
+
+    padding: 18px;
+
+    background: rgba(30, 41, 59, 0.78);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+}
+
+.analytics-chart-card h3 {
+    margin: 0 0 5px;
+
+    color: #f8fafc;
+
+    font-size: 15px;
+}
+
+.analytics-chart-card > p {
+    min-height: 34px;
+
+    margin: 0 0 14px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.analytics-chart-canvas {
+    position: relative;
+
+    width: 100%;
+    height: 280px;
+}
+
+.analytics-chart-canvas canvas {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+
+/* =========================================================
+   Wide Trend Chart
+========================================================= */
+
+.analytics-chart-wide {
+    grid-column: 1 / -1;
+}
+
+.analytics-trend-canvas {
+    height: 245px;
+}
+
+
+/* =========================================================
+   Operational Insights
+========================================================= */
+
+.analytics-insights-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+.analytics-insight-panel {
+    overflow: hidden;
+
+    background: rgba(30, 41, 59, 0.78);
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 14px;
+}
+
+.analytics-insight-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 16px;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+}
+
+.analytics-insight-header h3 {
+    margin: 0 0 5px;
+
+    color: #f8fafc;
+
+    font-size: 14px;
+}
+
+.analytics-insight-header p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.analytics-insight-icon {
+    flex-shrink: 0;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   Insight Rows
+========================================================= */
+
+.analytics-insight-list {
+    padding: 8px 16px;
+}
+
+.analytics-insight-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 12px 0;
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.analytics-insight-row:last-child {
+    border-bottom: none;
+}
+
+.analytics-insight-row span {
+    color: #e5e7eb;
+
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.analytics-insight-row strong {
+    min-width: 28px;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+.analytics-danger-value {
+    color: #fca5a5;
+}
+
+.analytics-success-value {
+    color: #86efac;
+}
+
+
+/* =========================================================
+   Empty Insight States
+========================================================= */
+
+.analytics-empty-state {
+    margin: 14px;
+    padding: 14px;
+
+    background: rgba(15, 23, 42, 0.48);
+
+    border-radius: 9px;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   Navigation
+========================================================= */
+
+.analytics-actions {
+    display: grid;
+
+    margin-top: 26px;
+}
+
+.analytics-actions .portal-button {
+    margin: 0;
+}
+
+/*
+   Override the older global rule that hides secondary
+   navigation buttons inside some action containers.
+*/
+
+.analytics-actions .secondary-button {
+    display: flex;
+}
+
+
+/* =========================================================
+   Footer
+========================================================= */
+
+.analytics-footer-note {
+    margin-top: 18px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 850px) {
+
+    .analytics-kpi-grid-four {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .analytics-page {
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
+    .analytics-card {
+        padding: 22px;
+    }
+
+    .analytics-kpi-grid-four,
+    .analytics-kpi-grid-three,
+    .analytics-chart-grid,
+    .analytics-insights-grid,
+    .analytics-definition-note {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-chart-wide {
+        grid-column: auto;
+    }
+
+    .analytics-chart-canvas {
+        height: 250px;
+    }
+
+    .analytics-trend-canvas {
+        height: 220px;
+    }
+
+}
+
+/* =========================================================
+   NexusDesk Ticket Operations
+========================================================= */
+
+.ticket-ops-page {
+    padding-top: 55px;
+    padding-bottom: 55px;
+}
+
+.ticket-ops-card {
+    width: 100%;
+    max-width: 1050px;
+}
+
+.ticket-ops-card > h1 {
+    margin-bottom: 8px;
+}
+
+.ticket-ops-subtitle {
+    margin-top: 0;
+    margin-bottom: 24px;
+
+    color: #cbd5e1;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   Context Badge
+========================================================= */
+
+.ticket-ops-context-badge.danger {
+    background: rgba(127, 29, 29, 0.30);
+    border-color: rgba(248, 113, 113, 0.28);
+    color: #fca5a5;
+}
+
+.ticket-ops-context-badge.info {
+    background: rgba(30, 64, 175, 0.24);
+    border-color: rgba(96, 165, 250, 0.24);
+    color: #93c5fd;
+}
+
+.ticket-ops-context-badge.success {
+    background: rgba(20, 83, 45, 0.26);
+    border-color: rgba(34, 197, 94, 0.24);
+    color: #86efac;
+}
+
+
+/* =========================================================
+   Main Ticket Navigation
+========================================================= */
+
+.ticket-ops-tabs {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+.ticket-ops-tabs a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 13px 14px;
+
+    text-decoration: none;
+
+    background: rgba(30, 41, 59, 0.70);
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 10px;
+
+    color: #cbd5e1;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.ticket-ops-tabs a:hover {
+    transform: translateY(-1px);
+
+    background: rgba(51, 65, 85, 0.55);
+
+    border-color: rgba(96, 165, 250, 0.22);
+}
+
+.ticket-ops-tabs a.active {
+    background: rgba(37, 99, 235, 0.22);
+
+    border-color: rgba(96, 165, 250, 0.55);
+
+    color: #dbeafe;
+}
+
+.ticket-ops-tabs a.high-priority-tab {
+    background: rgba(127, 29, 29, 0.20);
+
+    border-color: rgba(248, 113, 113, 0.38);
+
+    color: #fecaca;
+}
+
+.ticket-ops-tabs strong {
+    color: #60a5fa;
+
+    font-size: 16px;
+}
+
+.ticket-ops-tabs .high-priority-tab strong {
+    color: #f87171;
+}
+
+
+/* =========================================================
+   Context Metrics
+========================================================= */
+
+.ticket-ops-metrics {
+    display: grid;
+
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(135px, 1fr)
+    );
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+.ticket-ops-metric {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    min-height: 105px;
+
+    padding: 15px;
+
+    text-align: center;
+
+    background: rgba(30, 41, 59, 0.72);
+
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    border-radius: 12px;
+}
+
+.ticket-ops-metric-icon {
+    margin-bottom: 4px;
+
+    font-size: 17px;
+}
+
+.ticket-ops-metric strong {
+    color: #60a5fa;
+
+    font-size: 27px;
+    line-height: 1.1;
+}
+
+.ticket-ops-metric > span:last-child {
+    margin-top: 6px;
+
+    color: #cbd5e1;
+
+    font-size: 11px;
+}
+
+.ticket-ops-metric.danger {
+    border-bottom: 3px solid rgba(239, 68, 68, 0.72);
+}
+
+.ticket-ops-metric.danger strong {
+    color: #f87171;
+}
+
+.ticket-ops-metric.warning {
+    border-bottom: 3px solid rgba(245, 158, 11, 0.72);
+}
+
+.ticket-ops-metric.warning strong {
+    color: #fbbf24;
+}
+
+.ticket-ops-metric.success {
+    border-bottom: 3px solid rgba(34, 197, 94, 0.72);
+}
+
+.ticket-ops-metric.success strong {
+    color: #4ade80;
+}
+
+.ticket-ops-metric.info {
+    border-bottom: 3px solid rgba(59, 130, 246, 0.72);
+}
+
+
+/* =========================================================
+   Active Workload
+========================================================= */
+
+.ticket-ops-workload {
+    margin-bottom: 18px;
+    padding: 18px;
+
+    background: rgba(30, 41, 59, 0.66);
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
+}
+
+.ticket-ops-section-heading h2 {
+    margin: 0 0 4px;
+
+    color: #f8fafc;
+
+    font-size: 16px;
+}
+
+.ticket-ops-section-heading p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.ticket-ops-workload-grid {
+    display: grid;
+
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(210px, 1fr)
+    );
+
+    gap: 10px;
+
+    margin-top: 14px;
+}
+
+.workload-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    padding: 12px 14px;
+
+    background: rgba(15, 23, 42, 0.48);
+
+    border: 1px solid rgba(96, 165, 250, 0.12);
+    border-radius: 9px;
+}
+
+.workload-label {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #64748b;
+
+    font-size: 10px;
+    text-transform: uppercase;
+}
+
+.workload-chip strong {
+    color: #e5e7eb;
+
+    font-size: 12px;
+}
+
+.workload-count {
+    color: #93c5fd;
+
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+.unassigned-workload {
+    border-color: rgba(245, 158, 11, 0.18);
+}
+
+.unassigned-workload .workload-count {
+    color: #fbbf24;
+}
+
+
+/* =========================================================
+   Main Actions
+========================================================= */
+
+.ticket-ops-page-actions {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 18px;
+}
+
+.ticket-ops-page-actions .portal-button {
+    margin: 0;
+}
+
+
+/* =========================================================
+   Filters
+========================================================= */
+
+.ticket-filter-panel {
+    overflow: hidden;
+
+    margin-bottom: 22px;
+
+    background: rgba(30, 41, 59, 0.70);
+
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    border-radius: 12px;
+}
+
+.ticket-filter-panel > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 16px;
+
+    padding: 15px 17px;
+
+    cursor: pointer;
+
+    list-style: none;
+}
+
+.ticket-filter-panel > summary::-webkit-details-marker {
+    display: none;
+}
+
+.ticket-filter-panel > summary strong {
+    display: block;
+
+    color: #f8fafc;
+
+    font-size: 13px;
+}
+
+.ticket-filter-panel > summary small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+}
+
+.ticket-filter-arrow {
+    color: #93c5fd;
+
+    transition: transform 0.2s ease;
+}
+
+.ticket-filter-panel[open] .ticket-filter-arrow {
+    transform: rotate(180deg);
+}
+
+.ticket-filter-content {
+    padding: 17px;
+
+    border-top: 1px solid rgba(148, 163, 184, 0.09);
+}
+
+.ticket-filter-form {
+    margin: 0;
+}
+
+.ticket-filter-form label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: #e5e7eb;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ticket-filter-form input,
+.ticket-filter-form select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ticket-filter-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-top: 13px;
+}
+
+.ticket-filter-actions {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+.ticket-filter-actions .portal-button {
+    margin: 0;
+}
+
+.ticket-filter-apply {
+    margin: 0;
+}
+
+
+/* =========================================================
+   Results Header
+========================================================= */
+
+.ticket-results-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    margin-bottom: 12px;
+}
+
+.ticket-results-header h2 {
+    margin: 0 0 3px;
+
+    color: #f8fafc;
+
+    font-size: 18px;
+}
+
+.ticket-results-header p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+.ticket-results-header > span {
+    padding: 5px 9px;
+
+    background: rgba(59, 130, 246, 0.12);
+
+    border: 1px solid rgba(96, 165, 250, 0.16);
+    border-radius: 999px;
+
+    color: #93c5fd;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   Ticket List
+========================================================= */
+
+.ticket-operations-list {
+    display: grid;
+
+    gap: 13px;
+}
+
+
+/* =========================================================
+   Ticket Card
+========================================================= */
+
+.ops-ticket-card {
+    overflow: hidden;
+
+    background: rgba(30, 41, 59, 0.78);
+
+    border: 1px solid rgba(148, 163, 184, 0.13);
+    border-left: 4px solid #3b82f6;
+    border-radius: 12px;
+}
+
+.ops-ticket-card.ops-ticket-high {
+    border-left-color: #ef4444;
+}
+
+.ops-ticket-card.ops-ticket-due-soon {
+    border-left-color: #f59e0b;
+}
+
+.ops-ticket-card.ops-ticket-overdue {
+    border-left-color: #ef4444;
+}
+
+.ops-ticket-card.ops-ticket-closed {
+    border-left-color: #22c55e;
+}
+
+
+/* =========================================================
+   Ticket Summary
+========================================================= */
+
+.ops-ticket-summary {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 16px;
+
+    cursor: pointer;
+
+    list-style: none;
+}
+
+.ops-ticket-summary::-webkit-details-marker {
+    display: none;
+}
+
+.ops-ticket-summary:hover {
+    background: rgba(51, 65, 85, 0.24);
+}
+
+.ops-ticket-card[open] > .ops-ticket-summary {
+    background: rgba(51, 65, 85, 0.20);
+
+    border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+}
+
+.ops-ticket-summary-main {
+    min-width: 0;
+    flex: 1;
+}
+
+.ops-ticket-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 18px;
+}
+
+.ops-ticket-title-row strong {
+    color: #f8fafc;
+
+    font-size: 14px;
+}
+
+.ops-ticket-title-row p {
+    overflow: hidden;
+
+    max-width: 600px;
+
+    margin: 4px 0 0;
+
+    color: #cbd5e1;
+
+    font-size: 12px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   Ticket Badges
+========================================================= */
+
+.ops-ticket-badges {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+
+    gap: 6px;
+
+    flex-shrink: 0;
+}
+
+.ops-badge {
+    padding: 5px 8px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+.ops-badge.priority-low {
+    background: rgba(59, 130, 246, 0.14);
+    color: #93c5fd;
+}
+
+.ops-badge.priority-medium {
+    background: rgba(245, 158, 11, 0.16);
+    color: #fbbf24;
+}
+
+.ops-badge.priority-high {
+    background: rgba(239, 68, 68, 0.16);
+    color: #fca5a5;
+}
+
+.ops-badge.status-badge {
+    background: rgba(71, 85, 105, 0.45);
+    color: #e2e8f0;
+}
+
+.ops-badge.sla-track {
+    background: rgba(34, 197, 94, 0.18);
+    color: #86efac;
+}
+
+.ops-badge.sla-soon {
+    background: rgba(245, 158, 11, 0.18);
+    color: #fbbf24;
+}
+
+.ops-badge.sla-overdue {
+    background: rgba(239, 68, 68, 0.20);
+    color: #fca5a5;
+}
+
+.ops-badge.sla-none {
+    background: rgba(100, 116, 139, 0.26);
+    color: #cbd5e1;
+}
+
+
+/* =========================================================
+   Ticket Summary Metadata
+========================================================= */
+
+.ops-ticket-summary-meta {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px 16px;
+
+    margin-top: 10px;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+}
+
+.ops-expand-arrow {
+    color: #93c5fd;
+
+    transition: transform 0.2s ease;
+}
+
+.ops-ticket-card[open] > summary .ops-expand-arrow {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   Expanded Ticket
+========================================================= */
+
+.ops-ticket-content {
+    padding: 16px;
+}
+
+.ops-ticket-detail-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 16px;
+}
+
+.ops-ticket-detail-grid > div {
+    padding: 11px 12px;
+
+    background: rgba(15, 23, 42, 0.46);
+
+    border: 1px solid rgba(148, 163, 184, 0.09);
+    border-radius: 8px;
+}
+
+.ops-ticket-detail-grid span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #64748b;
+
+    font-size: 9px;
+    text-transform: uppercase;
+}
+
+.ops-ticket-detail-grid strong {
+    color: #e5e7eb;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   Ticket Actions
+========================================================= */
+
+.ops-ticket-actions {
+    display: grid;
+
+    grid-template-columns: repeat(
+        auto-fit,
+        minmax(170px, 1fr)
+    );
+
+    gap: 9px;
+
+    margin-bottom: 15px;
+}
+
+.ops-ticket-actions form {
+    margin: 0;
+}
+
+.ops-action-button,
+.ops-assigned-you {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 40px;
+
+    box-sizing: border-box;
+
+    margin: 0;
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.assign-action {
+    background: #2563eb;
+}
+
+.close-action {
+    background: #16a34a;
+}
+
+.edit-action {
+    background: #4f46e5;
+}
+
+.ops-assigned-you {
+    background: rgba(34, 197, 94, 0.12);
+
+    border: 1px solid rgba(34, 197, 94, 0.18);
+
+    color: #86efac;
+}
+
+
+/* =========================================================
+   Edit Form
+========================================================= */
+
+.ops-edit-form {
+    display: none;
+
+    margin-bottom: 16px;
+    padding: 17px;
+
+    background: rgba(15, 23, 42, 0.42);
+
+    border: 1px solid rgba(96, 165, 250, 0.12);
+    border-radius: 10px;
+}
+
+.ops-edit-form.show-edit-form {
+    display: block;
+}
+
+.ops-edit-header {
+    margin-bottom: 15px;
+}
+
+.ops-edit-header h3 {
+    margin: 0 0 4px;
+
+    color: #f8fafc;
+
+    font-size: 15px;
+}
+
+.ops-edit-header p {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 10px;
+}
+
+.ops-edit-form form {
+    margin: 0;
+}
+
+.ops-edit-form label {
+    display: block;
+
+    margin-top: 13px;
+    margin-bottom: 6px;
+
+    color: #e5e7eb;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ops-edit-form input,
+.ops-edit-form select,
+.ops-edit-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.ops-edit-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 12px;
+}
+
+.ops-save-ticket {
+    margin-top: 16px;
+}
+
+
+/* =========================================================
+   Attachments + Notes
+========================================================= */
+
+.ops-ticket-support-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin-bottom: 14px;
+}
+
+.ops-ticket-subpanel {
+    overflow: hidden;
+
+    background: rgba(15, 23, 42, 0.42);
+
+    border: 1px solid rgba(148, 163, 184, 0.09);
+    border-radius: 9px;
+}
+
+.ops-ticket-subpanel > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px 13px;
+
+    cursor: pointer;
+
+    list-style: none;
+
+    color: #e5e7eb;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ops-ticket-subpanel > summary::-webkit-details-marker {
+    display: none;
+}
+
+.ops-ticket-subpanel > summary strong {
+    color: #93c5fd;
+}
+
+.ops-subpanel-content {
+    padding: 12px;
+
+    border-top: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+.ops-attachment-link {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #60a5fa;
+
+    font-size: 11px;
+}
+
+.ops-empty-copy {
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   Timeline
+========================================================= */
+
+.ops-timeline {
+    display: grid;
+
+    gap: 8px;
+}
+
+.ops-timeline-entry {
+    padding: 10px 11px;
+
+    border-left: 2px solid #3b82f6;
+
+    background: rgba(30, 41, 59, 0.42);
+
+    border-radius: 0 7px 7px 0;
+}
+
+.ops-note-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+.ops-note-meta strong {
+    color: #e5e7eb;
+
+    font-size: 10px;
+}
+
+.ops-note-meta span {
+    color: #64748b;
+
+    font-size: 9px;
+}
+
+.ops-timeline-entry p {
+    margin: 5px 0 0;
+
+    color: #cbd5e1;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   Danger Zone
+========================================================= */
+
+.ops-ticket-danger {
+    overflow: hidden;
+
+    background: rgba(127, 29, 29, 0.08);
+
+    border: 1px solid rgba(248, 113, 113, 0.15);
+    border-radius: 9px;
+}
+
+.ops-ticket-danger > summary {
+    padding: 11px 13px;
+
+    cursor: pointer;
+
+    list-style: none;
+
+    color: #fca5a5;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ops-ticket-danger > summary::-webkit-details-marker {
+    display: none;
+}
+
+.ops-danger-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    padding: 13px;
+
+    border-top: 1px solid rgba(248, 113, 113, 0.12);
+}
+
+.ops-danger-content strong {
+    color: #fecaca;
+
+    font-size: 11px;
+}
+
+.ops-danger-content p {
+    margin: 4px 0 0;
+
+    color: #fca5a5;
+
+    font-size: 10px;
+}
+
+.ops-danger-content form {
+    flex-shrink: 0;
+
+    margin: 0;
+}
+
+.ops-danger-content .delete-button {
+    width: auto;
+
+    margin: 0;
+}
+
+
+/* =========================================================
+   Empty State
+========================================================= */
+
+.ticket-ops-empty-state {
+    padding: 35px 20px;
+
+    text-align: center;
+
+    background: rgba(30, 41, 59, 0.54);
+
+    border: 1px solid rgba(148, 163, 184, 0.11);
+    border-radius: 12px;
+}
+
+.ticket-ops-empty-state > span {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #4ade80;
+
+    font-size: 24px;
+}
+
+.ticket-ops-empty-state strong {
+    color: #f8fafc;
+
+    font-size: 14px;
+}
+
+.ticket-ops-empty-state p {
+    margin: 5px 0 0;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   Footer
+========================================================= */
+
+.ticket-ops-footer {
+    margin-top: 22px;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   Responsive
+========================================================= */
+
+@media (max-width: 850px) {
+
+    .ticket-ops-tabs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ops-ticket-detail-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .ticket-ops-page {
+        padding-top: 24px;
+        padding-bottom: 24px;
+    }
+
+    .ticket-ops-card {
+        padding: 22px;
+    }
+
+    .ticket-ops-tabs,
+    .ticket-ops-page-actions,
+    .ticket-filter-grid,
+    .ticket-filter-actions,
+    .ops-edit-grid,
+    .ops-ticket-support-grid,
+    .ops-ticket-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ops-ticket-title-row {
+        flex-direction: column;
+    }
+
+    .ops-ticket-badges {
+        justify-content: flex-start;
+    }
+
+    .ops-ticket-title-row p {
+        white-space: normal;
+    }
+
+    .ops-danger-content {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .ops-danger-content .delete-button {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   CHANGE PASSWORD
+========================================================= */
+
+.password-security-card {
+    width: 480px;
+}
+
+.password-security-card label {
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #cbd5e1;
+}
+
+.password-input-wrapper {
+    position: relative;
+}
+
+.password-input-wrapper input {
+    width: 100%;
+    padding-right: 52px;
+    box-sizing: border-box;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+
+    width: 38px;
+    height: 34px;
+
+    margin: 0;
+    padding: 0;
+
+    border: none;
+    border-radius: 8px;
+
+    background: transparent;
+    color: #94a3b8;
+
+    cursor: pointer;
+}
+
+.password-toggle:hover {
+    background: rgba(148, 163, 184, 0.10);
+    transform: translateY(-50%);
+}
+
+.password-strength-panel {
+    margin-top: 12px;
+    padding: 13px;
+
+    border: 1px solid rgba(148, 163, 184, 0.12);
+    border-radius: 12px;
+
+    background: rgba(15, 23, 42, 0.45);
+}
+
+.password-strength-heading {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-bottom: 9px;
+
+    font-size: 12px;
+    color: #cbd5e1;
+}
+
+.password-strength-track {
+    width: 100%;
+    height: 7px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: rgba(148, 163, 184, 0.16);
+}
+
+.password-strength-fill {
+    height: 100%;
+    width: 0;
+
+    border-radius: 999px;
+
+    transition:
+        width 0.25s ease,
+        background 0.25s ease;
+}
+
+.strength-empty {
+    width: 0;
+}
+
+.strength-weak {
+    width: 25%;
+    background: #ef4444;
+}
+
+.strength-fair {
+    width: 50%;
+    background: #f59e0b;
+}
+
+.strength-good {
+    width: 75%;
+    background: #3b82f6;
+}
+
+.strength-strong {
+    width: 100%;
+    background: #22c55e;
+}
+
+.password-strength-panel small {
+    display: block;
+
+    margin-top: 9px;
+
+    color: #94a3b8;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.password-match-status {
+    min-height: 18px;
+
+    margin-top: 7px;
+
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.password-match-success {
+    color: #86efac;
+}
+
+.password-match-error {
+    color: #fca5a5;
+}
+
+.password-error-box {
+    margin: 14px 0;
+
+    padding: 12px 14px;
+
+    border: 1px solid rgba(239, 68, 68, 0.28);
+    border-radius: 10px;
+
+    background: rgba(239, 68, 68, 0.10);
+
+    color: #fecaca;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.password-update-button {
+    margin-top: 18px;
+}
+
+.password-page-actions {
+    margin-top: 12px;
+}
+
+.password-security-note {
+    margin-top: 20px;
+    text-align: center;
+}
+
+/* =========================================================
+   CONTACT IT PRIORITY LAYOUT
+========================================================= */
+
+.contact-priority-grid,
+.contact-sla-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 900px) {
+
+    .contact-priority-grid,
+    .contact-sla-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   KNOWLEDGE BASE - GUIDED ARTICLE STEPS
+========================================================= */
+
+.kb-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.kb-section-heading h3 {
+    margin-bottom: 6px;
+}
+
+.kb-section-heading p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+
+.kb-guide-step-list {
+    display: grid;
+    gap: 14px;
+}
+
+
+.kb-guide-step {
+    position: relative;
+
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 17px 18px;
+
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    border-radius: 12px;
+
+    background: rgba(31, 41, 55, 0.88);
+
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+.kb-guide-step:hover {
+    border-color: rgba(96, 165, 250, 0.34);
+    transform: translateY(-1px);
+}
+
+
+/* Hide browser checkbox without removing accessibility */
+.kb-guide-step .step-check {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    margin: 0;
+    padding: 0;
+
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+
+.kb-guide-checkmark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 24px;
+
+    width: 24px;
+    height: 24px;
+
+    margin-top: 1px;
+
+    border: 1px solid rgba(148, 163, 184, 0.55);
+    border-radius: 7px;
+
+    background: rgba(15, 23, 42, 0.72);
+
+    color: white;
+    font-size: 14px;
+    font-weight: 700;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.kb-guide-step
+.step-check:checked
++
+.kb-guide-checkmark {
+    border-color: rgba(34, 197, 94, 0.8);
+    background: #22c55e;
+}
+
+
+.kb-guide-step
+.step-check:checked
++
+.kb-guide-checkmark::after {
+    content: "✓";
+}
+
+
+.kb-guide-step-content {
+    flex: 1;
+    min-width: 0;
+}
+
+
+.kb-guide-step-number {
+    display: inline-flex;
+    align-items: center;
+
+    margin-bottom: 8px;
+
+    padding: 4px 10px;
+
+    border: 1px solid rgba(96, 165, 250, 0.26);
+    border-radius: 999px;
+
+    background: rgba(59, 130, 246, 0.14);
+
+    color: #bfdbfe;
+
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+
+.kb-guide-step-content p {
+    margin: 0;
+
+    color: #e2e8f0;
+
+    font-size: 14px;
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+}
+
+
+.kb-progress-wrap {
+    margin-top: 20px;
+
+    padding-top: 16px;
+
+    border-top: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+
+.kb-progress-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 10px;
+
+    font-size: 12px;
+}
+
+
+.kb-progress-heading strong {
+    color: #e2e8f0;
+}
+
+
+.kb-progress-heading span {
+    color: #94a3b8;
+}
+
+
+.kb-no-results {
+    margin-top: 18px;
+}
+
+
+@media (max-width: 700px) {
+
+    .kb-guide-step {
+        padding: 15px;
+    }
+
+    .kb-progress-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+}
+
+/* =========================================================
+   MY TICKETS - INTERACTIVE FILTER CARDS
+========================================================= */
+
+.ticket-filter-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+
+.ticket-filter-card {
+    appearance: none;
+
+    width: 100%;
+    margin: 0;
+
+    font: inherit;
+    color: inherit;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.ticket-filter-card:hover {
+    transform: translateY(-2px);
+
+    border-color:
+        rgba(96, 165, 250, 0.5);
+}
+
+
+.ticket-filter-card.active {
+    border-color:
+        rgba(96, 165, 250, 0.8);
+
+    background:
+        rgba(59, 130, 246, 0.12);
+
+    box-shadow:
+        0 0 0 1px
+        rgba(59, 130, 246, 0.12);
+}
+
+
+.ticket-filter-card:focus-visible {
+    outline:
+        2px solid
+        rgba(96, 165, 250, 0.9);
+
+    outline-offset: 3px;
+}
+
+
+.ticket-filter-empty {
+    margin-top: 18px;
+}
+
+
+
+/* =========================================================
+   TICKET DETAIL - ACTIONS
+========================================================= */
+
+.ticket-print-button {
+    width: 100%;
+
+    font: inherit;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+}
+
+
+
+/* =========================================================
+   RESPONSIVE TICKET FILTER CARDS
+========================================================= */
+
+@media (max-width: 1000px) {
+
+    .ticket-filter-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .ticket-filter-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 480px) {
+
+    .ticket-filter-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 1100px) {
+    .ticket-kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 700px) {
+    .ticket-kpi-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   ADMIN FEEDBACK PAGE
+========================================================= */
+
+.feedback-admin-list {
+    display: grid;
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.feedback-admin-card {
+    background: linear-gradient(180deg, rgba(33, 43, 60, 0.96), rgba(28, 38, 54, 0.96));
+    border: 1px solid rgba(90, 130, 255, 0.18);
+    border-radius: 18px;
+    padding: 22px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.20);
+}
+
+.feedback-admin-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 18px;
+}
+
+.feedback-admin-top h2 {
+    margin: 8px 0 6px;
+}
+
+.feedback-admin-top p {
+    margin: 0;
+    opacity: 0.82;
+}
+
+.feedback-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.feedback-yes {
+    background: rgba(38, 208, 124, 0.14);
+    color: #7df1b0;
+    border: 1px solid rgba(38, 208, 124, 0.26);
+}
+
+.feedback-partial {
+    background: rgba(255, 193, 7, 0.14);
+    color: #ffd766;
+    border: 1px solid rgba(255, 193, 7, 0.26);
+}
+
+.feedback-no {
+    background: rgba(255, 99, 132, 0.14);
+    color: #ff9ab0;
+    border: 1px solid rgba(255, 99, 132, 0.26);
+}
+
+/* =========================================================
+   OPTIONAL: if your admin portal needs a reusable card class
+   for the two new dashboard cards
+========================================================= */
+
+.admin-command-card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(180deg, rgba(10, 18, 35, 0.94), rgba(8, 15, 29, 0.96));
+    border: 1px solid rgba(90, 130, 255, 0.16);
+    border-radius: 16px;
+    padding: 18px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    min-height: 118px;
+}
+
+.admin-command-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(110, 160, 255, 0.32);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.24);
+}
+
+.admin-command-icon {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.admin-command-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.08rem;
+    font-weight: 700;
+}
+
+.admin-command-card p {
+    margin: 0;
+    font-size: 0.94rem;
+    opacity: 0.82;
+    line-height: 1.45;
 }

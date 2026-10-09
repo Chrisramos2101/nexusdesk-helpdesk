@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Knowledge Feedback</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+<div class="login-page">
+    <div class="login-card my-tickets-page">
+
+        <div class="ticket-detail-topbar">
+            <a href="/" class="portal-button secondary-button">
+                ← Back to Admin Portal
+            </a>
+        </div>
+
+        <div class="portal-badge">ADMIN FEEDBACK</div>
+
+        <h1>💬 Knowledge Base Feedback</h1>
+        <p class="login-subtitle">
+            Review employee feedback on help articles and identify where self-service content should be improved.
+        </p>
+
+        <div class="ticket-kpi-grid">
+            <div class="ticket-kpi-card">
+                <span>📝</span>
+                <h2>{{ total_feedback }}</h2>
+                <p>Total Feedback</p>
+            </div>
+
+            <div class="ticket-kpi-card">
+                <span>👍</span>
+                <h2>{{ solved_count }}</h2>
+                <p>Solved My Issue</p>
+            </div>
+
+            <div class="ticket-kpi-card">
+                <span>🙂</span>
+                <h2>{{ partial_count }}</h2>
+                <p>Partially Helped</p>
+            </div>
+
+            <div class="ticket-kpi-card">
+                <span>👎</span>
+                <h2>{{ no_count }}</h2>
+                <p>Still Need Help</p>
+            </div>
+        </div>
+
+        <div class="ticket-toolbar">
+            <input
+                type="text"
+                id="feedbackSearch"
+                placeholder="Search by article, username, or feedback text..."
+                onkeyup="filterFeedback()">
+
+            <select id="feedbackTypeFilter" onchange="filterFeedback()">
+                <option value="all">All Feedback Types</option>
+                <option value="yes">Solved My Issue</option>
+                <option value="partial">Partially Helped</option>
+                <option value="no">Still Need Help</option>
+            </select>
+        </div>
+
+        {% if feedback_rows %}
+            <div class="feedback-admin-list">
+                {% for row in feedback_rows %}
+                    <article
+                        class="feedback-admin-card"
+                        data-feedback="{{ row.was_helpful|lower }}"
+                        data-search="{{ row.article_slug }} {{ row.username }} {{ row.was_helpful }} {{ row.feedback if row.feedback else '' }}">
+
+                        <div class="feedback-admin-top">
+                            <div>
+                                <span class="ticket-id-pill">
+                                    {{ row.article_slug.replace('-', ' ')|title }}
+                                </span>
+                                <h2>{{ row.article_slug.replace('-', ' ')|title }}</h2>
+                                <p>Submitted by {{ row.username }} on {{ row.created_at }}</p>
+                            </div>
+
+                            <div>
+                                {% if row.was_helpful == "yes" %}
+                                    <span class="feedback-pill feedback-yes">👍 Solved</span>
+                                {% elif row.was_helpful == "partial" %}
+                                    <span class="feedback-pill feedback-partial">🙂 Partial</span>
+                                {% else %}
+                                    <span class="feedback-pill feedback-no">👎 Needs Help</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="ticket-detail-grid">
+                            <div>
+                                <small>Article</small>
+                                <strong>{{ row.article_slug.replace('-', ' ')|title }}</strong>
+                            </div>
+
+                            <div>
+                                <small>User</small>
+                                <strong>{{ row.username }}</strong>
+                            </div>
+
+                            <div>
+                                <small>Feedback Type</small>
+                                <strong>
+                                    {% if row.was_helpful == "yes" %}
+                                        Solved My Issue
+                                    {% elif row.was_helpful == "partial" %}
+                                        Partially Helped
+                                    {% else %}
+                                        Still Need Help
+                                    {% endif %}
+                                </strong>
+                            </div>
+
+                            <div>
+                                <small>Submitted</small>
+                                <strong>{{ row.created_at }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="ticket-activity-box">
+                            <strong>Employee Notes</strong>
+                            <p>
+                                {% if row.feedback and row.feedback.strip() %}
+                                    {{ row.feedback }}
+                                {% else %}
+                                    No written notes were submitted.
+                                {% endif %}
+                            </p>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="premium-empty-state">
+                <span>📭</span>
+                <h2>No feedback yet</h2>
+                <p>Knowledge base feedback will appear here once employees begin submitting article responses.</p>
+            </div>
+        {% endif %}
+
+        <div class="portal-actions">
+            <a href="/" class="portal-button secondary-button">
+                ← Back to Admin Portal
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<footer class="login-footer">
+    © 2026 NexusDesk · Knowledge Feedback Center
+</footer>
+
+<script>
+function filterFeedback() {
+    const searchValue = document.getElementById("feedbackSearch").value.toLowerCase();
+    const typeValue = document.getElementById("feedbackTypeFilter").value.toLowerCase();
+    const cards = document.querySelectorAll(".feedback-admin-card");
+
+    cards.forEach(card => {
+        const searchText = card.dataset.search.toLowerCase();
+        const feedbackType = card.dataset.feedback.toLowerCase();
+
+        const matchesSearch = searchText.includes(searchValue);
+        const matchesType = typeValue === "all" || feedbackType === typeValue;
+
+        card.style.display = matchesSearch && matchesType ? "block" : "none";
+    });
+}
+</script>
+
+</body>
+</html>

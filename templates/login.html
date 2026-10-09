@@ -13,49 +13,49 @@
 <div class="saas-login-page">
 
     <section class="login-showcase">
-        <div class="showcase-badge">ENTERPRISE IT OPERATIONS</div>
+        <div class="showcase-badge">IT SUPPORT & TICKET MANAGEMENT</div>
 
-        <h1>Modern Help Desk & Ticket Operations Platform</h1>
+        <h1>A Simple Way to Manage IT Support Requests</h1>
 
         <p>
-            Manage support tickets, SLA performance, technician workload,
-            security events, and user access from one secure dashboard.
+            NexusDesk helps employees submit IT issues and gives support staff one place
+            to assign, track, prioritize, and resolve tickets.
         </p>
 
         <div class="showcase-preview-card">
             <div class="preview-header">
-                <span>📊 NexusDesk Live Overview</span>
+                <span>📊 NexusDesk Support Overview</span>
                 <span class="live-pill">LIVE</span>
             </div>
 
             <div class="preview-grid">
                 <div>
-                    <strong>128</strong>
-                    <small>Tickets Managed</small>
+                    <strong>6</strong>
+                    <small>Ticket Categories</small>
                 </div>
                 <div>
-                    <strong>98%</strong>
-                    <small>SLA Visibility</small>
+                    <strong>SLA</strong>
+                    <small>Priority & Performance Tracking</small>
                 </div>
                 <div>
-                    <strong>24/7</strong>
-                    <small>Audit Monitoring</small>
+                    <strong>Audit</strong>
+                    <small>Complete Activity History</small>
                 </div>
             </div>
 
             <div class="mini-activity">
-                <p>🎫 Ticket assigned to technician</p>
-                <p>🔐 MFA verification completed</p>
-                <p>📧 Password reset email sent</p>
+                <p>🎫 Support ticket assigned to a technician</p>
+                <p>🔐 Secure login verification completed</p>
+                <p>📧 Password reset request sent</p>
             </div>
         </div>
 
         <div class="feature-list">
-            <div>🔐 MFA Protected Access</div>
-            <div>👥 Role-Based Admin & Employee Portals</div>
-            <div>🛡️ Audit Logging & Security Monitoring</div>
-            <div>📈 SLA Tracking & Analytics</div>
-            <div>🐳 Docker + PostgreSQL Architecture</div>
+            <div>🔐 Secure Login with Multi-Factor Authentication</div>
+            <div>👥 Separate Employee & IT Admin Access</div>
+            <div>🛡️ Activity History & Security Monitoring</div>
+            <div>📈 Ticket Priority, SLA & Performance Tracking</div>
+            <div>🐳 Reliable Cloud-Based Ticket Management</div>
         </div>
     </section>
 
@@ -65,18 +65,18 @@
             <div class="logo-circle">🎧</div>
             <div>
                 <h1>NexusDesk</h1>
-                <p>Secure IT Service Management</p>
+                <p>IT Support & Ticket Management</p>
             </div>
         </div>
 
         <p class="login-subtitle">
-            Sign in to access your employee support portal or IT admin command center.
+            Sign in to submit and track IT support requests or manage tickets as an administrator.
         </p>
 
         <div class="trust-badges">
-            <span>🔐 MFA</span>
-            <span>🛡️ CSRF</span>
-            <span>👥 RBAC</span>
+            <span>🔐 Secure Login</span>
+            <span>🛡️ Protected Forms</span>
+            <span>👥 Role-Based Access</span>
         </div>
 
         {% if error %}
@@ -98,7 +98,8 @@
                 required>
 
             <label for="password">Password</label>
-            <div class="password-wrapper">
+
+            <div class="password-wrapper password-field-wrapper">
                 <input
                     type="password"
                     id="password"
@@ -111,31 +112,31 @@
                     type="button"
                     class="password-toggle"
                     onclick="togglePassword()"
-                    aria-label="Show or hide password">
-                    👁
+                    aria-label="Show password">
+                    Show
                 </button>
             </div>
 
             <button type="submit" id="loginButton" class="primary-login-button">
-                Login to Portal
+                Sign In to NexusDesk
             </button>
         </form>
 
         <div class="login-links">
             <a href="/forgot_password">Forgot password?</a>
             <span>•</span>
-            <a href="#" onclick="showContactIT()">Contact IT Support</a>
+            <a href="#" onclick="showContactIT()">Need Help Signing In?</a>
         </div>
 
         <div class="security-note">
-            🔐 Protected by MFA • CSRF Protection • Encrypted Sessions
+            🔐 Secure login • Multi-factor authentication • Protected sessions
         </div>
     </section>
 
 </div>
 
 <footer class="login-footer">
-    © 2026 NexusDesk · Secure Internal IT Operations Platform
+    © 2026 NexusDesk · IT Support & Ticket Management Platform
 </footer>
 
 <div id="customModal" class="modal-overlay">
@@ -149,17 +150,19 @@
 
 <script>
     function togglePassword() {
-        const passwordInput = document.getElementById("password");
-        const toggleButton = document.querySelector(".password-toggle");
+    const passwordInput = document.getElementById("password");
+    const toggleButton = document.querySelector(".password-toggle");
 
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            toggleButton.textContent = "🙈";
-        } else {
-            passwordInput.type = "password";
-            toggleButton.textContent = "👁";
-        }
-    }
+    const showing = passwordInput.type === "text";
+
+    passwordInput.type = showing ? "password" : "text";
+    toggleButton.textContent = showing ? "Show" : "Hide";
+
+    toggleButton.setAttribute(
+        "aria-label",
+        showing ? "Show password" : "Hide password"
+    );
+}
 
     function showLoading() {
         const button = document.getElementById("loginButton");
@@ -170,26 +173,65 @@
     }
 
     function showContactIT() {
-        document.getElementById("modalIcon").textContent = "🎧";
-        document.getElementById("modalTitle").textContent = "Contact IT Support";
+        document.getElementById("modalIcon").textContent = "🔐";
+        document.getElementById("modalTitle").textContent = "Need Help Signing In?";
+
         document.getElementById("modalText").innerHTML = `
-        <div class="support-contact-list">
-            <h3>Quick Support Options</h3>
+            <div class="support-contact-list">
 
-            <p>🔐 Forgot Password?</p>
-            <a href="/forgot_password" class="dashboard-link">
-                Request Password Reset →
-            </a>
+                <h3>Sign-In Support</h3>
 
-            <p style="margin-top:15px;">📧 Email Support</p>
-            <p>it-support@nexusdesk.local</p>
+                <div class="support-help-item">
+                    <p>
+                        🔑 <strong>Forgot your password?</strong>
+                    </p>
 
-            <p>☎️ Phone Support</p>
-            <p>(555) 123-4567</p>
+                    <p>
+                        Request a secure password reset link using the email
+                        associated with your NexusDesk account.
+                    </p>
 
-            <p>🕒 Business Hours</p>
-            <p>Monday–Friday 8:00 AM–5:00 PM</p>
-        </div>
+                    <a href="/forgot_password" class="dashboard-link">
+                        Reset My Password →
+                    </a>
+                </div>
+
+                <div class="support-help-item">
+                    <p>
+                        📧 <strong>Didn't receive your verification code?</strong>
+                    </p>
+
+                    <p>
+                        Check your inbox and spam or junk folder first.
+                        Verification codes expire after 10 minutes.
+                        If needed, use <strong>Resend Code</strong> on the
+                        verification screen to receive a new code.
+                    </p>
+                </div>
+
+                <div class="support-help-item">
+                    <p>
+                        👤 <strong>Lost access to your account email?</strong>
+                    </p>
+
+                    <p>
+                        Contact your NexusDesk administrator for help restoring
+                        access to your account.
+                    </p>
+                </div>
+
+                <div class="support-help-item support-security-item">
+                    <p>
+                        🔒 <strong>Security Reminder</strong>
+                    </p>
+
+                    <p>
+                        Never share your password or verification code with anyone.
+                        NexusDesk will never ask you to send either one by email.
+                    </p>
+                </div>
+
+            </div>
         `;
 
         document.getElementById("customModal").classList.add("show-modal");
