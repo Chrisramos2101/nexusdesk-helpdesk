@@ -35,48 +35,39 @@ Originally developed as a local Flask application, NexusDesk evolved into a clou
 
 ### Authentication & security
 
-- Password hashing with Werkzeug
-- Email-based multi-factor authentication with code resend and a temporary 30-minute trusted-browser window
-- Password-reset tokens with expiration and one-time use
-- Case-insensitive account-recovery email lookup
-- Login lockout and rate limiting
-- CSRF protection
-- Role-based access control
-- Secure production session cookies
-- HSTS, CSP, frame protection, MIME protection, referrer policy, and permissions policy
-- Audit logging
-- Security cleanup tooling
+- Secure password hashing using Werkzeug and role-based access control (RBAC) for employee and administrator accounts
+- Email-based multi-factor authentication (MFA) with expiring verification codes, resend support, and a 30-minute trusted-browser window
+- Secure account recovery using one-time, expiring password-reset tokens and case-insensitive email lookup
+- Account lockout and authentication rate limiting to mitigate repeated unauthorized login attempts
+- Cross-site request forgery (CSRF) protection and secure session cookie configuration
+- Production security headers, including HSTS, Content Security Policy (CSP), anti-framing, and MIME-sniffing protection
+- Audit logging to support accountability, security monitoring, and investigation of account activity
 
 ### Ticket management
 
-- Employee ticket submission
-- Open / In Progress / Closed lifecycle
-- High / Medium / Low priorities
-- Ticket categories
-- Technician assignment
-- Business-hour SLA tracking and outcomes: High within 4 business hours, Medium within 1 business day, and Low within 3 business days
-- Ticket notes
-- File attachment workflow
-- Search and filtering
-- Resolution tracking
-- Admin ticket management
+- End-to-end ticket lifecycle management, from employee submission and technician assignment through resolution and closure
+- Ticket categorization and prioritization using High, Medium, and Low severity levels
+- Status tracking across Open, In Progress, and Closed workflows
+- Business-hour service-level agreement (SLA) tracking with priority-based deadlines: High (4 business hours), Medium (1 business day), and Low (3 business days).
+- Search and filtering capabilities to locate and manage support requests efficiently
+- Ticket notes, file attachment workflows, and resolution tracking to support documentation and troubleshooting
+- Administrative ticket management with technician assignment and workload visibility
 
 ### User and support operations
 
-- Admin and employee roles
-- User creation, editing, and deletion
-- Department management
-- User profile management
-- Administrator-created support requests
-- Knowledge base
-- Knowledge-base views and employee feedback
-- Administrator knowledge-base feedback review
-- Branded transactional email notifications
-- Operational dashboards and analytics
+- Role-based employee and administrator portals with dedicated workflows and access permissions
+- Administrative user management, including account creation, modification, deletion, and role assignment
+- Department and user profile management to support organizational structure and account administration
+- Administrator-initiated support requests and centralized oversight of IT service operations
+- Integrated knowledge base with article views, employee feedback, and administrator feedback review
+- Branded transactional email notifications supporting account security and application communications
+- Operational dashboards and analytics for monitoring ticket volumes, priorities, SLA performance, and technician workloads
 
 ### Portfolio demonstration data
 
-The public demo can automatically seed a deterministic synthetic dataset that includes:
+NexusDesk includes a deterministic, synthetic dataset designed to demonstrate realistic IT support workflows without exposing actual employee, customer, or business information.
+
+The demonstration data generator is configured to create:
 
 - 14 fictional demo users
 - 72 synthetic support tickets
@@ -86,7 +77,9 @@ The public demo can automatically seed a deterministic synthetic dataset that in
 - 120 knowledge-base views
 - 28 knowledge-base feedback records
 
-Synthetic users use the `demo_` prefix and `example.com` email addresses. The seed is idempotent so redeploying the application does not duplicate the dataset.
+Synthetic users use the `demo_` username prefix and `example.com` email addresses. The seeding process is designed to be idempotent, preventing duplicate demonstration records when executed repeatedly.
+
+The dataset is intended solely for development, testing, and portfolio demonstration purposes.
 
 ## Architecture
 
