@@ -11,9 +11,9 @@
 
 ## Overview
 
-NexusDesk is a full-stack help desk system designed around the workflows commonly found in internal IT support teams. Employees can submit and track support tickets while administrators can triage requests, assign technicians, manage users, monitor SLAs, review audit activity, and maintain account security.
+NexusDesk is a full-stack IT help desk and ticket management system designed to streamline internal IT support operations. Employees can submit and track support requests, while administrators can prioritize tickets, assign technicians, monitor service-level agreements (SLAs), manage user accounts, and review operational activity through integrated dashboards and analytics.
 
-The project began as a local Flask application and was progressively hardened through a complete SDLC-style productionization process: architecture cleanup, automated testing, security controls, PostgreSQL migration, Dockerization, CI, cloud deployment, transactional email, synthetic portfolio data, and public acceptance testing.
+Originally developed as a local Flask application, NexusDesk evolved into a cloud-deployable platform through an iterative software development lifecycle (SDLC). The project incorporates a modular application architecture, security-focused authentication, automated testing, PostgreSQL database integration, Docker containerization, continuous integration (CI), and transactional email functionality.
 
 
 ## Application Screenshots
