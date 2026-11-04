@@ -282,52 +282,66 @@ The example illustrates the expected response when the application and database 
 
 ## Security Design
 
-NexusDesk uses defense-in-depth controls rather than relying on a single authentication check.
+NexusDesk incorporates a defense-in-depth security approach to protect user accounts, enforce access permissions, and reduce common web application risks.
 
-Key controls include secure cookies, CSRF protection, role authorization decorators, password hashing, rate limiting, failed-login lockout, one-time reset tokens, expiring MFA challenges, audit events, content security policy, HSTS, anti-frame protection, and restrictive browser permission headers.
+The application combines password hashing, role-based authorization, email-based multi-factor authentication, secure account recovery, rate limiting, and account lockout mechanisms. Additional protections include CSRF prevention, secure session configuration, restrictive HTTP security headers, and audit logging.
 
-See [`SECURITY.md`](SECURITY.md) for the security model and responsible-use notes.
+These controls are designed to strengthen authentication, protect application workflows, and improve the traceability of security-related activity.
 
-## Cloud Demo Limitations
+For implementation details and security considerations, see [SECURITY.md](SECURITY.md).
 
-The public deployment intentionally uses free portfolio infrastructure.
+## Deployment & Demo Limitations
 
-- The service may need time to wake after inactivity.
-- Free-tier upload storage is ephemeral.
-- The cloud database is for synthetic/demo content rather than durable business records.
-- Demo users are synthetic and are not intended as public login credentials.
-- The public system should never be used for sensitive production data.
+NexusDesk was configured for cloud deployment using Render, Docker, PostgreSQL, and Gunicorn. The application was developed as a portfolio demonstration environment rather than a commercial production service.
 
-These are hosting-tier constraints, not hidden application assumptions.
+### Current Demo Availability
+
+The previously configured public Render deployment is not currently accessible. Application functionality can instead be reviewed through the repository's source code, documentation, and screenshots.
+
+### Environment Limitations
+
+- The free-tier hosting configuration may introduce startup delays or resource constraints.
+- File uploads stored on ephemeral container storage are not guaranteed to persist across redeployments.
+- Synthetic demonstration data is used instead of real employee or customer records.
+- Demo accounts are intended for controlled testing rather than unrestricted public access.
+- The application is not intended to process sensitive production information.
+
+These limitations reflect the project's demonstration environment and hosting configuration rather than a claim of commercial production readiness.
 
 ## Engineering Highlights
 
-The project demonstrates:
+NexusDesk demonstrates the application of software engineering practices to a real-world IT service management use case.
 
-- migration from SQLite-oriented development to PostgreSQL
-- transactional data migration and foreign-key reconciliation
-- Dockerized application/database workflows
-- CI automation
-- production configuration validation
-- cloud health monitoring
-- secure reverse-proxy handling
-- transactional email integration
-- deterministic/idempotent demo data generation
-- automated regression and public acceptance gates
+- **Database Migration:** Transitioned from SQLite-oriented development to PostgreSQL, addressing data compatibility and referential-integrity issues.
+- **Modular Architecture:** Organized application components into Flask Blueprints, service layers, and database utilities to separate responsibilities.
+- **Security Engineering:** Integrated role-based authorization, multi-factor authentication, account recovery, rate limiting, CSRF protection, and audit logging.
+- **Containerization:** Configured Docker and Docker Compose for reproducible application and database environments.
+- **Continuous Integration:** Implemented GitHub Actions workflows for automated testing, source validation, and Docker build checks.
+- **Cloud Deployment:** Configured a containerized Flask/Gunicorn application for Render, including environment management and health checks.
+- **Transactional Email:** Integrated the Brevo API for authentication and application notifications.
+- **Demonstration Data:** Developed deterministic, idempotent synthetic data generation for repeatable portfolio demonstrations.
 
-A portfolio-oriented engineering summary is available in [`docs/PORTFOLIO_CASE_STUDY.md`](docs/PORTFOLIO_CASE_STUDY.md).
+For additional technical decisions, challenges, and implementation details, see the [NexusDesk Portfolio Case Study](docs/PORTFOLIO_CASE_STUDY.md).
 
 ## Release
 
-Current release: **v1.1.0**
+**Latest documented release: v1.1.0 — October 8, 2026**
 
-See:
+NexusDesk uses versioned releases to document major improvements in application functionality, security, testing, and deployment.
 
-- [`CHANGELOG.md`](CHANGELOG.md)
-- [`docs/RELEASE_CHECKLIST.md`](docs/RELEASE_CHECKLIST.md)
+Version 1.1.0 introduced enhancements to SLA tracking, multi-factor authentication, administrative workflows, operational analytics, and user experience.
+
+For additional details:
+
+- [Changelog](CHANGELOG.md)
+- [Release Checklist](docs/RELEASE_CHECKLIST.md)
 
 ## Author
 
-**Cristian Ramos**
+**Cristian Ramos**  
+B.S. Management Information Systems | DePaul University  
+Expected Graduation: June 2027
 
-NexusDesk was developed as a software engineering, cloud deployment, security, and IT operations portfolio project.
+NexusDesk is a portfolio project demonstrating practical experience with full-stack application development, systems analysis, relational databases, security-focused design, automated testing, and IT service operations.
+
+**Connect:** [LinkedIn](https://www.linkedin.com/in/cristian-ramos-85a98a272/) | [GitHub](https://github.com/Chrisramos2101)
