@@ -2,7 +2,11 @@
 
 **Production-style IT help desk and ticket management platform built with Flask, PostgreSQL, Docker, GitHub Actions, Render, and transactional email.**
 
-**Live portfolio demo:** https://nexusdesk-helpdesk.onrender.com
+
+## Application Preview
+
+![NexusDesk Landing Page and Secure Login](docs/nexusdesk/login.png)
+
 
 > The public deployment is a portfolio/demo environment populated with synthetic data. It is not intended to store real business or customer information.
 
@@ -11,6 +15,22 @@
 NexusDesk is a full-stack help desk system designed around the workflows commonly found in internal IT support teams. Employees can submit and track support tickets while administrators can triage requests, assign technicians, manage users, monitor SLAs, review audit activity, and maintain account security.
 
 The project began as a local Flask application and was progressively hardened through a complete SDLC-style productionization process: architecture cleanup, automated testing, security controls, PostgreSQL migration, Dockerization, CI, cloud deployment, transactional email, synthetic portfolio data, and public acceptance testing.
+
+
+## Application Screenshots
+
+### Administrator Portal
+
+![NexusDesk Admin Portal](docs/nexusdesk/admin-portal.png)
+
+### Ticket Management
+
+![NexusDesk Ticket Management and SLA Tracking](docs/nexusdesk/ticket-management.png)
+
+### Operational Analytics
+
+![NexusDesk Analytics Dashboard](docs/nexusdesk/analytics.png)
+
 
 ## Core Features
 
