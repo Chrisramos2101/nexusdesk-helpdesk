@@ -102,45 +102,52 @@ flowchart LR
     CI -->|checks pass| R
 ```
 
-A deeper architecture walkthrough is available in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+The architecture separates application routing, authentication, ticket workflows, administrative functionality, and knowledge management while using PostgreSQL for persistent data storage. Docker supports reproducible development environments, and GitHub Actions automates testing and build validation.
+
+The diagram illustrates the application's configured cloud deployment architecture. Public deployment availability is not currently guaranteed.
+
+For a detailed breakdown of application components, service interactions, and deployment considerations, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Technology Stack
 
 | Layer | Technology |
 |---|---|
 | Backend | Python 3.12, Flask |
-| Application server | Gunicorn |
+| Application Server | Gunicorn |
 | Database | PostgreSQL |
-| Local development | Docker Compose |
 | Frontend | HTML, CSS, Jinja2 |
-| Security | Flask-WTF, CSRF, password hashing, MFA, rate limiting |
-| Email | Brevo transactional email over HTTPS; SMTP fallback for local development |
+| Development Environment | Docker, Docker Compose |
+| Authentication & Security | Werkzeug, Flask-WTF, MFA, CSRF protection, rate limiting |
+| Email Integration | Brevo Transactional Email API, SMTP fallback |
 | Testing | pytest, coverage |
-| CI | GitHub Actions |
-| Cloud demo | Render |
-| Source control | Git + GitHub |
+| Continuous Integration | GitHub Actions |
+| Cloud Deployment Configuration | Render |
+| Version Control | Git, GitHub |
 
 ## Repository Structure
 
 ```text
 nexusdesk-helpdesk/
-├── app.py
-├── routes/
-├── services/
-├── database/
-├── templates/
-├── static/
-├── scripts/
-├── tests/
-├── deployment/
-├── .github/workflows/
-├── Dockerfile
-├── docker-compose.yml
-├── render.yaml
-└── README.md
+├── app.py                 # Flask application entry point
+├── routes/                # Request handling and application endpoints
+├── services/              # Business logic and application services
+├── database/              # Database access and configuration
+├── migrations/            # Database migration scripts
+├── templates/             # Jinja2 HTML templates
+├── static/                # CSS, JavaScript, and other static assets
+├── scripts/               # Maintenance and utility scripts
+├── tests/                 # Automated tests
+├── docs/                  # Technical documentation and screenshots
+│   └── nexusdesk/         # Application screenshots
+├── deployment/            # Deployment configuration and utilities
+├── .github/workflows/     # GitHub Actions CI workflows
+├── Dockerfile             # Container build instructions
+├── docker-compose.yml     # Local multi-container environment
+├── render.yaml            # Render deployment configuration
+└── README.md              # Project overview and documentation
 ```
 
-The application separates route handling, business/service logic, database access, and presentation templates instead of keeping the application in a single monolithic Flask file.
+NexusDesk follows a modular Flask architecture that separates request handling, business logic, database operations, and presentation components. This organization improves code maintainability, simplifies testing, and makes individual application features easier to understand and extend.
 
 ## Local Development
 
