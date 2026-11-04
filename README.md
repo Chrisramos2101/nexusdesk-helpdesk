@@ -151,6 +151,8 @@ NexusDesk follows a modular Flask architecture that separates request handling, 
 
 ## Local Development
 
+NexusDesk supports local development using Docker Compose to run the Flask application with a PostgreSQL database.
+
 ### Requirements
 
 - Docker Desktop
@@ -169,27 +171,42 @@ Start the local PostgreSQL-backed application:
 docker compose up --build
 ```
 
-Then open:
+Once the services are ready, open:
 
 ```text
 http://localhost:5000
 ```
 
-Stop the application with:
+### Stopping the Application
+
+Stop the containers:
 
 ```bash
 docker compose down
 ```
 
-Do not use `docker compose down -v` unless you intentionally want to remove the local PostgreSQL volume.
+**Note:** Avoid using `docker compose down -v` unless you intentionally want to delete the local PostgreSQL volume and its stored data.
 
 ## Environment Configuration
 
-Never commit real secrets.
+NexusDesk uses environment variables to manage application configuration, database connectivity, and external service credentials.
 
-Use `.env.production.example` as a reference for supported configuration. Production secrets such as `SECRET_KEY`, `DATABASE_URL`, Brevo API credentials, and bootstrap credentials are configured directly in the cloud environment.
+The repository includes `.env.production.example` as a reference for supported configuration settings.
+
+Configuration values include:
+
+- `SECRET_KEY` — Flask session security
+- `DATABASE_URL` — PostgreSQL database connection
+- Brevo API credentials — Transactional email integration
+- Bootstrap credentials — Initial account configuration
+
+**Security:** Real passwords, API keys, database credentials, and other secrets must never be committed to GitHub. Sensitive configuration values should be provided through local environment variables or the deployment platform's secure environment settings.
 
 ## Testing
+
+NexusDesk includes automated testing and validation workflows to support application reliability, code quality, and deployment readiness.
+
+### Automated Tests
 
 Run the complete Python test suite:
 
@@ -197,40 +214,61 @@ Run the complete Python test suite:
 python -m pytest -q
 ```
 
-Validate Python source:
+### Source Validation
+
+Check Python files for syntax and compilation errors:
 
 ```bash
 python -m compileall -q .
 ```
 
-Validate Docker Compose:
+### Docker Configuration Validation
+
+Validate the Docker Compose configuration:
 
 ```bash
 docker compose config --quiet
 ```
 
-The GitHub Actions pipeline automatically performs compilation, pytest/coverage, and a Docker build on pushes and pull requests.
+### Continuous Integration
 
-## Production / Portfolio Deployment
+GitHub Actions is configured to run automated checks on pushes and pull requests, including:
 
-The current portfolio environment uses:
+- Python source compilation
+- pytest execution and coverage reporting
+- Docker image build validation
 
-- Render Docker web service
-- Render PostgreSQL
-- HTTPS/TLS termination at Render
-- Gunicorn
-- Brevo transactional email API
-- GitHub Actions
-- automatic deployment after successful checks
-- `/healthz` application/database health check
+These checks help detect regressions and configuration problems before deployment.
 
-Public health endpoint:
+See the [GitHub Actions workflows](.github/workflows/) for the CI configuration.
 
-```text
-https://nexusdesk-helpdesk.onrender.com/healthz
-```
+## Cloud Deployment & Portfolio Environment
 
-Expected production response:
+NexusDesk includes configuration for deploying the application to Render using Docker and PostgreSQL.
+
+### Deployment Architecture
+
+The configured deployment environment includes:
+
+- **Render Web Service:** Docker-based Flask application
+- **Gunicorn:** Python WSGI application server
+- **PostgreSQL:** Relational database storage
+- **HTTPS/TLS:** Secure application traffic
+- **Brevo API:** Transactional email integration
+- **GitHub Actions:** Automated testing and build validation
+- **Health Monitoring:** `/healthz` application and database health endpoint
+
+### Deployment Status
+
+The application was previously deployed as a portfolio demonstration environment. The public Render service is currently unavailable, so live access is not guaranteed.
+
+The repository retains its deployment configuration, containerization files, and automated testing workflows for technical review.
+
+### Health Check
+
+NexusDesk includes a `/healthz` endpoint designed to report application and database connectivity.
+
+Example healthy response:
 
 ```json
 {
@@ -239,6 +277,8 @@ Expected production response:
   "status": "healthy"
 }
 ```
+
+The example illustrates the expected response when the application and database are operating correctly.
 
 ## Security Design
 
