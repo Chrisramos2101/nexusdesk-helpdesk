@@ -327,10 +327,7 @@ NexusDesk uses versioned releases to document major improvements in application 
 
 Version 1.1.0 introduced enhancements to SLA tracking, multi-factor authentication, administrative workflows, operational analytics, and user experience.
 
-For additional details:
-
-- [Changelog](CHANGELOG.md)
-- [Release Checklist](docs/RELEASE_CHECKLIST.md)
+For detailed release history and feature changes, see the [Changelog](CHANGELOG.md).
 
 ## Author
 
