@@ -125,8 +125,3 @@ For additional implementation details, see:
 - [Project README](README.md)
 - [Architecture Documentation](docs/ARCHITECTURE.md)
 - [Portfolio Case Study](docs/PORTFOLIO_CASE_STUDY.md)
-- managed backups and point-in-time recovery
-- vulnerability/dependency scanning
-- WAF/rate limiting at the edge
-- formal incident response and retention policies
-- observability/alerting service integration
