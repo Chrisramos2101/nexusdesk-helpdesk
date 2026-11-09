@@ -290,23 +290,19 @@ These controls are designed to strengthen authentication, protect application wo
 
 For implementation details and security considerations, see [SECURITY.md](SECURITY.md).
 
-## Deployment & Demo Limitations
+## Demo Environment Limitations
 
-NexusDesk was configured for cloud deployment using Render, Docker, PostgreSQL, and Gunicorn. The application was developed as a portfolio demonstration environment rather than a commercial production service.
+NexusDesk is a portfolio demonstration project rather than a commercially deployed IT service management platform.
 
-### Current Demo Availability
+The configured demonstration environment has the following limitations:
 
-The previously configured public Render deployment is not currently accessible. Application functionality can instead be reviewed through the repository's source code, documentation, and screenshots.
-
-### Environment Limitations
-
-- The free-tier hosting configuration may introduce startup delays or resource constraints.
-- File uploads stored on ephemeral container storage are not guaranteed to persist across redeployments.
-- Synthetic demonstration data is used instead of real employee or customer records.
-- Demo accounts are intended for controlled testing rather than unrestricted public access.
+- Free-tier hosting may introduce startup delays and resource constraints.
+- Uploaded files stored on ephemeral container storage may be lost during restarts or redeployments.
+- The application uses synthetic demonstration data rather than real employee or customer records.
+- Demo accounts are intended for controlled testing, not unrestricted public access.
 - The application is not intended to process sensitive production information.
 
-These limitations reflect the project's demonstration environment and hosting configuration rather than a claim of commercial production readiness.
+These limitations reflect the project's demonstration scope and infrastructure choices. Current deployment availability is documented in the Cloud Deployment & Portfolio Environment section above.
 
 ## Engineering Highlights
 
