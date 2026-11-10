@@ -54,3 +54,55 @@ def test_employee_cannot_comment_on_other_users_ticket(client, login_as, create_
         (ticket_id,),
     ).fetchone()["count"]
     assert count == 0
+
+
+
+def test_ticket_assignment_updates_database(create_ticket, db):
+    from services.ticket_service import assign_ticket_to_user
+
+    # Create a ticket in the isolated test database.
+    ticket_id = create_ticket("employee")
+
+    # Assign the ticket to an administrator.
+    assign_ticket_to_user(ticket_id, "admin")
+
+    # Verify the assignment was saved.
+    ticket = db.execute(
+        "SELECT assigned_to FROM tickets WHERE id = ?",
+        (ticket_id,),
+    ).fetchone()
+
+    assert ticket is not None
+    assert ticket["assigned_to"] == "admin"
+
+
+
+def test_ticket_closure_updates_database(create_ticket, db):
+    from services.ticket_service import close_ticket
+
+    ticket_id = create_ticket("employee")
+
+    close_ticket(
+        ticket_id=ticket_id,
+        closed_at="11/09/2026 06:30 PM",
+        completed_by="admin",
+        resolution_time="2 hours",
+        sla_met="Yes",
+    )
+
+    ticket = db.execute(
+        """
+        SELECT status, closed_at, completed_by,
+               resolution_time, sla_met
+        FROM tickets
+        WHERE id = ?
+        """,
+        (ticket_id,),
+    ).fetchone()
+
+    assert ticket is not None
+    assert ticket["status"] == "Closed"
+    assert ticket["closed_at"] == "11/09/2026 06:30 PM"
+    assert ticket["completed_by"] == "admin"
+    assert ticket["resolution_time"] == "2 hours"
+    assert ticket["sla_met"] == "Yes"
