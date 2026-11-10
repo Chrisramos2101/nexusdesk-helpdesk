@@ -10,9 +10,6 @@
 
 ![NexusDesk Landing Page and Secure Login](docs/nexusdesk/login.png)
 
-
-> NexusDesk is a portfolio demonstration project designed to use synthetic data. It is not intended to store real business or customer information.
-
 ## Overview
 
 NexusDesk is a full-stack IT help desk and ticket management system designed to streamline internal IT support operations. Employees can submit and track support requests, while administrators can prioritize tickets, assign technicians, monitor service-level agreements (SLAs), manage user accounts, and review operational activity through integrated dashboards and analytics.
