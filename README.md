@@ -2,6 +2,10 @@
 
 **Full-stack IT help desk and ticket management system built with Python, Flask, PostgreSQL, Docker, and GitHub Actions.**
 
+**Live Demo:** [Launch NexusDesk](https://nexusdesk-helpdesk.onrender.com)
+
+> **Portfolio Demo:** This application uses synthetic demonstration data and is not intended for real business or customer information. The free hosting environment may take time to start after inactivity.
+
 ## Application Preview
 
 ![NexusDesk Landing Page and Secure Login](docs/nexusdesk/login.png)
