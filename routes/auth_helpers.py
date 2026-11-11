@@ -9,8 +9,23 @@ from services.user_service import get_user_by_username
 def login_required(view):
     @wraps(view)
     def wrapped_view(*args, **kwargs):
-        if "username" not in session:
+
+        username = session.get("username")
+
+        if not username:
             return redirect("/login")
+
+        # Verify that the authenticated account
+        # still exists in the database.
+        user = get_user_by_username(username)
+
+        if not user:
+            session.clear()
+            return redirect("/login")
+
+        # Keep the session role synchronized with
+        # the authoritative database record.
+        session["role"] = user["role"]
 
         return view(*args, **kwargs)
 
@@ -26,8 +41,7 @@ def admin_required(view):
         if not username:
             return redirect("/login")
 
-        # Always check the current database role.
-        # Do not trust a potentially outdated session role.
+        # Never trust the session role alone.
         user = get_user_by_username(username)
 
         if not user:
@@ -35,8 +49,6 @@ def admin_required(view):
             return redirect("/login")
 
         current_role = user["role"]
-
-        # Synchronize the session with the database.
         session["role"] = current_role
 
         if current_role != "admin":
