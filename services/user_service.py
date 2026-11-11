@@ -77,26 +77,59 @@ def delete_user_by_id(user_id):
     connection.close()
 
 
-def create_user_account(full_name, username, email, department, password_hash, role):
+
+def create_user_account(
+    full_name,
+    username,
+    email,
+    department,
+    password_hash,
+    role
+):
     connection = get_db_connection()
-    cursor = connection.cursor()
-    placeholder = db_placeholder()
 
-    cursor.execute(f"""
-        INSERT INTO users 
-        (full_name, username, email, department, password_hash, role)
-        VALUES ({placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder}, {placeholder})
-    """, (
-        full_name,
-        username,
-        email,
-        department,
-        password_hash,
-        role
-    ))
+    try:
+        cursor = connection.cursor()
+        placeholder = db_placeholder()
 
-    connection.commit()
-    connection.close()
+        cursor.execute(
+            f"""
+            INSERT INTO users
+            (
+                full_name,
+                username,
+                email,
+                department,
+                password_hash,
+                role
+            )
+            VALUES (
+                {placeholder},
+                {placeholder},
+                {placeholder},
+                {placeholder},
+                {placeholder},
+                {placeholder}
+            )
+            """,
+            (
+                full_name,
+                username,
+                email,
+                department,
+                password_hash,
+                role,
+            ),
+        )
+
+        connection.commit()
+
+    except Exception:
+        connection.rollback()
+        raise
+
+    finally:
+        connection.close()
 
 
 def get_technicians():
