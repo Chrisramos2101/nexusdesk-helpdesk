@@ -2,6 +2,31 @@
 
 All notable NexusDesk release milestones are documented here.
 
+## [Unreleased]
+
+### Security — November 11, 2026
+
+- Added verified account email-change functionality with expiring, one-time confirmation tokens
+- Added an email-change confirmation page and supporting service logic
+- Extended authentication and account-management regression coverage
+- Added database schema support for pending email changes
+
+### Testing
+
+- Validated the Phase 1 upgrade with the complete automated pytest suite
+- Achieved 89% combined statement and branch coverage during the Phase 1 regression run
+- Passed GitHub Actions test/build and PostgreSQL integration jobs for commit `92a57fc`
+
+### Deployment
+
+- Restored the original portfolio database containing 14 users and 80 tickets
+- Disabled automatic demonstration-data seeding in the Render deployment
+- Successfully deployed the Phase 1 security upgrade to Render
+
+### Outstanding Validation
+
+- Live end-to-end email delivery for the new email-change workflow remains unverified
+
 ## [1.1.0] - 2026-10-08
 
 ### Added
