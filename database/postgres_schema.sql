@@ -113,3 +113,14 @@ CREATE TABLE IF NOT EXISTS article_views (
     username TEXT NOT NULL,
     viewed_at TEXT NOT NULL
 );
+
+-- Email ownership must be verified before changing the account address.
+CREATE TABLE IF NOT EXISTS email_change_tokens (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    new_email TEXT NOT NULL,
+    token_hash TEXT UNIQUE NOT NULL,
+    expires_at TEXT NOT NULL,
+    used INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+);

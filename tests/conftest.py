@@ -27,6 +27,7 @@ from database.schema import init_db  # noqa: E402
 
 
 TABLES_TO_CLEAR = [
+    "email_change_tokens",
     "security_rate_limits",
     "mfa_codes",
     "article_feedback",

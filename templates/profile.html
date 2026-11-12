@@ -37,6 +37,17 @@
         </p>
 
 
+        {% if request.args.get("email_pending") == "1" %}
+            <div class="success-box profile-success">Verification email sent. Your original email remains active until you confirm the new address.</div>
+        {% endif %}
+        {% if request.args.get("email_verified") == "1" %}
+            <div class="success-box profile-success">Email verified and updated successfully.</div>
+        {% endif %}
+        {% if request.args.get("email_error") %}
+            <div class="profile-field-hint" role="alert" style="color:#ef4444;">
+                Email change could not be completed. Check your password, email, or verification link and try again.
+            </div>
+        {% endif %}
         {% if request.args.get("updated") == "1" %}
             <div class="success-box profile-success">
                 ✓ Profile updated successfully.
@@ -96,8 +107,13 @@
                 >
 
                 <small class="profile-field-hint">
-                    Used for verification codes and password recovery.
+                    Used for verification codes and password recovery. A new address
+                    will not become active until you confirm the email we send there.
                 </small>
+
+                <label for="current_password">Current password (required only to change email)</label>
+                <input id="current_password" type="password" name="current_password"
+                    autocomplete="current-password" placeholder="Confirm password to change email">
 
 
                 <label for="department">

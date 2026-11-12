@@ -7,6 +7,11 @@ from database.sql_helpers import db_placeholder
 from services.user_service import get_user_by_username
 from services.validation_service import validate_password_strength
 from services.email_service import send_email
+from services.email_change_service import (
+    email_in_use, issue_email_change, cancel_email_change,
+    confirm_email_change,
+)
+from urllib.parse import quote
 from services.password_reset_service import (
     get_user_by_email,
     create_password_reset_token,
@@ -1062,30 +1067,89 @@ def profile():
 @auth_bp.route("/update_profile", methods=["POST"])
 @login_required
 def update_profile():
-
     full_name = request.form.get("full_name", "").strip()
     email = request.form.get("email", "").strip()
     department = request.form.get("department", "").strip()
+    user = get_user_by_username(session["username"])
 
+    # Do not allow arbitrary addresses to become the destination for MFA/reset.
+    if not email or len(email) > 254 or "@" not in email or any(c.isspace() for c in email):
+        return redirect("/profile?email_error=invalid")
+    if not full_name or len(full_name) > 160 or len(department) > 100:
+        return redirect("/profile?email_error=invalid")
+
+    changing_email = email.casefold() != (user["email"] or "").strip().casefold()
+    if changing_email:
+        password = request.form.get("current_password", "")
+        if not check_password_hash(user["password_hash"], password):
+            return redirect("/profile?email_error=password")
+        if email_in_use(email, user["id"]):
+            return redirect("/profile?email_error=unavailable")
+        rate_key = f"{session['username']}:{request.remote_addr or 'unknown'}"
+        allowed, _ = check_rate_limit(rate_key, "email_change", limit=3, window_seconds=3600)
+        if not allowed:
+            return redirect("/profile?email_error=rate_limit")
+
+        token = issue_email_change(user["id"], email)
+        # The token is never persisted in cleartext or logged.
+        link = f"{get_app_base_url()}/confirm_email_change?token={quote(token)}"
+        message = (
+            "You requested an email change for NexusDesk.\n\n"
+            f"To verify ownership of {email}, open this link:\n{link}\n\n"
+            "Sign into your NexusDesk account, review, then confirm. "
+            "This link expires in 30 minutes and can be used once. "
+            "If you did not request this, you may ignore this email."
+        )
+        try:
+            delivered = send_email("Verify your NexusDesk email change", email, message)
+        except Exception:
+            cancel_email_change(token)
+            raise
+        if not delivered:
+            cancel_email_change(token)
+            return redirect("/profile?email_error=delivery")
+
+    # Profile details are independent of the pending email verification.
     connection = get_db_connection()
-    cursor = connection.cursor()
-    placeholder = db_placeholder()
+    try:
+        cursor = connection.cursor()
+        p = db_placeholder()
+        cursor.execute(
+            f"UPDATE users SET full_name = {p}, department = {p} WHERE username = {p}",
+            (full_name, department, session["username"]),
+        )
+        connection.commit()
+    except Exception:
+        connection.rollback()
+        raise
+    finally:
+        connection.close()
+    log_audit_event(session["username"], "PROFILE_UPDATED", "user", user["id"],
+                    "Profile updated; email change pending verification" if changing_email else "Profile updated")
+    return redirect("/profile?email_pending=1" if changing_email else "/profile?updated=1")
 
-    cursor.execute(f"""
-        UPDATE users
-        SET
-            full_name = {placeholder},
-            email = {placeholder},
-            department = {placeholder}
-        WHERE username = {placeholder}
-    """, (
-        full_name,
-        email,
-        department,
-        session["username"]
-    ))
 
-    connection.commit()
-    connection.close()
+@auth_bp.route("/confirm_email_change", methods=["GET", "POST"])
+@login_required
+def confirm_profile_email():
+    # GET never consumes the token: link scanners may follow links automatically.
+    token = (request.form.get("token") if request.method == "POST" else
+             request.args.get("token", "")) or ""
+    if not token or len(token) > 256:
+        return redirect("/profile?email_error=invalid_token")
+    if request.method == "GET":
+        response = render_template("email_change_confirm.html", token=token)
+        return response, 200, {"Referrer-Policy": "no-referrer", "Cache-Control": "no-store"}
 
-    return redirect("/profile?updated=1")
+    success, old_email, new_email = confirm_email_change(session["username"], token)
+    if not success:
+        return redirect("/profile?email_error=invalid_token")
+
+    log_audit_event(session["username"], "EMAIL_CHANGED", "user", "",
+                    "Account email verified and changed")
+    # Inform the former address without placing any secrets in the message.
+    if old_email and old_email.casefold() != new_email.casefold():
+        send_email("NexusDesk account email changed", old_email,
+                   "Your NexusDesk account email was changed. If you did not request "
+                   "this, contact your administrator immediately.")
+    return redirect("/profile?email_verified=1")

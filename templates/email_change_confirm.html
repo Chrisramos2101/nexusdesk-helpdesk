@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Confirm Email Change | NexusDesk</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container" style="max-width:600px;margin:4rem auto;padding:1rem;">
+    <div class="card" style="padding:2rem;">
+      <h1>Confirm Email Change</h1>
+      <p>Confirm that you want to use your verified new email address for NexusDesk sign-in codes and password recovery.</p>
+      <form method="post" action="{{ url_for('auth.confirm_profile_email') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="token" value="{{ token }}">
+        <button type="submit" class="portal-button admin-button">Confirm new email address</button>
+      </form>
+      <p><a href="{{ url_for('auth.profile') }}">Back to profile</a></p>
+    </div>
+  </div>
+</body>
+</html>

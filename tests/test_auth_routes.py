@@ -159,7 +159,7 @@ def test_profile_update_saves_user_information(
         "/update_profile",
         data={
             "full_name": "Updated Employee",
-            "email": "updated@example.com",
+            "email": "employee@example.com",
             "department": "IT",
         },
     )
@@ -179,5 +179,5 @@ def test_profile_update_saves_user_information(
     ).fetchone()
 
     assert user["full_name"] == "Updated Employee"
-    assert user["email"] == "updated@example.com"
+    assert user["email"] == "employee@example.com"
     assert user["department"] == "IT"
