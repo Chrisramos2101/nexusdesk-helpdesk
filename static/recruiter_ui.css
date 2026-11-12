@@ -27,3 +27,33 @@ body.nexusdesk-recruiter-preview a[href^="/profile"] {display:none!important;}
 body.nexusdesk-recruiter-preview .container,body.nexusdesk-recruiter-preview .login-page {scroll-margin-top:95px;}
 @media(max-width:800px){.nd-demo-inner{gap:9px;padding:12px}.nd-demo-links{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;}.nd-demo-links a{padding:7px 9px}.nd-demo-note{padding:8px 14px}}
 @media(prefers-reduced-motion:reduce){.nd-demo-shell *{transition:none!important}}
+
+/* ND-RECRUITER-CONSISTENCY-V1 | Recruiter-only styling; no production CSS overrides. */
+.nd-gateway-toplabel{font:700 12px Inter,system-ui,sans-serif;color:#d0e0f7}
+body.nexusdesk-recruiter-preview .nd-disabled-feature{cursor:default;opacity:.79;border-style:dashed!important;position:relative}
+body.nexusdesk-recruiter-preview .nd-disabled-feature:hover{transform:none!important;box-shadow:none!important}
+body.nexusdesk-recruiter-preview .nd-disabled-feature em{display:block;font:750 11px Inter,system-ui,sans-serif;letter-spacing:.02em;color:#afc8e8;font-style:normal;padding-top:7px}
+body.nexusdesk-recruiter-preview .premium-ticket-form{display:none!important}
+body.nexusdesk-recruiter-preview .nd-workflow-guide,
+body.nexusdesk-recruiter-preview .nd-preview-workflow{border:1px solid #30476b;background:linear-gradient(145deg,#192a44,#131f35);border-radius:18px;padding:24px;margin:20px 0 24px;color:#e8f3ff;box-shadow:0 10px 25px rgba(0,0,0,.08)}
+body.nexusdesk-recruiter-preview .nd-workflow-guide h3,
+body.nexusdesk-recruiter-preview .nd-preview-workflow h3{color:#fff;letter-spacing:-.025em;font-size:21px;margin:10px 0}
+body.nexusdesk-recruiter-preview .nd-workflow-guide p,
+body.nexusdesk-recruiter-preview .nd-preview-workflow p{color:#c1d2e7;font-size:13px;line-height:1.75;margin:0 0 17px}
+body.nexusdesk-recruiter-preview .nd-guide-topline{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:space-between}
+body.nexusdesk-recruiter-preview .nd-guide-tag{display:inline-block;font:800 10px Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;padding:6px 11px;border-radius:999px;background:#173c36;color:#9be2c6;border:1px solid #2b6357}
+body.nexusdesk-recruiter-preview .nd-guide-readonly{font:800 11px Inter,system-ui,sans-serif;color:#bdd4fa}
+body.nexusdesk-recruiter-preview .nd-guide-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:19px 0}
+body.nexusdesk-recruiter-preview .nd-guide-steps>div{background:#0f1b2e;border:1px solid #2e4362;padding:13px;border-radius:13px;display:grid;gap:5px}
+body.nexusdesk-recruiter-preview .nd-guide-steps span{color:#83b3ff;font-weight:900;font-size:12px}
+body.nexusdesk-recruiter-preview .nd-guide-steps strong{color:#f0f7ff;font-size:13px}
+body.nexusdesk-recruiter-preview .nd-guide-steps small{color:#adbed5;font-size:11px}
+body.nexusdesk-recruiter-preview .nd-guide-actions{display:flex;flex-wrap:wrap;gap:10px}
+body.nexusdesk-recruiter-preview a.nd-guide-primary,
+body.nexusdesk-recruiter-preview a.nd-guide-secondary{display:inline-flex;min-height:42px;align-items:center;justify-content:center;text-align:center;text-decoration:none!important;border-radius:10px;padding:10px 15px;font-weight:800;font-size:12px}
+body.nexusdesk-recruiter-preview a.nd-guide-primary{background:#2d68dc;color:#fff!important}
+body.nexusdesk-recruiter-preview a.nd-guide-secondary{background:#1e3553;color:#dcecff!important;border:1px solid #355477}
+body.nexusdesk-recruiter-preview .nd-preview-features{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:21px}
+body.nexusdesk-recruiter-preview .nd-preview-features span{background:#0f1c2e;border:1px solid #2d4566;padding:6px 10px;border-radius:9px;font-size:11px;color:#dce9fb}
+body.nexusdesk-recruiter-preview a[href="#ticket-form"]{display:none!important}
+@media(max-width:720px){body.nexusdesk-recruiter-preview .nd-guide-steps{grid-template-columns:1fr}body.nexusdesk-recruiter-preview .nd-workflow-guide,body.nexusdesk-recruiter-preview .nd-preview-workflow{padding:18px}}

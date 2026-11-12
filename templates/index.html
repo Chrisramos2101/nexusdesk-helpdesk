@@ -16,6 +16,7 @@
 
 
 <body class="{% if session.get('recruiter_demo') %}nexusdesk-recruiter-preview{% endif %}">
+<!-- ND-RECRUITER-CONSISTENCY-V1 -->
 <!-- NexusDesk recruiter preview navigation -->
 {% if session.get('recruiter_demo') %}{% include '_recruiter_demo_nav.html' %}{% endif %}
 
@@ -73,8 +74,13 @@
 
             {% else %}
 
+                {% if session.get('recruiter_demo') %}
+                Explore the IT support request lifecycle, ticket history,
+                and self-service resources in read-only mode.
+                {% else %}
                 Submit, track, and manage IT support requests
                 in one secure place.
+                {% endif %}
 
             {% endif %}
 
@@ -306,7 +312,33 @@
                  EMPLOYEE QUICK ACTIONS
             ================================================== -->
 
+            {% if session.get('recruiter_demo') %}
+            <section class="nd-workflow-guide" aria-labelledby="nd-workflow-title">
+              <div class="nd-guide-topline"><span class="nd-guide-tag">Employee demo walkthrough</span><span class="nd-guide-readonly">Read-only preview</span></div>
+              <h3 id="nd-workflow-title">Follow a support request from start to finish</h3>
+              <p>View fictional ticket details, priorities, statuses and support notes. Ticket creation is intentionally disabled in this public portfolio demo.</p>
+              <div class="nd-guide-steps">
+                <div><span>01</span><strong>Open My Tickets</strong><small>Browse your submitted requests</small></div>
+                <div><span>02</span><strong>View a request</strong><small>Check status and support activity</small></div>
+                <div><span>03</span><strong>Find an answer</strong><small>Explore the knowledge base</small></div>
+              </div>
+              <div class="nd-guide-actions"><a class="nd-guide-primary" href="/my_tickets">View my ticket history</a><a class="nd-guide-secondary" href="/knowledge_base">Browse help articles</a></div>
+            </section>
+            {% endif %}
             <div class="quick-card-grid employee-action-grid">
+{% if session.get('recruiter_demo') %}
+
+
+                <div class="quick-card nd-disabled-feature" aria-disabled="true" title="Available in the full application, disabled in the demo">
+
+
+                  <span>🚀</span><strong>Submit Request</strong><small>Create a new IT support ticket</small><em>Production feature · Demo disabled</em>
+
+
+                </div>
+
+
+                {% endif %}
 
 
                 <a
@@ -387,6 +419,19 @@
                     </small>
 
                 </a>
+{% if session.get('recruiter_demo') %}
+
+
+                <div class="quick-card nd-disabled-feature" aria-disabled="true" title="Available in the full application, disabled in the demo">
+
+
+                  <span>🔐</span><strong>Change Password</strong><small>Update account security</small><em>Production feature · Demo disabled</em>
+
+
+                </div>
+
+
+                {% endif %}
 
 
                 <a
@@ -407,6 +452,19 @@
                     </small>
 
                 </a>
+{% if session.get('recruiter_demo') %}
+
+
+                <div class="quick-card nd-disabled-feature" aria-disabled="true" title="Available in the full application, disabled in the demo">
+
+
+                  <span>👤</span><strong>My Profile</strong><small>View account details</small><em>Production feature · Demo disabled</em>
+
+
+                </div>
+
+
+                {% endif %}
 
 
                 <a
@@ -498,6 +556,15 @@
                  NEW SUPPORT REQUEST
             ================================================== -->
 
+            {% if session.get('recruiter_demo') %}
+              <section class="nd-preview-workflow" id="ticket-form" aria-labelledby="nd-preview-request-title">
+                <div class="nd-guide-tag">Production capability · Disabled in this demo</div>
+                <h3 id="nd-preview-request-title">Submit a support request</h3>
+                <p>In the full application, employees can describe an issue, choose its category and priority, attach evidence, and submit a ticket. This public demo is read-only to keep the sample dataset unchanged.</p>
+                <div class="nd-preview-features"><span>Issue details</span><span>Category &amp; priority</span><span>File evidence</span><span>SLA tracking</span></div>
+                <a href="/my_tickets" class="nd-guide-primary">Explore existing tickets instead</a>
+              </section>
+            {% endif %}
             <div
                 class="form-section premium-ticket-form"
                 id="ticket-form"
@@ -999,7 +1066,7 @@
                     </strong>
 
                     <small>
-                        Manage active support requests
+                        {% if session.get('recruiter_demo') %}Explore support queues and ticket status{% else %}Manage active support requests{% endif %}
                     </small>
 
                 </a>
@@ -1067,6 +1134,23 @@
                     </small>
 
                 </a>
+{% if session.get('recruiter_demo') %}
+
+
+
+                <div class="quick-card nd-disabled-feature" aria-disabled="true" title="Available in the full application, disabled in the demo">
+
+
+
+                  <span>👤</span><strong>Create User</strong><small>Add employee or administrator accounts</small><em>Production feature · Demo disabled</em>
+
+
+
+                </div>
+
+
+
+                {% endif %}
 
 
 
@@ -1105,10 +1189,27 @@
                     </strong>
 
                     <small>
-                        Edit roles and account access
+                        {% if session.get('recruiter_demo') %}Inspect fictional user roles and departments{% else %}Edit roles and account access{% endif %}
                     </small>
 
                 </a>
+{% if session.get('recruiter_demo') %}
+
+
+
+                <div class="quick-card nd-disabled-feature" aria-disabled="true" title="Available in the full application, disabled in the demo">
+
+
+
+                  <span>👤</span><strong>My Profile</strong><small>View account details</small><em>Production feature · Demo disabled</em>
+
+
+
+                </div>
+
+
+
+                {% endif %}
 
 
 
@@ -1152,6 +1253,15 @@
                     </small>
 
                 </a>
+{% if session.get('recruiter_demo') %}
+
+                <div class="quick-card nd-disabled-feature" aria-disabled="true" title="Available in the full application, disabled in the demo">
+
+                  <span>🎫</span><strong>Submit Support Request</strong><small>Create and assign support requests</small><em>Production feature · Demo disabled</em>
+
+                </div>
+
+                {% endif %}
 
                 <a
                     href="/admin_submit_ticket"

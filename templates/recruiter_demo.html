@@ -4,86 +4,90 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <title>Explore NexusDesk | Portfolio Demo</title>
-  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+  <title>Explore NexusDesk | Recruiter Demo</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='recruiter_ui.css') }}">
   <style>
-    :root{--navy:#101d33;--ink:#14253d;--slate:#59708d;--edge:#dce6f3;--blue:#2563eb}
+    /* ND-RECRUITER-CONSISTENCY-V1 | dark role-selection gateway */
+    :root {color-scheme:dark}
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 8% 10%,#dcecff 0,transparent 47%),linear-gradient(180deg,#f8fbff,#edf3fb);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
-    .demo-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:22px max(5vw,20px);max-width:1280px;margin:auto}
-    .demo-brand{display:flex;align-items:center;gap:11px;color:var(--navy);font-weight:850;font-size:20px;text-decoration:none;letter-spacing:-.04em}
-    .demo-brandmark{height:40px;width:40px;display:grid;place-items:center;background:var(--navy);border-radius:13px;color:white}
-    .demo-top-tag{font-size:11px;color:#32517a;background:#e2ecfb;border:1px solid #cbdcf5;padding:8px 12px;border-radius:999px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-    .demo-main{max-width:1160px;margin:auto;padding:42px 24px 64px}
-    .demo-kicker{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#2463c0;font-weight:850;margin-bottom:14px}
-    .demo-main h1{font-size:clamp(36px,5vw,60px);letter-spacing:-.06em;line-height:1.1;max-width:850px;margin:0 0 18px;color:#10213b;font-weight:850}
-    .demo-lead{font-size:17px;line-height:1.75;color:#526883;max-width:790px;margin:0 0 34px}
-    .demo-proof{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:35px}
-    .demo-proof span{font-size:12px;border:1px solid var(--edge);background:#fff;border-radius:999px;padding:9px 13px;font-weight:750;color:#355171}
-    .demo-options{display:grid;grid-template-columns:1fr 1fr;gap:21px}
-    .demo-panel{background:white;border:1px solid var(--edge);border-radius:22px;padding:30px;box-shadow:0 18px 50px rgba(24,48,78,.07);display:flex;flex-direction:column;align-items:stretch}
-    .demo-panel:hover{border-color:#bfd1eb;box-shadow:0 22px 54px rgba(24,48,78,.1)}
-    .demo-icon{display:grid;place-items:center;width:54px;height:54px;border-radius:16px;background:#eaf2ff;color:#2159af;font-size:25px;margin-bottom:20px}
-    .demo-panel.employee .demo-icon{background:#e6f6ef;color:#168362}
-    .demo-panel h2{font-size:23px;letter-spacing:-.035em;margin:0 0 10px;color:#132642}
-    .demo-panel p{font-size:14px;line-height:1.75;color:#5b6f88;margin:0 0 19px}
-    .demo-panel ul{padding:0;margin:0 0 26px;list-style:none;display:grid;gap:10px;flex:1}
-    .demo-panel li{font-size:13px;color:#344e6d;display:flex;align-items:center;gap:9px}
-    .demo-panel li::before{content:'✓';font-size:12px;background:#e6f1ff;color:#2563eb;border-radius:50%;display:grid;place-items:center;width:19px;height:19px;flex-shrink:0;font-weight:900}
-    .demo-panel.employee li::before{color:#11765b;background:#e7f7f0}
-    .demo-panel form{margin:0}
-    .demo-btn{width:100%;border:0;border-radius:11px;padding:15px 19px;background:#245dca;color:#fff;font:800 14px Inter,system-ui,sans-serif;cursor:pointer}
-    .demo-btn:hover{background:#164aa6}
-    .demo-panel.employee .demo-btn{background:#126a55}.demo-panel.employee .demo-btn:hover{background:#0c513f}
-    .demo-footnote{margin:26px 0 0;color:#667c97;font-size:12px;text-align:center;line-height:1.65}
-    @media(max-width:700px){.demo-main{padding:23px 18px 48px}.demo-options{grid-template-columns:1fr}.demo-panel{padding:24px}.demo-top{padding:18px}.demo-lead{font-size:15px}}
+    body{margin:0;min-height:100vh;color:#f4f8ff;background:radial-gradient(ellipse at 5% 8%,#1b3358 0%,transparent 45%),radial-gradient(ellipse at 95% 95%,#103b3a 0%,transparent 30%),linear-gradient(135deg,#0f192b,#111f34 60%,#15213a);font:14px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
+    .nd-gateway-banner{background:#dbeafe;color:#183c68;padding:12px 20px;text-align:center;border-bottom:1px solid #bdd3f5;font-size:12px;font-weight:650}
+    .nd-gateway-inner{width:min(1120px,calc(100% - 40px));margin:0 auto;padding:62px 0 74px}
+    .nd-hero{margin-bottom:33px}
+    .nd-eyebrow{display:inline-block;border:1px solid #2a6654;background:rgba(19,102,78,.26);color:#8ee0ba;border-radius:999px;padding:6px 13px;text-transform:uppercase;font-size:11px;letter-spacing:.1em;font-weight:800}
+    h1{font-size:clamp(34px,5vw,58px);line-height:1.11;letter-spacing:-.045em;margin:19px 0 16px;max-width:870px;color:#fff}
+    .nd-hero p{color:#b7c7dc;font-size:17px;max-width:790px;margin:0 0 26px;line-height:1.7}
+    .nd-metrics{display:flex;flex-wrap:wrap;gap:9px}
+    .nd-metrics span{border:1px solid #2d4360;background:#1b2a40;border-radius:12px;padding:8px 13px;color:#d8e8ff;font-weight:700;font-size:12px}
+    .nd-role-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+    .nd-role-card{display:flex;flex-direction:column;background:linear-gradient(150deg,#19263a,#121d30);border:1px solid #304764;border-radius:20px;padding:31px;box-shadow:0 14px 35px rgba(0,0,0,.17);min-width:0}
+    .nd-role-card:hover{border-color:#47658b;transform:translateY(-2px)}
+    .nd-role-icon{display:grid;place-items:center;width:52px;height:52px;background:#213f70;border:1px solid #32568d;border-radius:15px;color:#a9cbff;font-size:24px;margin-bottom:16px}
+    .nd-role-card.employee .nd-role-icon{background:#143d36;color:#91e7c6;border-color:#2d6c59}
+    .nd-role-card h2{font-size:23px;line-height:1.25;letter-spacing:-.028em;margin:0 0 8px;color:#fff}
+    .nd-role-card p{color:#b4c5da;margin:0 0 20px;font-size:14px}
+    .nd-role-card ul{display:grid;gap:11px;padding:0;margin:0 0 30px;list-style:none;flex:1}
+    .nd-role-card li{display:flex;gap:10px;align-items:start;color:#d2dfec;font-size:13px}
+    .nd-role-card li::before{content:'✓';color:#8ad8b4;font-weight:900;flex-shrink:0}
+    .nd-role-card form{margin:0;display:block!important}
+    .nd-entry-btn{width:100%;min-height:49px;border:none;border-radius:11px;color:#fff;background:#2b66d3;font-weight:800;font-size:14px;cursor:pointer}
+    .nd-entry-btn:hover{background:#367bf3}
+    .employee .nd-entry-btn{background:#10765d}.employee .nd-entry-btn:hover{background:#179575}
+    .nd-footnote{text-align:center;font-size:12px;color:#a9bdd5;margin:29px auto 0;max-width:750px}
+    @media(max-width:720px){.nd-gateway-inner{padding:34px 0 45px}.nd-role-grid{grid-template-columns:1fr;gap:15px}.nd-role-card{padding:25px}.nd-hero p{font-size:15px}.nd-role-card:hover{transform:none}}
+    @media(prefers-reduced-motion:reduce){.nd-role-card{transition:none!important}}
   </style>
 </head>
 <body>
-  <header class="demo-top">
-    <div class="demo-brand"><span class="demo-brandmark">N</span>NexusDesk</div>
-    <div class="demo-top-tag">Interactive portfolio preview</div>
-  </header>
-  <main class="demo-main">
-    <div class="demo-kicker">Production-style IT support platform</div>
-    <h1>Explore NexusDesk from both sides of the help desk.</h1>
-    <p class="demo-lead">A role-based IT support system built with Python, Flask, and PostgreSQL. Explore how employees track requests and administrators monitor queues, technicians, and service performance.</p>
-    <div class="demo-proof" aria-label="Demo highlights">
-      <span>80 fictional support tickets</span><span>6 issue categories</span><span>Admin &amp; employee roles</span><span>Read-only experience</span>
+  <header class="nd-demo-shell" role="banner">
+    <div class="nd-demo-inner">
+      <div class="nd-demo-identity"><span class="nd-demo-logo" aria-hidden="true">N</span><span class="nd-demo-wordmark">NexusDesk</span><span class="nd-demo-label">Portfolio demo</span></div>
+      <span class="nd-gateway-toplabel">Explore both roles · No password required</span>
     </div>
-    <div class="demo-options">
-      <section class="demo-panel" aria-labelledby="demo-admin-title">
-        <div class="demo-icon" aria-hidden="true">▤</div>
-        <h2 id="demo-admin-title">Administrator workspace</h2>
-        <p>Explore operational workflows from the perspective of a help desk administrator.</p>
+  </header>
+  <div class="nd-gateway-banner"><strong>Read-only demo</strong> · Fictional accounts and tickets · Changes, submissions, and account management are disabled.</div>
+  <main class="nd-gateway-inner">
+    <section class="nd-hero" aria-labelledby="nd-demo-heading">
+      <span class="nd-eyebrow">Production-style IT support platform</span>
+      <h1 id="nd-demo-heading">One help desk. Two perspectives.</h1>
+      <p>Explore NexusDesk's role-based ticket lifecycle: employees follow support requests, while administrators review queues, operational analytics, and user access.</p>
+      <div class="nd-metrics"><span>80 fictional tickets</span><span>6 support categories</span><span>Administrator &amp; employee access</span><span>Read-only demonstration</span></div>
+    </section>
+    <div class="nd-role-grid">
+      <section class="nd-role-card" aria-labelledby="nd-admin-heading">
+        <div class="nd-role-icon" aria-hidden="true">▤</div>
+        <h2 id="nd-admin-heading">Administrator portal</h2>
+        <p>See the operational side of NexusDesk, including its production workflows and read-only demo views.</p>
         <ul>
-          <li>Ticket queues, priority, and status filters</li>
-          <li>Analytics, SLA reporting, and workload</li>
-          <li>User directory and system overview</li>
+          <li>Ticket queues, priority filters and statuses</li>
+          <li>Analytics and SLA performance overview</li>
+          <li>User directory, system health and knowledge feedback</li>
+          <li>Account creation and ticket edits shown as disabled capabilities</li>
         </ul>
         <form action="{{ url_for('recruiter_demo.enter') }}" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <input type="hidden" name="role" value="admin">
-          <button class="demo-btn" type="submit">Explore administrator demo</button>
+          <button class="nd-entry-btn" type="submit">Explore administrator demo</button>
         </form>
       </section>
-      <section class="demo-panel employee" aria-labelledby="demo-employee-title">
-        <div class="demo-icon" aria-hidden="true">◎</div>
-        <h2 id="demo-employee-title">Employee workspace</h2>
-        <p>See how an employee follows ticket progress and finds support resources.</p>
+      <section class="nd-role-card employee" aria-labelledby="nd-employee-heading">
+        <div class="nd-role-icon" aria-hidden="true">◎</div>
+        <h2 id="nd-employee-heading">Employee portal</h2>
+        <p>Follow realistic examples of the employee ticket workflow without creating or changing records.</p>
         <ul>
-          <li>Personal ticket history and status tracking</li>
-          <li>Support request details and activity</li>
-          <li>Self-service knowledge resources</li>
+          <li>My Tickets, ticket details and request history</li>
+          <li>Status and priority visibility</li>
+          <li>Self-service knowledge articles and support guidance</li>
+          <li>Ticket submission showcased as a read-only workflow preview</li>
         </ul>
         <form action="{{ url_for('recruiter_demo.enter') }}" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <input type="hidden" name="role" value="employee">
-          <button class="demo-btn" type="submit">Explore employee demo</button>
+          <button class="nd-entry-btn" type="submit">Explore employee demo</button>
         </form>
       </section>
     </div>
-    <p class="demo-footnote">All demo identities and records are fictional. Editing, submissions, and account changes are disabled. Select a role to enter instantly—no password required.</p>
+    <p class="nd-footnote">Portfolio demonstration using synthetic records. Switch between roles at any time; the underlying production application and original user data are separate.</p>
   </main>
 </body>
 </html>
