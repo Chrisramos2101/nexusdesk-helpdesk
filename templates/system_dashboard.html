@@ -10,9 +10,13 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}">
     {% if session.get('recruiter_demo') %}<link rel="stylesheet" href="{{ url_for('static', filename='recruiter_ui.css') }}">{% endif %}
+
+    {% if session.get("username") and not session.get("recruiter_demo") %}<link rel="stylesheet" href="{{ url_for('static',filename='production_context.css') }}">{% endif %}
 </head>
 
 <body class="{% if session.get('recruiter_demo') %}nexusdesk-recruiter-preview{% endif %}">
+{% include "_production_context_bar.html" %}
+
 <!-- NexusDesk recruiter preview navigation -->
 {% if session.get('recruiter_demo') %}{% include '_recruiter_demo_nav.html' %}{% endif %}
 

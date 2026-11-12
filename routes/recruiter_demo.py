@@ -63,7 +63,7 @@ def enter():
     session["recruiter_demo"] = True
 
     if expected_role == "admin":
-        return redirect("/dashboard")
+        return redirect("/")
 
     return redirect("/")
 

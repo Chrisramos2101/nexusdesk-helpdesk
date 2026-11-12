@@ -52,7 +52,7 @@ def test_admin_demo_entry(client):
     )
 
     assert response.status_code == 302
-    assert response.location.endswith("/dashboard")
+    assert response.location.endswith("/")
 
     with client.session_transaction() as session:
         assert session["username"] == "Demo_Admin"

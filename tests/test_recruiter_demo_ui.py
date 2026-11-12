@@ -31,7 +31,7 @@ def test_readonly_controls_are_concealed_in_preview_only():
     assert 'body.nexusdesk-recruiter-preview form[method="post"]' in css
     navbar = (BASE / 'templates' / '_recruiter_demo_nav.html').read_text(encoding='utf-8')
     assert "session.get('role') == 'admin'" in navbar
-    assert 'href="/recruiter-demo/"' in navbar
+    assert 'href="/recruiter-demo/"' not in navbar
 
 
 def test_ui_patch_does_not_modify_security_layer():

@@ -1,0 +1,7 @@
+{# Authenticated production banner with account context only. #}
+{% if session.get('username') and not session.get('recruiter_demo') %}
+<div class="nd-prod-context" role="region" aria-label="NexusDesk account context">
+  <span class="nd-prod-brand">NexusDesk · IT Support &amp; Ticket Management</span>
+  <span class="nd-prod-viewer">Viewing as <strong>{{ session.get('username') }}</strong></span>
+</div>
+{% endif %}

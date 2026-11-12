@@ -11,9 +11,13 @@
         rel="stylesheet"
         href="{{ url_for('static', filename='style.css') }}"
     >
+
+    {% if session.get("username") and not session.get("recruiter_demo") %}<link rel="stylesheet" href="{{ url_for('static',filename='production_context.css') }}">{% endif %}
 </head>
 
 <body>
+{% include "_production_context_bar.html" %}
+
 
 <div class="container create-user-page">
 

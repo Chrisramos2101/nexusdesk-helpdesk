@@ -1,0 +1,4 @@
+/* Production account context banner; no changes to demo navigation. */
+.nd-prod-context{position:relative;z-index:20;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px max(20px,calc((100vw - 1160px)/2));background:linear-gradient(115deg,#0d1b31,#162f55);color:#f1f6ff;border-bottom:1px solid #294263;font:600 13px/1.4 Arial,sans-serif;}
+.nd-prod-brand{font-weight:800;letter-spacing:-.01em}.nd-prod-viewer{color:#c9d9ee}.nd-prod-viewer strong{color:white}
+@media(max-width:620px){.nd-prod-context{flex-direction:column;align-items:flex-start;padding:10px 18px;gap:3px}}

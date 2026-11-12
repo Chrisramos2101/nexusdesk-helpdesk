@@ -4,7 +4,7 @@
     <div class="nd-demo-identity">
       <span class="nd-demo-logo" aria-hidden="true">N</span>
       <span class="nd-demo-wordmark">NexusDesk</span>
-      <span class="nd-demo-label">Portfolio demo</span>
+
     </div>
     <nav class="nd-demo-links" aria-label="Recruiter demo navigation">
       <a href="/">Overview</a>
@@ -20,8 +20,7 @@
     </nav>
     <div class="nd-demo-role">
       <span class="nd-demo-role-label">Viewing as</span>
-      <strong>{{ 'Administrator' if session.get('role') == 'admin' else 'Employee' }}</strong>
-      <a class="nd-demo-switch" href="/recruiter-demo/">Switch role</a>
+      <strong>{{ session.get('username', 'Demo user') }}</strong>
     </div>
   </div>
 </header>
