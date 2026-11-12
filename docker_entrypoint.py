@@ -22,7 +22,24 @@ def main():
     validate_production_environment()
     prepare_runtime_directories()
 
-    if database_url.startswith("postgresql://"):
+    recruiter_demo = (
+        os.getenv("RECRUITER_DEMO_MODE", "false")
+        .strip()
+        .lower() == "true"
+    )
+
+    if recruiter_demo:
+        from services.recruiter_demo_guard import (
+            validate_recruiter_demo_database,
+        )
+
+        validate_recruiter_demo_database()
+        print(
+            "Recruiter demo: using pre-initialized read-only database.",
+            flush=True,
+        )
+
+    elif database_url.startswith("postgresql://"):
         from run_postgres_schema import run_schema_file
 
         print("Applying idempotent PostgreSQL schema...", flush=True)
