@@ -66,3 +66,38 @@ def enter():
         return redirect("/dashboard")
 
     return redirect("/")
+
+# ND-RECRUITER-FINAL-POLISH-2026
+# Read-only UI previews never call the production write endpoints.
+@recruiter_demo_bp.route("/preview/<feature>", methods=["GET"])
+def preview(feature):
+    if not recruiter_mode_enabled():
+        abort(404)
+    username = session.get("username")
+    role = session.get("role")
+    if not session.get("recruiter_demo"):
+        abort(403)
+    if (role, username) not in {("admin", "Demo_Admin"), ("employee", "Demo_Employee")}:
+        abort(403)
+    features = {
+        "create-user": ("admin", "Create User", "Administrator account setup"),
+        "submit-support-request": ("admin", "Submit Support Request", "Administrator support request"),
+        "edit-ticket": ("admin", "Update Ticket", "Ticket lifecycle and technician assignment"),
+        "profile": ("both", "My Profile", "Fictional profile details"),
+        "change-password": ("employee", "Change Password", "Account security workflow"),
+    }
+    if feature not in features:
+        abort(404)
+    allowed_role, title, subtitle = features[feature]
+    if allowed_role not in ("both", role):
+        abort(403)
+    return render_template(
+        "recruiter_feature_preview.html",
+        feature=feature,
+        title=title,
+        subtitle=subtitle,
+        role=role,
+        demo_name="Demo Administrator" if role == "admin" else "Demo Employee",
+        demo_department="IT" if role == "admin" else "Operations",
+        demo_email="demo-admin@example.com" if role == "admin" else "demo-employee@example.com",
+    )

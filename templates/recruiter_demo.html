@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="{{ url_for('static',filename='recruiter_ui.css') }}">
   <style>
     /* ND-RECRUITER-CONSISTENCY-V1 | dark role-selection gateway */
+    /* ND-RECRUITER-FINAL-POLISH-2026 */
     :root {color-scheme:dark}
     *{box-sizing:border-box}
     body{margin:0;min-height:100vh;color:#f4f8ff;background:radial-gradient(ellipse at 5% 8%,#1b3358 0%,transparent 45%),radial-gradient(ellipse at 95% 95%,#103b3a 0%,transparent 30%),linear-gradient(135deg,#0f192b,#111f34 60%,#15213a);font:14px/1.6 Inter,system-ui,-apple-system,"Segoe UI",sans-serif}
@@ -38,7 +39,7 @@
     @media(prefers-reduced-motion:reduce){.nd-role-card{transition:none!important}}
   </style>
 </head>
-<body>
+<body class="nd-gateway-final">
   <header class="nd-demo-shell" role="banner">
     <div class="nd-demo-inner">
       <div class="nd-demo-identity"><span class="nd-demo-logo" aria-hidden="true">N</span><span class="nd-demo-wordmark">NexusDesk</span><span class="nd-demo-label">Portfolio demo</span></div>
@@ -49,7 +50,7 @@
   <main class="nd-gateway-inner">
     <section class="nd-hero" aria-labelledby="nd-demo-heading">
       <span class="nd-eyebrow">Production-style IT support platform</span>
-      <h1 id="nd-demo-heading">One help desk. Two perspectives.</h1>
+      <h1 id="nd-demo-heading">One platform. Two perspectives.</h1>
       <p>Explore NexusDesk's role-based ticket lifecycle: employees follow support requests, while administrators review queues, operational analytics, and user access.</p>
       <div class="nd-metrics"><span>80 fictional tickets</span><span>6 support categories</span><span>Administrator &amp; employee access</span><span>Read-only demonstration</span></div>
     </section>
@@ -62,7 +63,7 @@
           <li>Ticket queues, priority filters and statuses</li>
           <li>Analytics and SLA performance overview</li>
           <li>User directory, system health and knowledge feedback</li>
-          <li>Account creation and ticket edits shown as disabled capabilities</li>
+          <li>Safe previews of ticket submission and account administration</li>
         </ul>
         <form action="{{ url_for('recruiter_demo.enter') }}" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -78,7 +79,7 @@
           <li>My Tickets, ticket details and request history</li>
           <li>Status and priority visibility</li>
           <li>Self-service knowledge articles and support guidance</li>
-          <li>Ticket submission showcased as a read-only workflow preview</li>
+          <li>Explore the actual ticket form without submitting</li>
         </ul>
         <form action="{{ url_for('recruiter_demo.enter') }}" method="POST">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

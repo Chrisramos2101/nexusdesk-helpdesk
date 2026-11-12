@@ -57,3 +57,47 @@ body.nexusdesk-recruiter-preview .nd-preview-features{display:flex;gap:8px;flex-
 body.nexusdesk-recruiter-preview .nd-preview-features span{background:#0f1c2e;border:1px solid #2d4566;padding:6px 10px;border-radius:9px;font-size:11px;color:#dce9fb}
 body.nexusdesk-recruiter-preview a[href="#ticket-form"]{display:none!important}
 @media(max-width:720px){body.nexusdesk-recruiter-preview .nd-guide-steps{grid-template-columns:1fr}body.nexusdesk-recruiter-preview .nd-workflow-guide,body.nexusdesk-recruiter-preview .nd-preview-workflow{padding:18px}}
+
+
+/* ND-RECRUITER-FINAL-POLISH-2026 — recruiter UI only; preserves application security. */
+/* Production login's body gradient is the source of truth for the recruiter gateway. */
+body.nd-gateway-final { background:linear-gradient(135deg,#0f172a,#1e293b) !important; }
+body.nd-gateway-final .nd-role-card {background:linear-gradient(180deg,rgba(17,24,39,.96),rgba(15,23,42,.94));border-color:rgba(96,165,250,.18);}
+body.nd-gateway-final .nd-gateway-inner {max-width:1120px;}
+body.nexusdesk-recruiter-preview .nd-preview-workflow {display:none!important;}
+body.nexusdesk-recruiter-preview .premium-ticket-form {display:block!important;}
+body.nexusdesk-recruiter-preview .premium-ticket-form .nd-local-ticket-editor {display:block!important;}
+body.nexusdesk-recruiter-preview .nd-disabled-feature.nd-explorable-feature {opacity:1;cursor:pointer;border-style:solid!important;display:flex!important;flex-direction:column;gap:7px;text-decoration:none!important;}
+body.nexusdesk-recruiter-preview .nd-explorable-feature:hover,body.nexusdesk-recruiter-preview .nd-explorable-feature:focus-visible {transform:translateY(-2px)!important;box-shadow:0 10px 22px rgba(32,90,180,.15)!important;border-color:#4c75ae!important;}
+body.nexusdesk-recruiter-preview .nd-explorable-feature em {color:#94d6bb;}
+body.nexusdesk-recruiter-preview a[href="#ticket-form"].nd-explorable-feature {display:flex!important;}
+body.nexusdesk-recruiter-preview .nd-form-hint {display:block;margin:8px 0 20px;padding:11px 14px;border-radius:11px;background:rgba(59,130,246,.13);border:1px solid rgba(96,165,250,.35);font-size:13px;color:#dceaff;}
+body.nexusdesk-recruiter-preview .nd-sample-attachment {padding:12px 15px;border:1px dashed #446387;border-radius:11px;font-size:12px;color:#c2d3e9;}
+body.nexusdesk-recruiter-preview .nd-save-disabled {background:#263b58!important;color:#d4e3fa!important;opacity:1;cursor:not-allowed;}
+body.nexusdesk-recruiter-preview .premium-ticket-form input[type=file] {display:none!important;}
+body.nexusdesk-recruiter-preview .premium-ticket-form label.upload-zone {pointer-events:none;opacity:.72;}
+/* No real write-only cards are exposed in demo; only the preview alternatives are visible. */
+body.nexusdesk-recruiter-preview a[href="/create_user"],body.nexusdesk-recruiter-preview a[href="/profile"],body.nexusdesk-recruiter-preview a[href="/admin_submit_ticket"],body.nexusdesk-recruiter-preview a[href="/change_password"] {display:none!important;}
+.nd-feature-page{max-width:950px;margin:36px auto 70px;padding:0 20px;color:#eff6ff;font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif;}
+.nd-feature-panel{background:linear-gradient(180deg,rgba(17,24,39,.98),rgba(15,23,42,.95));border:1px solid #2a456c;border-radius:22px;padding:30px;box-shadow:0 24px 65px rgba(0,0,0,.22);}
+.nd-feature-panel h1{font-size:clamp(25px,4vw,36px);margin:8px 0;}
+.nd-feature-lead{color:#b8cbe5;line-height:1.65;margin:12px 0 25px;}
+.nd-feature-topline{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;}
+.nd-feature-tag{font-weight:800;color:#a5e2c3;background:#163c31;border:1px solid #316b57;border-radius:999px;padding:6px 12px;font-size:11px;}
+.nd-feature-back{color:#c5ddff!important;font-weight:700;text-decoration:none;font-size:12px;}
+.nd-field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;}
+.nd-feature-field{display:flex;flex-direction:column;gap:7px;margin:13px 0;}
+.nd-feature-field label{font-size:12px;font-weight:750;color:#dce9fa;}
+.nd-feature-field input,.nd-feature-field select,.nd-feature-field textarea{width:100%;font:14px Inter,system-ui,sans-serif;padding:12px 13px;border-radius:9px;background:#1e293b;color:#f8fafc;border:1px solid #324963;box-sizing:border-box;}
+.nd-feature-field input:focus,.nd-feature-field select:focus,.nd-feature-field textarea:focus{outline:2px solid #3b82f6;outline-offset:1px;}
+.nd-feature-section{border-top:1px solid #293f5e;padding-top:16px;margin-top:16px;}
+.nd-feature-section h2{font-size:19px;color:#fff;}
+.nd-preview-status{padding:14px 17px;background:#172b45;border:1px solid #355274;border-radius:12px;font-size:13px;color:#d4e2f6;line-height:1.6;margin:20px 0;}
+.nd-feature-disabled{background:#243852;color:#c7d5e7;border:1px solid #4b6584;border-radius:10px;padding:12px 16px;font-weight:800;cursor:not-allowed;}
+.nd-feature-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:18px;}
+.nd-feature-actions a{background:#1c4d9a;color:#fff!important;text-decoration:none;padding:12px 16px;border-radius:10px;font-weight:800;font-size:13px;}
+.nd-faux-upload{padding:16px;border:1px dashed #4c6483;border-radius:10px;color:#b4cde9;font-size:13px;}
+@media(max-width:750px){.nd-feature-page{margin:18px auto 40px}.nd-feature-panel{padding:19px}.nd-field-grid{grid-template-columns:1fr}}
+body.nexusdesk-recruiter-preview .nd-admin-tour{padding:20px 23px;margin:18px 0 20px;border:1px solid #30496c;border-radius:16px;background:linear-gradient(145deg,#1b2b43,#111f34);}
+body.nexusdesk-recruiter-preview .nd-admin-tour h3{font-size:19px;color:#fff;margin:9px 0;}
+body.nexusdesk-recruiter-preview .nd-admin-tour p{font-size:13px;line-height:1.7;color:#bccfe5;margin:5px 0 14px;}

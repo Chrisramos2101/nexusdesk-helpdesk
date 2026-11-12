@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 from flask import abort, redirect, request
 
+# ND-RECRUITER-FINAL-POLISH-2026
 SAFE_METHODS = {"GET", "HEAD", "OPTIONS"}
 DEMO_DATABASE_NAME = "nexusdesk_recruiter_demo"
 DEMO_DATABASE_USER = "recruiter_demo_app"
@@ -11,6 +12,7 @@ DEMO_DATABASE_USER = "recruiter_demo_app"
 # Admin/employee access within these routes still uses existing DB-backed decorators.
 DEMO_READ_ENDPOINTS = {
     "recruiter_demo.landing",
+    "recruiter_demo.preview",
     "auth.logout",
     "tickets.home",
     "tickets.my_tickets",

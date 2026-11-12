@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>{{ title }} — NexusDesk Portfolio Demo</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static',filename='recruiter_ui.css') }}">
+</head>
+<body class="nexusdesk-recruiter-preview">
+  {% include '_recruiter_demo_nav.html' %}
+  <main class="nd-feature-page">
+    <section class="nd-feature-panel">
+      <div class="nd-feature-topline"><span class="nd-feature-tag">Interactive preview · Nothing saved</span><a class="nd-feature-back" href="/">← Back to {{ 'Admin' if role == 'admin' else 'Employee' }} overview</a></div>
+      <h1>{{ title }}</h1>
+      <p class="nd-feature-lead">{{ subtitle }}. Explore the interface using fictional account information. The public demo cannot create records, update passwords or upload files.</p>
+      {% if feature == 'create-user' %}
+        <div class="nd-field-grid">
+          <div class="nd-feature-field"><label for="full_name">Full name</label><input id="full_name" value="Taylor Morgan" autocomplete="off"></div>
+          <div class="nd-feature-field"><label for="username">Username</label><input id="username" value="taylor.morgan" autocomplete="off"></div>
+          <div class="nd-feature-field"><label for="email">Email address</label><input id="email" type="email" value="taylor.morgan@example.com" autocomplete="off"></div>
+          <div class="nd-feature-field"><label for="department">Department</label><select id="department"><option>Finance</option><option>Human Resources</option><option>IT</option><option selected>Operations</option><option>Sales</option></select></div>
+          <div class="nd-feature-field"><label for="role">Account role</label><select id="role"><option selected>Employee</option><option>Administrator</option></select></div>
+          <div class="nd-feature-field"><label for="password_example">Temporary password (example only)</label><input id="password_example" type="text" value="Generated securely in production" readonly></div>
+        </div>
+        <div class="nd-preview-status">Production creates accounts with role-based permissions, secure password handling and audit history. This example does not submit or persist user details.</div>
+      {% elif feature == 'profile' %}
+        <div class="nd-field-grid">
+          <div class="nd-feature-field"><label for="profile_name">Full name</label><input id="profile_name" value="{{ demo_name }}" readonly></div>
+          <div class="nd-feature-field"><label for="profile_username">Username</label><input id="profile_username" value="{{ session.get('username') }}" readonly></div>
+          <div class="nd-feature-field"><label for="profile_role">Role</label><input id="profile_role" value="{{ role | title }}" readonly></div>
+          <div class="nd-feature-field"><label for="profile_dept">Department</label><input id="profile_dept" value="{{ demo_department }}" readonly></div>
+          <div class="nd-feature-field"><label for="profile_email">Email address</label><input id="profile_email" value="{{ demo_email }}" readonly></div>
+        </div>
+        <div class="nd-preview-status">These are fictional demo details. Profile updates, email changes, password recovery and MFA enrollment are disabled here.</div>
+      {% elif feature == 'change-password' %}
+        <div class="nd-field-grid">
+          <div class="nd-feature-field"><label for="pw_current">Current password</label><input id="pw_current" type="password" placeholder="Not available in demo" disabled></div>
+          <div class="nd-feature-field"><label for="pw_new">New password</label><input id="pw_new" type="password" placeholder="Preview field only" disabled></div>
+          <div class="nd-feature-field"><label for="pw_confirm">Confirm password</label><input id="pw_confirm" type="password" placeholder="Preview field only" disabled></div>
+        </div>
+        <div class="nd-preview-status">Production uses authenticated password-change checks and security controls. To protect visitors, this demo does not collect or transmit passwords.</div>
+      {% elif feature == 'edit-ticket' %}
+        <div class="nd-field-grid">
+          <div class="nd-feature-field"><label for="ticket_id">Example ticket</label><input id="ticket_id" value="NEX-2026-000012" readonly></div>
+          <div class="nd-feature-field"><label for="ticket_assignee">Assigned technician</label><select id="ticket_assignee"><option selected>Demo Administrator</option><option>Fictional Staff 01</option><option>Fictional Staff 02</option><option>Unassigned</option></select></div>
+          <div class="nd-feature-field"><label for="ticket_status">Status</label><select id="ticket_status"><option>Open</option><option selected>In Progress</option><option>Closed</option></select></div>
+          <div class="nd-feature-field"><label for="ticket_priority">Priority</label><select id="ticket_priority"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+        </div>
+        <div class="nd-feature-field"><label for="ticket_note">Technician troubleshooting note</label><textarea id="ticket_note" rows="4" placeholder="Add a fictional example note to explore this workflow..."></textarea></div>
+        <div class="nd-preview-status">Production allows authorized administrators to manage status, assignments, priorities and support notes. This page is a local preview only; the ticket and audit log never change.</div>
+      {% elif feature == 'submit-support-request' %}
+        <div class="nd-field-grid">
+          <div class="nd-feature-field"><label for="name">Assigned administrator</label><input id="name" value="{{ demo_name }}" readonly></div>
+          <div class="nd-feature-field"><label for="department">Department</label><input id="department" value="IT" readonly></div>
+        </div>
+        <div class="nd-feature-field"><label for="issue">Issue description</label><textarea id="issue" rows="4" placeholder="Example: A shared office printer is not responding. This text stays only in your browser."></textarea></div>
+        <div class="nd-field-grid">
+          <div class="nd-feature-field"><label for="category">Category</label><select id="category"><option>Account Access</option><option>Hardware</option><option>Network</option><option>Security</option><option selected>Software</option><option>Other</option></select></div>
+          <div class="nd-feature-field"><label for="priority">Priority</label><select id="priority"><option>Low</option><option selected>Medium</option><option>High</option></select></div>
+        </div>
+        <div class="nd-faux-upload">📎 Attachment selection is demonstrated in production; uploads are unavailable in this preview.</div>
+        <div class="nd-preview-status">Production creates and assigns tickets with SLA tracking. You can explore this layout, but no support request will be created.</div>
+      {% endif %}
+      <div class="nd-feature-actions"><button class="nd-feature-disabled" type="button" disabled>🔒 Save disabled — Preview only</button><a href="{{ '/users' if feature == 'create-user' else '/my_tickets' if role == 'employee' else '/dashboard' }}">Explore live read-only data</a></div>
+    </section>
+  </main>
+</body>
+</html>
