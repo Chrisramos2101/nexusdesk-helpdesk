@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>NexusDesk | Recruiter Demo</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+        .demo-page {
+            max-width: 980px;
+            margin: 70px auto;
+            padding: 24px;
+            text-align: center;
+        }
+
+        .demo-heading {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .demo-description {
+            max-width: 620px;
+            margin: 0 auto 35px;
+            line-height: 1.7;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            text-align: left;
+        }
+
+        .demo-card {
+            padding: 30px;
+            border: 1px solid #dce3eb;
+            border-radius: 16px;
+            background: white;
+        }
+
+        .demo-card h2 {
+            margin-bottom: 12px;
+        }
+
+        .demo-card p {
+            line-height: 1.6;
+        }
+
+        .demo-card button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            border: 0;
+            border-radius: 8px;
+            background: #174ea6;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .demo-notice {
+            margin-top: 32px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 650px) {
+            .demo-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="demo-page">
+
+    <h1 class="demo-heading">Explore NexusDesk</h1>
+
+    <p class="demo-description">
+        Explore a demonstration of an IT help desk platform
+        featuring ticket management, role-based access,
+        SLA tracking, and operational analytics.
+    </p>
+
+    <div class="demo-grid">
+
+        <section class="demo-card">
+            <h2>Administrator Demo</h2>
+
+            <p>
+                Explore support operations, ticket queues,
+                technician assignments, reporting,
+                and administrative workflows.
+            </p>
+
+            <form
+                action="{{ url_for('recruiter_demo.enter') }}"
+                method="POST"
+            >
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="role"
+                    value="admin"
+                >
+
+                <button type="submit">
+                    Explore Administrator
+                </button>
+            </form>
+        </section>
+
+        <section class="demo-card">
+            <h2>Employee Demo</h2>
+
+            <p>
+                Explore the employee portal,
+                submitted support requests,
+                ticket statuses, and knowledge resources.
+            </p>
+
+            <form
+                action="{{ url_for('recruiter_demo.enter') }}"
+                method="POST"
+            >
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    value="{{ csrf_token() }}"
+                >
+
+                <input
+                    type="hidden"
+                    name="role"
+                    value="employee"
+                >
+
+                <button type="submit">
+                    Explore Employee
+                </button>
+            </form>
+        </section>
+
+    </div>
+
+    <p class="demo-notice">
+        Portfolio demonstration using fictional data.
+        Read-only experience.
+    </p>
+
+</main>
+
+</body>
+</html>

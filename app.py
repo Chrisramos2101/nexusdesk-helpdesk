@@ -11,7 +11,7 @@ from flask import Flask, request, send_from_directory
 from flask_wtf.csrf import CSRFProtect
 from werkzeug.exceptions import HTTPException
 from werkzeug.middleware.proxy_fix import ProxyFix
-
+from routes.recruiter_demo import recruiter_demo_bp
 from database.config import DATABASE_URL
 from database.schema import init_db
 from health import register_health_route
@@ -33,6 +33,11 @@ validate_production_environment()
 prepare_runtime_directories()
 
 app = Flask(__name__)
+
+from services.recruiter_demo_guard import register_recruiter_demo_guard
+
+app.config["RECRUITER_STRICT_ENDPOINTS"] = True
+register_recruiter_demo_guard(app)
 
 # Render and similar platforms terminate HTTPS at a trusted reverse proxy.
 # Only enable this when deployment explicitly opts in.
@@ -119,6 +124,7 @@ app.register_blueprint(admin_bp)
 app.register_blueprint(knowledge_bp)
 app.register_blueprint(tickets_bp)
 app.register_blueprint(dashboard_bp)
+app.register_blueprint(recruiter_demo_bp)
 
 
 @app.context_processor

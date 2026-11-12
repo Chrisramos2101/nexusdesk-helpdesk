@@ -1,3 +1,4 @@
+import os
 from flask import Blueprint, render_template, request, redirect, session
 from datetime import datetime
 from database.db import get_db_connection
@@ -121,6 +122,10 @@ def get_related_articles(current_slug):
 
 
 def track_article_view(slug):
+    # Recruiter demo: viewing an article must not write to PostgreSQL.
+    if os.getenv("RECRUITER_DEMO_MODE", "false").lower() == "true":
+        return
+
     placeholder = db_placeholder()
     username = session.get("username", "anonymous")
 

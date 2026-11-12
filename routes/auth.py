@@ -671,6 +671,11 @@ def mfa_resend():
 
 @auth_bp.route("/logout")
 def logout():
+    # Recruiter demo: logout without database writes.
+    if os.getenv("RECRUITER_DEMO_MODE", "false").lower() == "true":
+        session.clear()
+        return redirect("/recruiter-demo/")
+
     trusted_username = session.get("mfa_trusted_username")
     trusted_until = session.get("mfa_trusted_until")
 
