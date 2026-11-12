@@ -1,0 +1,27 @@
+<header class="nd-demo-shell" role="banner">
+  <div class="nd-demo-inner">
+    <div class="nd-demo-identity">
+      <span class="nd-demo-logo" aria-hidden="true">N</span>
+      <span class="nd-demo-wordmark">NexusDesk</span>
+      <span class="nd-demo-label">Portfolio demo</span>
+    </div>
+    <nav class="nd-demo-links" aria-label="Recruiter demo navigation">
+      <a href="/">Overview</a>
+      {% if session.get('role') == 'admin' %}
+        <a href="/dashboard">Ticket queue</a>
+        <a href="/stats">Analytics</a>
+        <a href="/users">Users</a>
+        <a href="/system_dashboard">System</a>
+      {% else %}
+        <a href="/my_tickets">My tickets</a>
+      {% endif %}
+      <a href="/knowledge_base">Knowledge base</a>
+    </nav>
+    <div class="nd-demo-role">
+      <span class="nd-demo-role-label">Viewing as</span>
+      <strong>{{ 'Administrator' if session.get('role') == 'admin' else 'Employee' }}</strong>
+      <a class="nd-demo-switch" href="/recruiter-demo/">Switch role</a>
+    </div>
+  </div>
+</header>
+<div class="nd-demo-note" role="status"><strong>Read-only demo</strong> · Fictional accounts and tickets · Changes, submissions, and account management are disabled.</div>

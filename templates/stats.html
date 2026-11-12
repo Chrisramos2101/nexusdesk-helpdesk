@@ -14,10 +14,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    {% if session.get('recruiter_demo') %}<link rel="stylesheet" href="{{ url_for('static', filename='recruiter_ui.css') }}">{% endif %}
 </head>
 
 
-<body>
+<body class="{% if session.get('recruiter_demo') %}nexusdesk-recruiter-preview{% endif %}">
+<!-- NexusDesk recruiter preview navigation -->
+{% if session.get('recruiter_demo') %}{% include '_recruiter_demo_nav.html' %}{% endif %}
 
 <div class="container analytics-page">
 

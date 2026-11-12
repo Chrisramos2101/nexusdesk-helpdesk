@@ -1,0 +1,29 @@
+/* NexusDesk Recruiter Demo | visual layer only; authorization remains server-side. */
+:root { --demo-navy:#101d33; --demo-blue:#2563eb; --demo-soft:#eff6ff; --demo-line:#dbe5f1; }
+body.nexusdesk-recruiter-preview { background-color:#f5f8fc; }
+.nd-demo-shell { position:sticky; top:0; z-index:9999; background:linear-gradient(115deg,#0d1b31,#162f55); color:#fff; border-bottom:1px solid #294263; box-shadow:0 8px 22px rgba(9,22,41,.12); font-family:Inter,system-ui,-apple-system,'Segoe UI',sans-serif; }
+.nd-demo-shell * { box-sizing:border-box; }
+.nd-demo-inner { max-width:1320px; padding:11px 22px; margin:0 auto; display:flex; align-items:center; gap:22px; justify-content:space-between; flex-wrap:wrap; }
+.nd-demo-identity { display:flex;align-items:center;gap:10px;flex-wrap:wrap;min-width:180px; }
+.nd-demo-logo { display:inline-grid;place-items:center;height:32px;width:32px;border-radius:10px;background:#3479fb;font-weight:800;color:#fff;font-size:16px; }
+.nd-demo-wordmark { font-size:15px;font-weight:800;letter-spacing:-.025em; }
+.nd-demo-label { display:inline-block; padding:4px 8px;border:1px solid #506583;border-radius:999px;color:#d8e7ff;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase; }
+.nd-demo-links { display:flex;gap:4px;align-items:center;flex-wrap:wrap; }
+.nd-demo-links a,.nd-demo-role a { display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;color:#f1f6ff !important;text-decoration:none !important;font-size:12px;font-weight:700;border-radius:9px;padding:9px 11px;line-height:1.2;transition:background .15s; }
+.nd-demo-links a:hover,.nd-demo-role a:hover { background:rgba(255,255,255,.15); }
+.nd-demo-role { display:flex; align-items:center;gap:8px;flex-wrap:wrap; }
+.nd-demo-role-label { font-size:11px;color:#b9d1ec; }
+.nd-demo-role strong {color:#fff;font-size:12px;}
+.nd-demo-role a.nd-demo-switch { background:#f8fafc; color:#15243c !important; padding:9px 12px; }
+.nd-demo-note { background:#e9f2ff;border-bottom:1px solid #d0e2fb; color:#234571;font-size:12px;font-weight:600;line-height:1.5;padding:9px 22px;text-align:center;font-family:Inter,system-ui,sans-serif; }
+.nd-demo-note strong { font-weight:850; }
+body.nexusdesk-recruiter-preview form[method="POST"],
+body.nexusdesk-recruiter-preview form[method="post"] {display:none!important;}
+body.nexusdesk-recruiter-preview a[href^="/create_user"],
+body.nexusdesk-recruiter-preview a[href^="/admin_submit_ticket"],
+body.nexusdesk-recruiter-preview a[href^="/change_password"],
+body.nexusdesk-recruiter-preview a[href^="/forgot_password"],
+body.nexusdesk-recruiter-preview a[href^="/profile"] {display:none!important;}
+body.nexusdesk-recruiter-preview .container,body.nexusdesk-recruiter-preview .login-page {scroll-margin-top:95px;}
+@media(max-width:800px){.nd-demo-inner{gap:9px;padding:12px}.nd-demo-links{order:3;width:100%;overflow-x:auto;flex-wrap:nowrap;}.nd-demo-links a{padding:7px 9px}.nd-demo-note{padding:8px 14px}}
+@media(prefers-reduced-motion:reduce){.nd-demo-shell *{transition:none!important}}
