@@ -4,8 +4,6 @@
 
 **Live Demo:** [Launch NexusDesk](https://nexusdesk-helpdesk.onrender.com)
 
-> **Portfolio Demo:** This application uses synthetic demonstration data and is not intended for real business or customer information. The free hosting environment may take time to start after inactivity.
-
 ## Application Preview
 
 ![NexusDesk Landing Page and Secure Login](docs/nexusdesk/login.png)
@@ -147,7 +145,7 @@ flowchart LR
 
 The architecture separates application routing, authentication, ticket workflows, administrative functionality, and knowledge management while using PostgreSQL for persistent data storage. Docker supports reproducible development environments, and GitHub Actions automates testing and build validation.
 
-The diagram illustrates the application's configured cloud deployment architecture. The diagram represents the Render deployment architecture used by the current portfolio application. Live availability remains subject to the limitations of the free hosting environment.
+The diagram represents the current Render deployment architecture. Live availability remains subject to the limitations of the free hosting environment.
 
 For a detailed breakdown of application components, service interactions, and deployment considerations, see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
