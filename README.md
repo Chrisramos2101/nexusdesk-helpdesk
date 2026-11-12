@@ -52,19 +52,19 @@ The following screenshots provide an overview of NexusDesk's administrator inter
 
 ### Administrator Portal
 
-![NexusDesk Administrator Portal](docs/nexusdesk/admin-portal.png)
+![NexusDesk Administrator Portal](nexusdesk/admin-portal.png)
 
 Administrator interface for managing IT support operations, account administration, and ticket activity.
 
 ### Ticket Management
 
-![NexusDesk Ticket Management and SLA Tracking](docs/nexusdesk/ticket-management.png)
+![NexusDesk Ticket Management and SLA Tracking](nexusdesk/ticket-management.png)
 
 Ticket management interface supporting priority classification, status tracking, technician assignment, and business-hour SLA monitoring.
 
 ### Operational Analytics
 
-![NexusDesk Operational Analytics Dashboard](docs/nexusdesk/analytics.png)
+![NexusDesk Operational Analytics Dashboard](nexusdesk/analytics.png)
 
 Operational reporting dashboard showing ticket activity and service-management performance indicators.
 
